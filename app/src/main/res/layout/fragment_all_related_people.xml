@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.fragments.secondaryfragments.empresa.AllEmpresasFragment"
+    android:background="@drawable/ic_otro_rectangulo_meet"
+    android:orientation="vertical"
+    android:padding="15dp"
+    >
+
+    <GridLayout
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/botonAtras"
+            android:layout_width="30dp"
+            android:layout_marginStart="10dp"
+            android:layout_height="30dp"
+            android:textColor="@color/white"
+            android:background="@drawable/ic_back_button"
+            android:fontFamily="@font/montserrat_light"
+            android:textAllCaps="false"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="46dp"
+            android:layout_column="0"
+            android:layout_row="0"
+            />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_light"
+            android:text="@string/personas_que_quiz_s_nconozcas"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:textSize="23sp"
+            android:layout_column="1"
+            android:layout_row="0"
+            />
+
+    </GridLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerAllInfluencers"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+
+</LinearLayout>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <style name="roundTopCorners" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">23dp</item>
+        <item name="cornerSizeTopRight">23dp</item>
+    </style>
+
+    <style name="Button.White" parent="ThemeOverlay.AppCompat">
+        <item name="colorAccent">@android:color/white</item>
+    </style>
+
+    <style name="roundCorners" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">23dp</item>
+        <item name="cornerSizeTopRight">23dp</item>
+        <item name="cornerSizeBottomLeft">23dp</item>
+        <item name="cornerSizeBottomRight">23dp</item>
+    </style>
+
+</resources>

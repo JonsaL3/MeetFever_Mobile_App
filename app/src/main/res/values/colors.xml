@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Colores por defecto -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Colores fondos -->
+    <color name="negro_fondo">#202225</color>
+    <color name="seminegro_fondo">#2F3136</color>
+
+    <!-- Colores letras -->
+    <color name="gris_textos">#8D95AA</color>
+
+    <!-- Colores principales -->
+    <color name="rosa_meet">#C850C0</color>
+    <color name="amarillo_meet">#FFCC70</color>
+    <color name="azul_meet">#4158D0</color>
+
+    <!-- Otros colores -->
+    <color name="gris_hint">#838488</color>
+    <color name="negro_botones">#292a2f</color>
+
+</resources>

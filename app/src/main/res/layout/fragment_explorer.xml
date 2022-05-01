@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_background_gradient_shape"
+    >
+    <!-- TODO CONTEXT -->
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/contenedorExplorer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:visibility="gone"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textoBuenosDias"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/montserrat_light"
+                android:text="@string/buenos_dias_jonsa"
+                android:textColor="@color/white" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="230dp"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginTop="10dp"
+                >
+
+                <ImageView
+                    android:id="@+id/imageView34"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_explorer_rectangulo" />
+
+                <ImageView
+                    android:id="@+id/imageView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="4dp"
+                    android:src="@drawable/img_main_wave" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="40dp"
+                    android:fontFamily="@font/montserrat_light"
+                    android:text="@string/meet_fever_explorer"
+                    android:textColor="@color/white"
+                    android:textSize="30sp" />
+
+                <EditText
+                    android:id="@+id/inputMainActivityExplorer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="50dp"
+                    android:layout_marginTop="115dp"
+                    android:background="@drawable/ic_inputs_login_negro"
+                    android:ems="10"
+                    android:fontFamily="@font/montserrat_light"
+                    android:gravity="center"
+                    android:hint="@string/buscar_por_nombre"
+                    android:inputType="text"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gris_hint"
+                    android:textSize="15sp"
+                    />
+
+            </FrameLayout>
+
+            <!-- Las 4 experiencias mas mencionadas o que se yo -->
+
+            <TextView
+                android:id="@+id/experienciasDestacadasTexto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/montserrat_light"
+                android:text="@string/experiencias_destacadas"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                />
+
+           <androidx.recyclerview.widget.RecyclerView
+               android:id="@+id/experienciaDestacadasRecyclerView"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="center"
+               />
+
+            <!-- Horizontal scroll view con los locales con mas seguidores -->
+
+            <TextView
+                android:id="@+id/localesTrendingTexto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/montserrat_light"
+                android:text="@string/top_locales"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/localesTrendingRecycler"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</FrameLayout>
