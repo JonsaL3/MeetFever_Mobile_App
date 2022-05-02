@@ -1,13 +1,13 @@
-package es.indytek.meetfever.models.emoticono
+package es.indytek.meetfever.models.sexo
 
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-data class Emoticono (
+data class Sexo(
 
     @SerializedName("Id")
     val id: Int,
-    @SerializedName("Emoji")
-    val emoji: String,
+    @SerializedName("Sexo")
+    val nombre: String
 
 ) : Serializable

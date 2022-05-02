@@ -1,13 +1,9 @@
 package es.indytek.meetfever.models.usuario
 
-import android.annotation.SuppressLint
-import android.content.ContentValues
-import android.database.Cursor
 import com.google.gson.annotations.SerializedName
-import es.indytek.meetfever.data.sqlite.Tablas
 import java.io.Serializable
 
-abstract class Usuario (
+open class Usuario (
 
     /* identificador de un usuario */
     @SerializedName("Id")
@@ -21,9 +17,9 @@ abstract class Usuario (
     @SerializedName("Nick")
     var nick: String = "",
     @SerializedName("Foto_Perfil")
-    var fotoFondo: String? = "", // TODO BASE 64
+    var fotoFondo: String? = "",
     @SerializedName("Foto_Fondo")
-    var fotoPerfil: String? = "", // TODO BASE 64
+    var fotoPerfil: String? = "",
     @SerializedName("Telefono")
     var telefono: String? = "",
     @SerializedName("Frase")

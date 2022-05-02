@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <gradient
+        android:type="linear"
+        android:angle="45"
+        android:centerX="0.5"
+        android:startColor="@color/amarillo_meet"
+        android:centerColor="@color/rosa_meet"
+        android:endColor="@color/azul_meet" />
+
+    <!-- le pongo un borde a la shape -->
+    <stroke
+        android:width="10dp"
+        android:color="@color/white" />
+
+    <corners android:radius="30dp"/>
+
+</shape>

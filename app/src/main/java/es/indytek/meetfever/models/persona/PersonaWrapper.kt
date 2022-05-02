@@ -1,2 +1,2 @@
 package es.indytek.meetfever.models.persona
-class PersonaWrapper : HashSet<Persona>()
+class PersonaWrapper : ArrayList<Persona>()

@@ -15,7 +15,7 @@ object WebServiceExperiencia {
     // Iniciar sesión a partir de usuario y contraseña
     fun findTop4ExperienciasMasComentadas(context: Context, callback : WebServiceGenericInterface) {
 
-        val url = "interface/api/meetfever/empresa/ObtenerTop4ExperienciasMasOpinadas"
+        val url = "interface/api/meetfever/experiencia/ObtenerTop4ExperienciasMasOpinadas"
         val jsonObject = JSONObject()
 
         try {
@@ -33,6 +33,8 @@ object WebServiceExperiencia {
                             callback.callback(experiencias)
                         else
                             callback.callback(0)
+                    } else {
+                        callback.callback(0)
                     }
 
                 }
@@ -42,4 +44,38 @@ object WebServiceExperiencia {
             e.printStackTrace()
         }
     }
+
+    // Iniciar sesión a partir de usuario y contraseña
+    fun findAllExperiencias(context: Context, callback : WebServiceGenericInterface) {
+
+        val url = "interface/api/meetfever/experiencia/ObtenerTodasLasExperiencias"
+        val jsonObject = JSONObject()
+
+        try {
+
+            WebService.processRequestGet(context, url, jsonObject, object: WebServiceGenericInterface {
+                override fun callback(any: Any) {
+
+                    if (any.toString().isNotEmpty()) {
+                        // Obtengo el response
+                        val experiencias = GsonBuilder()
+                            .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeTypeAdapter())
+                            .create()
+                            .fromJson(any.toString(), ExperienciaWrapper::class.java)
+                        if (experiencias.size > 0)
+                            callback.callback(experiencias)
+                        else
+                            callback.callback(0)
+                    } else {
+                        callback.callback(0)
+                    }
+
+                }
+            })
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
 }

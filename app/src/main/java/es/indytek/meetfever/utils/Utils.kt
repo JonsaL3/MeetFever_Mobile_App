@@ -54,6 +54,18 @@ object Utils {
 
     }
 
+    fun putBase64ImageIntoImageViewWithoutCorners(imageView: ImageView, base64Image: String, context: Context) {
+
+        var requestOptions = RequestOptions()
+        requestOptions = requestOptions.transform(CenterCrop())
+
+        Glide.with(context)
+            .load(Base64.decode(base64Image, Base64.DEFAULT))
+            .apply(requestOptions)
+            .into(imageView)
+
+    }
+
     fun putBase64ImageIntoImageViewCircular(imageView: ImageView, base64Image: String, context: Context) {
 
         var requestOptions = RequestOptions()

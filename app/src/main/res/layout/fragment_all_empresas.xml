@@ -9,46 +9,55 @@
     android:padding="15dp"
     >
 
-    <GridLayout
-        android:layout_marginTop="5dp"
+    <LinearLayout
+        android:id="@+id/container_all_empresas"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:visibility="gone"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/botonAtras"
-            android:layout_width="30dp"
-            android:layout_marginStart="10dp"
-            android:layout_height="30dp"
-            android:textColor="@color/white"
-            android:background="@drawable/ic_back_button"
-            android:fontFamily="@font/montserrat_light"
-            android:textAllCaps="false"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="70dp"
-            android:layout_column="0"
-            android:layout_row="0"
-            />
+        <GridLayout
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_light"
-            android:text="@string/locales_trending"
-            android:textColor="@color/white"
-            android:gravity="center_vertical"
-            android:textSize="23sp"
-            android:layout_column="1"
-            android:layout_row="0"
-            />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/botonAtras"
+                android:layout_width="30dp"
+                android:layout_marginStart="10dp"
+                android:layout_height="30dp"
+                android:textColor="@color/white"
+                android:background="@drawable/ic_back_button"
+                android:fontFamily="@font/montserrat_light"
+                android:textAllCaps="false"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="70dp"
+                android:layout_column="0"
+                android:layout_row="0"
+                />
 
-    </GridLayout>
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_light"
+                android:text="@string/locales_trending"
+                android:textColor="@color/white"
+                android:gravity="center_vertical"
+                android:textSize="23sp"
+                android:layout_column="1"
+                android:layout_row="0"
+                />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerAllEmpresas"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        </GridLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerAllEmpresas"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
 
 
 </LinearLayout>

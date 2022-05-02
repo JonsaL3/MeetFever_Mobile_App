@@ -9,9 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import es.indytek.meetfever.R
+import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
+import es.indytek.meetfever.data.webservice.WebServicePersona
 import es.indytek.meetfever.databinding.FragmentPeopleBinding
 import es.indytek.meetfever.models.persona.PersonaWrapper
 import es.indytek.meetfever.models.usuario.Usuario
+import es.indytek.meetfever.ui.fragments.secondaryfragments.empresa.AllEmpresasFragment
+import es.indytek.meetfever.ui.fragments.secondaryfragments.persona.AllPeopleFragment
+import es.indytek.meetfever.ui.fragments.secondaryfragments.persona.AllRelatedPeopleFragment
 import es.indytek.meetfever.ui.recyclerviews.adapters.PersonaRecyclerViewAdapter
 import es.indytek.meetfever.utils.Animations
 import java.time.LocalTime
@@ -43,12 +48,65 @@ class PeopleFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentPeopleBinding.inflate(layoutInflater)
+
         // Pinto todos los elementos que componen el fragment
         pintar()
 
+        // cargo los listeners para ver las listas correspondientes
+        cargarListeners()
+
         return binding.root
+    }
+    // listeners que necesito
+    private fun cargarListeners() {
+
+        binding.localesTrendingTexto.setOnClickListener {
+            mostrarTodasLasPersonas()
+        }
+
+        binding.personasQueQuizasConozcasTexto.setOnClickListener {
+            obtenerTodasLasPersonasRelacionadas()
+        }
+
+    }
+
+    // pregunto al webservice por todas las personas
+    private fun mostrarTodasLasPersonas() {
+
+        WebServicePersona.findAllPersonas(requireContext(), object: WebServiceGenericInterface {
+            override fun callback(any: Any) {
+
+                if (any == 0) {
+                    // TODO ERROR
+                } else {
+                    val personas = any as PersonaWrapper
+                    val fragmento = AllPeopleFragment.newInstance(currentUsuario, personas)
+                    activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_layout,fragmento)?.commit()
+                }
+
+            }
+        })
+
+    }
+
+    // private fun pregunto al web service por todas las personas relacionadas
+    private fun obtenerTodasLasPersonasRelacionadas() {
+
+        WebServicePersona.findAllRelatedPersonas(currentUsuario, requireContext(), object: WebServiceGenericInterface {
+            override fun callback(any: Any) {
+
+                if (any == 0) {
+                    // TODO ERROR
+                } else {
+                    val personas = any as PersonaWrapper
+                    val fragmento = AllRelatedPeopleFragment.newInstance(currentUsuario, personas)
+                    activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_layout,fragmento)?.commit()
+                }
+
+            }
+        })
+
     }
 
     // pinta los datos del tio que inició sesión

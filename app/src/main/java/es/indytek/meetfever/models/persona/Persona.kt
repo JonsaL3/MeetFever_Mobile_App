@@ -1,6 +1,7 @@
 package es.indytek.meetfever.models.persona
 
 import com.google.gson.annotations.SerializedName
+import es.indytek.meetfever.models.sexo.Sexo
 import es.indytek.meetfever.models.usuario.Usuario
 import java.time.LocalDate
 
@@ -24,7 +25,7 @@ class Persona (
     @SerializedName("Apellido2")
     var apellido2: String,
     @SerializedName("Sexo")
-    var sexo: String,
+    var sexo: Sexo,
     @SerializedName("Fecha_Nacimiento")
     var fechaNacimiento: LocalDate,
     @SerializedName("dni")

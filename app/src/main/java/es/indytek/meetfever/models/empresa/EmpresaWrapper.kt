@@ -1,2 +1,2 @@
 package es.indytek.meetfever.models.empresa
-class EmpresaWrapper : HashSet<Empresa>()
+class EmpresaWrapper : ArrayList<Empresa>()

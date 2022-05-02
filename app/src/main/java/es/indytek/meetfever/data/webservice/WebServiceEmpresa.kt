@@ -32,7 +32,9 @@ object WebServiceEmpresa {
                             callback.callback(empresas)
                         else
                             callback.callback(0)
-                    }
+                    } else
+                        callback.callback(0)
+
 
                 }
             })
@@ -41,4 +43,37 @@ object WebServiceEmpresa {
             e.printStackTrace()
         }
     }
+
+    // Obtener todas las empresas
+    fun findAllEmpresas(context: Context, callback : WebServiceGenericInterface) {
+
+        val url = "interface/api/meetfever/empresa/ObtenerTodasLasEmpresas"
+        val jsonObject = JSONObject()
+
+        try {
+
+            WebService.processRequestGet(context, url, jsonObject, object: WebServiceGenericInterface {
+                override fun callback(any: Any) {
+
+                    if (any.toString().isNotEmpty()) {
+                        // Obtengo el response
+                        val empresas = GsonBuilder()
+                            .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeTypeAdapter())
+                            .create()
+                            .fromJson(any.toString(), EmpresaWrapper::class.java)
+                        if (empresas.size > 0)
+                            callback.callback(empresas)
+                        else
+                            callback.callback(0)
+                    } else
+                        callback.callback(0)
+
+                }
+            })
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
 }

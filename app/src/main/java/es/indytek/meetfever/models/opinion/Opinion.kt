@@ -3,20 +3,22 @@ package es.indytek.meetfever.models.opinion
 
 import com.google.gson.annotations.SerializedName
 import es.indytek.meetfever.models.emoticono.Emoticono
+import es.indytek.meetfever.models.usuario.Usuario
 import java.io.Serializable
+import java.time.LocalDateTime
 
 data class Opinion(
 
     @SerializedName("Descripcion")
     var descripcion: String = "",
-    @SerializedName("EMOTICONO")
+    @SerializedName("Emoticono")
     var eMOTICONO: Emoticono = Emoticono(-1,""),
     @SerializedName("Fecha")
-    var fecha: String = "",
+    var fecha: LocalDateTime = LocalDateTime.now(),
     @SerializedName("Id")
     var id: Int = 0,
-    @SerializedName("Id_Autor") /* MODO SEMI LAZY, NO NECESITO EL AUTOR POR NORMA GENERAL PERO NO ME VIENE MAL SU ID */
-    var idAutor: Int = 0,
+    @SerializedName("Autor")
+    var autor: Usuario,
     @SerializedName("Id_Empresa")
     var idEmpresa: Int = 0,
     @SerializedName("Titulo")

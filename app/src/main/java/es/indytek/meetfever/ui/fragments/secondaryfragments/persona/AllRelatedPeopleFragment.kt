@@ -1,42 +1,80 @@
 package es.indytek.meetfever.ui.fragments.secondaryfragments.persona
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import es.indytek.meetfever.R
+import es.indytek.meetfever.databinding.FragmentAllRelatedPeopleBinding
+import es.indytek.meetfever.models.persona.PersonaWrapper
+import es.indytek.meetfever.models.usuario.Usuario
+import es.indytek.meetfever.ui.recyclerviews.adapters.PersonaRecyclerViewAdapter
+import es.indytek.meetfever.utils.Animations
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+private const val ARG_PARAM1 = "usuario"
+private const val ARG_PARAM2 = "personas"
 
 class AllRelatedPeopleFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+    // bindeo de las vistas
+    private lateinit var binding: FragmentAllRelatedPeopleBinding
+
+    // datos que necesito
+    private lateinit var usuario: Usuario
+    private lateinit var personas: PersonaWrapper
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            usuario = it.getSerializable(ARG_PARAM1) as Usuario
+            personas = it.getSerializable(ARG_PARAM2) as PersonaWrapper
         }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_all_related_people, container, false)
+    ): View {
+        binding = FragmentAllRelatedPeopleBinding.inflate(inflater, container, false)
+
+        // Pinto a todos los usuarios
+        pintar()
+
+        return binding.root
+    }
+
+    // lo pinto tosdo
+    private fun pintar() {
+        pintarPersonas()
+
+        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+            Animations.mostrarVistaSuavemente(binding.containerAllRelatedPersonas, 300)
+        },100)
+    }
+
+    // pintar todas las personas
+    private fun pintarPersonas() {
+        // Creo el layout manager que voy a usar en este recycler
+        val girdLayoutManager = GridLayoutManager(context, 3)
+        binding.recyclerAllInfluencers.layoutManager = girdLayoutManager
+
+        // lo mismo para el recycler view
+        val recyclerAdapter = PersonaRecyclerViewAdapter(personas)
+        binding.recyclerAllInfluencers.adapter = recyclerAdapter
     }
 
     companion object {
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(usuario: Usuario, personas: PersonaWrapper) =
             AllRelatedPeopleFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                    putSerializable(ARG_PARAM1, usuario)
+                    putSerializable(ARG_PARAM2, personas)
                 }
             }
     }

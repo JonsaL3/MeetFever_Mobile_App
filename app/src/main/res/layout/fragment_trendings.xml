@@ -89,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:fontFamily="@font/montserrat_light"
-                android:text="@string/opiniones_mas_valoradas"
+                android:text="@string/feevers_mas_valorados_del_dia"
                 android:textColor="@color/white"
                 android:textSize="22sp"
                 />

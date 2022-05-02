@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import es.indytek.meetfever.R
 import es.indytek.meetfever.data.webservice.*
 import es.indytek.meetfever.databinding.ActivityMainBinding
@@ -36,7 +37,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var diezPersonasQueQuizasConozcas: PersonaWrapper
 
     // datos del trending fragment
-    private lateinit var top100OpinionesMasGustadas24H: EmpresaWrapper
+    private lateinit var top100OpinionesMasGustadas24H: OpinionWrapper
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,6 +90,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Métodos relacionados con la carga de datos #################################################
+    /*
+    * Los datos de todas las actividades o fragmentos siempre serán cargados por el que los llama, para que
+    * una vez cargue el nuevo ya esté con todos sus datos y disimular los tiempos de carga
+    */
     private fun cargarDatosPrincipales() {
 
         // busco las 10 empresas con mas seguidores
@@ -137,16 +142,16 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        /*var top100OpinionesMasGustadas24H: OpinionWrapper? = null
-        WebServiceOpinion.find10PersonasQueQuizasConozca(this, object:
+        var mTop100OpinionesMasGustadas24H: OpinionWrapper? = null
+        WebServiceOpinion.find100OpinionesMasGustadas24h(this, object:
             WebServiceGenericInterface {
             override fun callback(any: Any) {
                 if (any == 0)
-                    top100OpinionesMasGustadas24H = OpinionWrapper()
+                    mTop100OpinionesMasGustadas24H = OpinionWrapper()
                 else
-                    top100OpinionesMasGustadas24H = any as OpinionWrapper
+                    mTop100OpinionesMasGustadas24H = any as OpinionWrapper
             }
-        })*/
+        })
 
         // espero a que cargue to-do y procedo
         Handler(Looper.getMainLooper()).postDelayed(Runnable {
@@ -167,9 +172,9 @@ class MainActivity : AppCompatActivity() {
                 diezPersonasQueQuizasConozcas = it
             }
 
-            /*top100OpinionesMasGustadas24H?.let {
+            mTop100OpinionesMasGustadas24H?.let {
                 top100OpinionesMasGustadas24H = it
-            }*/
+            }
 
             // Quito la pantalla de carga
             Animations.ocultarVistaSuavemente(binding.pantallaDeCarga, 500)
@@ -177,7 +182,7 @@ class MainActivity : AppCompatActivity() {
             // cargo el fragmento principal por defecto
             cargarExplorerFragment()
 
-        },1000)
+        },500)
 
     }
 
@@ -191,20 +196,41 @@ class MainActivity : AppCompatActivity() {
 
     // Funciones de carga de fragmentos ############################################################
     private fun cargarExplorerFragment() {
-        val fragmento = ExplorerFragment
-            .newInstance(currentUsuario, top10EmpresasConMasSeguidores, topExperienciasMasOpinadas)
-        supportFragmentManager.beginTransaction().replace(R.id.frame_layout,fragmento).commit()
+
+        try {
+            val fragmento = ExplorerFragment
+                .newInstance(currentUsuario, top10EmpresasConMasSeguidores, topExperienciasMasOpinadas)
+            supportFragmentManager.beginTransaction().replace(R.id.frame_layout,fragmento).commit()
+        } catch (e: UninitializedPropertyAccessException) {
+            // todo mensaje de reintentando
+            cargarDatosPrincipales()
+        }
+
     }
 
     private fun cargarPeopleFragment() {
-        val fragmento = PeopleFragment
-            .newInstance(currentUsuario, topPersonasConMasSeguidores, diezPersonasQueQuizasConozcas)
-        supportFragmentManager.beginTransaction().replace(R.id.frame_layout,fragmento).commit()
+
+        try {
+            val fragmento = PeopleFragment
+                .newInstance(currentUsuario, topPersonasConMasSeguidores, diezPersonasQueQuizasConozcas)
+            supportFragmentManager.beginTransaction().replace(R.id.frame_layout,fragmento).commit()
+        } catch (e: UninitializedPropertyAccessException) {
+            // todo mensaje de reintentando
+            cargarDatosPrincipales()
+        }
+
     }
 
     private fun cargarTrendingsFragment() {
-        val fragmento = TrendingsFragment.newInstance(currentUsuario, OpinionWrapper()) // TODO: top100OpinionesMasGustadas24H
-        supportFragmentManager.beginTransaction().replace(R.id.frame_layout,fragmento).commit()
+
+        try {
+            val fragmento = TrendingsFragment.newInstance(currentUsuario, top100OpinionesMasGustadas24H)
+            supportFragmentManager.beginTransaction().replace(R.id.frame_layout,fragmento).commit()
+        } catch (e: UninitializedPropertyAccessException) {
+            // todo mensaje de reintentando
+            cargarDatosPrincipales()
+        }
+
     }
 
 }

@@ -75,4 +75,72 @@ object WebServicePersona {
         }
     }
 
+    // Obtengo todas las personas
+    fun findAllPersonas(context: Context, callback : WebServiceGenericInterface) {
+
+        val url = "interface/api/meetfever/persona/ObtenerTodasLasPersonas"
+        val jsonObject = JSONObject()
+
+        try {
+
+            WebService.processRequestGet(context, url, jsonObject, object: WebServiceGenericInterface {
+                override fun callback(any: Any) {
+
+                    if (any.toString().isNotEmpty()) {
+                        // Obtengo el response
+                        val personas = GsonBuilder()
+                            .registerTypeAdapter(LocalDate::class.java, LocalDateTypeAdapter())
+                            .create()
+                            .fromJson(any.toString(), PersonaWrapper::class.java)
+                        if (personas.size > 0)
+                            callback.callback(personas)
+                        else
+                            callback.callback(0)
+                    } else {
+                        callback.callback(0)
+                    }
+
+                }
+            })
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    // Obtengo todas las personas relacionadas conmigo
+    fun findAllRelatedPersonas(usuario: Usuario, context: Context, callback : WebServiceGenericInterface) {
+
+        val url = "interface/api/meetfever/persona/ObtenerTodasLasPersonasQueQuizasConozca"
+        val jsonObject = JSONObject()
+
+        try {
+
+            jsonObject.put("Id", usuario.id)
+
+            WebService.processRequestPost(context, url, jsonObject, object: WebServiceGenericInterface {
+                override fun callback(any: Any) {
+
+                    if (any.toString().isNotEmpty()) {
+                        // Obtengo el response
+                        val personas = GsonBuilder()
+                            .registerTypeAdapter(LocalDate::class.java, LocalDateTypeAdapter())
+                            .create()
+                            .fromJson(any.toString(), PersonaWrapper::class.java)
+                        if (personas.size > 0)
+                            callback.callback(personas)
+                        else
+                            callback.callback(0)
+                    } else {
+                        callback.callback(0)
+                    }
+
+                }
+            })
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
 }

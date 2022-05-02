@@ -11,15 +11,21 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import es.indytek.meetfever.R
+import es.indytek.meetfever.data.webservice.WebServiceEmpresa
+import es.indytek.meetfever.data.webservice.WebServiceExperiencia
+import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
 import es.indytek.meetfever.databinding.FragmentExplorerBinding
 import es.indytek.meetfever.models.empresa.EmpresaWrapper
 import es.indytek.meetfever.models.experiencia.ExperienciaWrapper
 import es.indytek.meetfever.models.usuario.Usuario
+import es.indytek.meetfever.ui.fragments.secondaryfragments.empresa.AllEmpresasFragment
+import es.indytek.meetfever.ui.fragments.secondaryfragments.empresa.AllExperiencesFragment
 import es.indytek.meetfever.ui.recyclerviews.adapters.EmpresaRecyclerViewAdapter
 import es.indytek.meetfever.ui.recyclerviews.adapters.ExperienciaRecyclerViewAdapter
 import es.indytek.meetfever.utils.Animations
 import java.time.LocalTime
 import java.util.stream.Collectors
+import kotlin.math.E
 
 private const val ARG_PARAM1 = "usuario"
 private const val ARG_PARAM2 = "top10EmpresasConMasSeguidores"
@@ -54,7 +60,60 @@ class ExplorerFragment : Fragment() {
         // Muestro to.dos los datos de este fragmento
         pintar()
 
+        // arranco los listeners que necesito
+        arrancarListeners()
+
         return binding.root
+    }
+
+    // preparo los listeners
+    private fun arrancarListeners() {
+
+        binding.experienciasDestacadasTexto.setOnClickListener{
+            mostrarTodasLasExperiencias()
+        }
+
+        binding.localesTrendingTexto.setOnClickListener {
+            mostrarTodasLasEmpresas()
+        }
+    }
+
+    // muestro todas las empresas en otro fragmento
+    private fun mostrarTodasLasEmpresas() {
+        // aqui, al no ser uno de los fragmentos principales, me da mas igual el popping
+        // porque no hay que volver a la pantalla de inicio
+        WebServiceEmpresa.findAllEmpresas(requireContext(), object: WebServiceGenericInterface {
+            override fun callback(any: Any) {
+
+                if (any == 0) {
+                    // TODO ERROR
+                } else {
+                    val empresas = any as EmpresaWrapper
+                    val fragmento = AllEmpresasFragment.newInstance(currentUsuario, empresas)
+                    activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_layout,fragmento)?.commit()
+                }
+
+            }
+        })
+
+    }
+
+    private fun mostrarTodasLasExperiencias() {
+        // aqui, al no ser uno de los fragmentos principales, me da mas igual el popping
+        WebServiceExperiencia.findAllExperiencias(requireContext(), object: WebServiceGenericInterface{
+            override fun callback(any: Any) {
+
+                if (any == 0) {
+                    // TODO ERROR
+                } else {
+                    val experiencias = any as ExperienciaWrapper
+                    val fragmento = AllExperiencesFragment.newInstance(currentUsuario, experiencias)
+                    activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_layout,fragmento)?.commit()
+                }
+
+            }
+        })
+
     }
 
     // pinta los datos del tio que inició sesión
@@ -84,8 +143,8 @@ class ExplorerFragment : Fragment() {
 
         // le enchufo ahora el adapter
         val recyclerAdapter = ExperienciaRecyclerViewAdapter(
-            // no creo que lleguen mas de 4 pero por si acaso
-            topExperienciasMasOpinadas.stream().limit(4).collect(Collectors.toList())
+            topExperienciasMasOpinadas.stream().limit(4).collect(Collectors.toList()),
+            currentUsuario
         )
 
         binding.experienciaDestacadasRecyclerView.adapter = recyclerAdapter
@@ -95,7 +154,7 @@ class ExplorerFragment : Fragment() {
     private fun pintarTopEmpresas() {
 
         // Creo el layout manager que voy a usar en este recycler
-        val linearLayoutManager: LinearLayoutManager = LinearLayoutManager(context)
+        val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
         binding.localesTrendingRecycler.layoutManager = linearLayoutManager
 

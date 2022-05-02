@@ -1,4 +1,4 @@
 package es.indytek.meetfever.models.experiencia
 
 
-class ExperienciaWrapper: HashSet<Experiencia>()
+class ExperienciaWrapper: ArrayList<Experiencia>()

@@ -26,10 +26,10 @@ object WebService {
 
                     if (resGson.rETCODE == 0) {
                         resGson.jSONOUT?.let { callback.callback(it) }
-                    }
-
-                    else {
+                    } else {
                         // TODO
+                        callback.callback("")
+                        Log.d(":::", "RETCODE DISTINTO DE 0 " + resGson.rETCODE + " " + resGson.mENSAJE + " " + resGson.jSONOUT)
                     }
                 },
                 { error ->
@@ -58,14 +58,14 @@ object WebService {
 
                     val resGson: DefaultResult = Gson().fromJson(response.getJSONObject("data").toString(), DefaultResult::class.java)
 
-                    Log.w("prueba", resGson.toString())
+                    Log.w(":::PRUEBA", resGson.toString())
 
                     if (resGson.rETCODE == 0) {
                         resGson.jSONOUT?.let { callback.callback(it) }
-                    }
-
-                    else {
-                        // TODO
+                    } else {
+                        // TODO CARTEL ERROR
+                        callback.callback("")
+                        Log.d(":::", "RETCODE DISTINTO DE 0 " + resGson.rETCODE + " " + resGson.mENSAJE + " " + resGson.jSONOUT)
                     }
                 },
                 { error ->
