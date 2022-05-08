@@ -91,7 +91,7 @@
                 android:layout_height="40dp"
                 android:text="@string/iniciar_sesi_n"
                 android:textColor="@color/white"
-                android:background="@drawable/ic_custom_boton"
+                android:background="@drawable/anim_button_pressed"
                 android:fontFamily="@font/montserrat_light"
                 android:layout_marginTop="70dp"
                 android:textAllCaps="false"
@@ -143,7 +143,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="35sp"
-                android:background="@drawable/ic_custom_boton"
+                android:background="@drawable/anim_button_pressed"
                 android:fontFamily="@font/montserrat_light"
                 android:text="@string/registrarse"
                 android:textAllCaps="false"
@@ -153,5 +153,60 @@
         </LinearLayout>
 
     </ScrollView>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/pre_pantalla_de_carga"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/ic_fondo_pantalla_carga"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="visible"
+        >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.26999998">
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/ic_logo_meet_blanco_" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_marginTop="20dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_light"
+                android:gravity="center"
+                android:text="@string/meetfever"
+                android:textColor="@color/white"
+                android:textSize="25sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_light"
+                android:gravity="center"
+                android:text="@string/color_your_life"
+                android:textColor="@color/white"
+                android:textSize="25sp" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

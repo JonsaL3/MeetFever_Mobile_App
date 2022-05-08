@@ -8,7 +8,7 @@
     <!-- TODO CONTEXT -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/contenedor_trendings"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

@@ -11,7 +11,7 @@
 
     <LinearLayout
         android:id="@+id/container_all_experiences"
-        android:visibility="gone"
+        android:visibility="visible"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

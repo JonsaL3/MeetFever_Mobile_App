@@ -12,7 +12,7 @@
     <LinearLayout
         android:id="@+id/container_all_empresas"
         android:layout_width="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_height="match_parent"
         android:orientation="vertical">
 

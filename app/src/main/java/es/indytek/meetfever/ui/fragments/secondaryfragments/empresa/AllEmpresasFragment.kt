@@ -10,6 +10,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import es.indytek.meetfever.R
+import es.indytek.meetfever.data.webservice.WebServiceEmpresa
+import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
 import es.indytek.meetfever.databinding.FragmentAllEmpresasBinding
 import es.indytek.meetfever.models.empresa.EmpresaWrapper
 import es.indytek.meetfever.models.usuario.Usuario
@@ -18,7 +20,6 @@ import es.indytek.meetfever.ui.recyclerviews.adapters.PersonaRecyclerViewAdapter
 import es.indytek.meetfever.utils.Animations
 
 private const val ARG_PARAM1 = "usuario"
-private const val ARG_PARAM2 = "todasLasEmpresas"
 
 class AllEmpresasFragment : Fragment() {
 
@@ -33,7 +34,6 @@ class AllEmpresasFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             usuario = it.getSerializable(ARG_PARAM1) as Usuario
-            empresas = it.getSerializable(ARG_PARAM2) as EmpresaWrapper
         }
     }
 
@@ -52,31 +52,36 @@ class AllEmpresasFragment : Fragment() {
     // pinto las distintas cosas que necesito
     private fun pintar() {
         pintarTodasLasEmpresas()
-
-        Handler(Looper.getMainLooper()).postDelayed(Runnable {
-            Animations.mostrarVistaSuavemente(binding.containerAllEmpresas, 300)
-        },100)
     }
 
     private fun pintarTodasLasEmpresas() {
 
-        // Creo el layout manager que voy a usar en este recycler
-        val girdLayoutManager = GridLayoutManager(context, 3)
-        binding.recyclerAllEmpresas.layoutManager = girdLayoutManager
+        WebServiceEmpresa.findAllEmpresas(requireContext(), object: WebServiceGenericInterface {
+            override fun callback(any: Any) {
 
-        // lo mismo para el recycler view
-        val recyclerAdapter = EmpresaRecyclerViewAdapter(empresas.toList())
-        binding.recyclerAllEmpresas.adapter = recyclerAdapter
+                if (any == 0) {
+                    // TODO ERROR
+                } else {
+                    val empresas = any as EmpresaWrapper
+                    Animations.pintarGridRecyclerViewSuavemente(
+                        gridLayoutManager = GridLayoutManager(requireContext(), 3),
+                        recyclerView = binding.recyclerAllEmpresas,
+                        adapter = EmpresaRecyclerViewAdapter(empresas),
+                        duration = 200
+                    )
+                }
+
+            }
+        })
 
     }
 
     companion object {
         @JvmStatic
-        fun newInstance(usuario: Usuario, empresas: EmpresaWrapper) =
+        fun newInstance(usuario: Usuario) =
             AllEmpresasFragment().apply {
                 arguments = Bundle().apply {
                     putSerializable(ARG_PARAM1, usuario)
-                    putSerializable(ARG_PARAM2, empresas)
                 }
             }
     }

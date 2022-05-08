@@ -10,7 +10,7 @@
 
     <FrameLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="115dp">
         <!--<ImageView
             android:id="@+id/enterpriseImageRecycler1"
             android:layout_width="110dp"
@@ -23,8 +23,7 @@
             android:layout_width="115dp"
             android:layout_height="115dp"
             android:scaleType="centerCrop"
-            app:shapeAppearanceOverlay="@style/roundCorners"
-            />
+            app:shapeAppearanceOverlay="@style/roundCorners" />
 
         <ImageView
             android:id="@+id/degradado"

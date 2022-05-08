@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import es.indytek.meetfever.R
+import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
+import es.indytek.meetfever.data.webservice.WebServicePersona
 import es.indytek.meetfever.databinding.FragmentAllRelatedPeopleBinding
 import es.indytek.meetfever.models.persona.PersonaWrapper
 import es.indytek.meetfever.models.usuario.Usuario
@@ -16,7 +18,6 @@ import es.indytek.meetfever.ui.recyclerviews.adapters.PersonaRecyclerViewAdapter
 import es.indytek.meetfever.utils.Animations
 
 private const val ARG_PARAM1 = "usuario"
-private const val ARG_PARAM2 = "personas"
 
 class AllRelatedPeopleFragment : Fragment() {
 
@@ -25,14 +26,11 @@ class AllRelatedPeopleFragment : Fragment() {
 
     // datos que necesito
     private lateinit var usuario: Usuario
-    private lateinit var personas: PersonaWrapper
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             usuario = it.getSerializable(ARG_PARAM1) as Usuario
-            personas = it.getSerializable(ARG_PARAM2) as PersonaWrapper
         }
     }
 
@@ -51,30 +49,37 @@ class AllRelatedPeopleFragment : Fragment() {
     // lo pinto tosdo
     private fun pintar() {
         pintarPersonas()
-
-        Handler(Looper.getMainLooper()).postDelayed(Runnable {
-            Animations.mostrarVistaSuavemente(binding.containerAllRelatedPersonas, 300)
-        },100)
     }
 
     // pintar todas las personas
     private fun pintarPersonas() {
-        // Creo el layout manager que voy a usar en este recycler
-        val girdLayoutManager = GridLayoutManager(context, 3)
-        binding.recyclerAllInfluencers.layoutManager = girdLayoutManager
 
-        // lo mismo para el recycler view
-        val recyclerAdapter = PersonaRecyclerViewAdapter(personas)
-        binding.recyclerAllInfluencers.adapter = recyclerAdapter
+        WebServicePersona.findAllRelatedPersonas(usuario, requireContext(), object: WebServiceGenericInterface {
+            override fun callback(any: Any) {
+
+                if (any == 0) {
+                    //TODO ERROR
+                } else {
+                    val personas = any as PersonaWrapper
+                    Animations.pintarGridRecyclerViewSuavemente(
+                        gridLayoutManager = GridLayoutManager(requireContext(), 3),
+                        recyclerView = binding.recyclerAllInfluencers,
+                        adapter = PersonaRecyclerViewAdapter(personas),
+                        duration = 200
+                    )
+                }
+
+            }
+        })
+
     }
 
     companion object {
         @JvmStatic
-        fun newInstance(usuario: Usuario, personas: PersonaWrapper) =
+        fun newInstance(usuario: Usuario) =
             AllRelatedPeopleFragment().apply {
                 arguments = Bundle().apply {
                     putSerializable(ARG_PARAM1, usuario)
-                    putSerializable(ARG_PARAM2, personas)
                 }
             }
     }

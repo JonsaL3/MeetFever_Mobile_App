@@ -1,5 +1,8 @@
 package es.indytek.meetfever.ui.recyclerviews.viewholders
 
+import android.graphics.Color
+import android.graphics.ColorFilter
+import android.graphics.PorterDuff
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -20,13 +23,16 @@ class EmpresaViewHolder(
 ) : RecyclerView.ViewHolder(view) {
 
     fun bind(objeto: Empresa) {
+
         // pongo el texto
         binding.texto.text = objeto.nombreEmpresa.toString()
 
         // Si tiene foto de perfil, la pinto
         val foto = objeto.fotoPerfil
+
         foto?.let {
-            Utils.putBase64ImageIntoImageView(binding.imagen, it, itemView.context)
+            Utils.putBase64ImageIntoImageViewWithPlaceholder(binding.imagen, it, itemView.context, R.drawable.ic_default_svg_image)
+            binding.degradado.setColorFilter(Utils.getDominantColorInImageFromBase64(foto), PorterDuff.Mode.SRC_ATOP)
         }
 
         // en caso de click cargo el perfil

@@ -14,7 +14,6 @@ import es.indytek.meetfever.data.webservice.WebServicePersona
 import es.indytek.meetfever.databinding.FragmentPeopleBinding
 import es.indytek.meetfever.models.persona.PersonaWrapper
 import es.indytek.meetfever.models.usuario.Usuario
-import es.indytek.meetfever.ui.fragments.secondaryfragments.empresa.AllEmpresasFragment
 import es.indytek.meetfever.ui.fragments.secondaryfragments.persona.AllPeopleFragment
 import es.indytek.meetfever.ui.fragments.secondaryfragments.persona.AllRelatedPeopleFragment
 import es.indytek.meetfever.ui.recyclerviews.adapters.PersonaRecyclerViewAdapter
@@ -22,8 +21,6 @@ import es.indytek.meetfever.utils.Animations
 import java.time.LocalTime
 
 private const val ARG_PARAM1 = "usuario"
-private const val ARG_PARAM2 = "topPersonasConMasSeguidores"
-private const val ARG_PARAM3 = "personasQueQuizásConozcas"
 
 class PeopleFragment : Fragment() {
 
@@ -32,15 +29,11 @@ class PeopleFragment : Fragment() {
 
     // datos que necesito
     private lateinit var currentUsuario: Usuario
-    private lateinit var topPersonasConMasSeguidores: PersonaWrapper
-    private lateinit var diezPersonasQueQuizasConozcas: PersonaWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             currentUsuario = it.getSerializable(ARG_PARAM1) as Usuario
-            topPersonasConMasSeguidores = it.getSerializable(ARG_PARAM2) as PersonaWrapper
-            diezPersonasQueQuizasConozcas = it.getSerializable(ARG_PARAM3) as PersonaWrapper
         }
     }
 
@@ -73,40 +66,14 @@ class PeopleFragment : Fragment() {
 
     // pregunto al webservice por todas las personas
     private fun mostrarTodasLasPersonas() {
-
-        WebServicePersona.findAllPersonas(requireContext(), object: WebServiceGenericInterface {
-            override fun callback(any: Any) {
-
-                if (any == 0) {
-                    // TODO ERROR
-                } else {
-                    val personas = any as PersonaWrapper
-                    val fragmento = AllPeopleFragment.newInstance(currentUsuario, personas)
-                    activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_layout,fragmento)?.commit()
-                }
-
-            }
-        })
-
+        val fragmento = AllPeopleFragment.newInstance(currentUsuario)
+        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_layout,fragmento)?.commit()
     }
 
     // private fun pregunto al web service por todas las personas relacionadas
     private fun obtenerTodasLasPersonasRelacionadas() {
-
-        WebServicePersona.findAllRelatedPersonas(currentUsuario, requireContext(), object: WebServiceGenericInterface {
-            override fun callback(any: Any) {
-
-                if (any == 0) {
-                    // TODO ERROR
-                } else {
-                    val personas = any as PersonaWrapper
-                    val fragmento = AllRelatedPeopleFragment.newInstance(currentUsuario, personas)
-                    activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_layout,fragmento)?.commit()
-                }
-
-            }
-        })
-
+        val fragmento = AllRelatedPeopleFragment.newInstance(currentUsuario)
+        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_layout,fragmento)?.commit()
     }
 
     // pinta los datos del tio que inició sesión
@@ -131,27 +98,50 @@ class PeopleFragment : Fragment() {
     // pinta el recycler de las personas con mas seguidores
     private fun pintarTopPersonas() {
 
-        // Creo el layout manager que voy a usar en este recycler
-        val linearLayoutManager: LinearLayoutManager = LinearLayoutManager(context)
-        linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
-        binding.topPersonasRecyclerView.layoutManager = linearLayoutManager
+        WebServicePersona.findTop10PersonasConMasSeguidores(requireContext(), object:
+            WebServiceGenericInterface {
+            override fun callback(any: Any) {
 
-        // lo mismo para el recycler view
-        val recyclerAdapter = PersonaRecyclerViewAdapter(topPersonasConMasSeguidores.toList())
-        binding.topPersonasRecyclerView.adapter = recyclerAdapter
+                if (any == 0) {
+                    // TODO ERROR
+                } else {
+                    val personas = any as PersonaWrapper
+                    Animations.pintarLinearRecyclerViewSuavemente(
+                        linearLayoutManager = LinearLayoutManager(requireContext()),
+                        recyclerView = binding.topPersonasRecyclerView,
+                        adapter = PersonaRecyclerViewAdapter(personas),
+                        orientation = LinearLayoutManager.HORIZONTAL,
+                        duration = 200
+                    )
+                }
+
+            }
+        })
 
     }
 
     private fun pintarPersonasQueQuizasConozca() {
 
-        // Creo el layout manager que voy a usar en este recycler
-        val linearLayoutManager: LinearLayoutManager = LinearLayoutManager(context)
-        linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
-        binding.personasQueQuizasConozcasRecyclerView.layoutManager = linearLayoutManager
+        WebServicePersona.find10PersonasQueQuizasConozca(currentUsuario, requireContext(), object:
+            WebServiceGenericInterface {
+            override fun callback(any: Any) {
 
-        // lo mismo para el recycler view
-        val recyclerAdapter = PersonaRecyclerViewAdapter(diezPersonasQueQuizasConozcas.toList())
-        binding.personasQueQuizasConozcasRecyclerView.adapter = recyclerAdapter
+                if (any == 0) {
+                    // TODO ERROR
+                }
+                else {
+                    val personas = any as PersonaWrapper
+                    Animations.pintarLinearRecyclerViewSuavemente(
+                        linearLayoutManager = LinearLayoutManager(requireContext()),
+                        recyclerView = binding.personasQueQuizasConozcasRecyclerView,
+                        adapter = PersonaRecyclerViewAdapter(personas),
+                        orientation = LinearLayoutManager.HORIZONTAL,
+                        duration = 200
+                    )
+                }
+
+            }
+        })
 
     }
 
@@ -160,24 +150,16 @@ class PeopleFragment : Fragment() {
         pintarNombreDelUsuarioQueInicioSesion()
         pintarTopPersonas()
         pintarPersonasQueQuizasConozca()
-
-        Handler(Looper.getMainLooper()).postDelayed(Runnable {
-            Animations.mostrarVistaSuavemente(binding.contendorPeople, 300)
-        },100)
     }
 
     companion object {
         @JvmStatic
         fun newInstance(
             usuario: Usuario,
-            topPersonasConMasSeguidores: PersonaWrapper,
-            diezPersonasQueQuizasConozcas: PersonaWrapper
         ) =
             PeopleFragment().apply {
                 arguments = Bundle().apply {
                     putSerializable(ARG_PARAM1, usuario)
-                    putSerializable(ARG_PARAM2, topPersonasConMasSeguidores)
-                    putSerializable(ARG_PARAM3, diezPersonasQueQuizasConozcas)
                 }
             }
     }

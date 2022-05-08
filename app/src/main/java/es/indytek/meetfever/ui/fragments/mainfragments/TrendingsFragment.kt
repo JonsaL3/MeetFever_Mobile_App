@@ -9,17 +9,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import es.indytek.meetfever.R
+import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
+import es.indytek.meetfever.data.webservice.WebServiceOpinion
 import es.indytek.meetfever.databinding.FragmentTrendingsBinding
-import es.indytek.meetfever.models.opinion.Opinion
 import es.indytek.meetfever.models.opinion.OpinionWrapper
 import es.indytek.meetfever.models.usuario.Usuario
-import es.indytek.meetfever.ui.recyclerviews.adapters.EmpresaRecyclerViewAdapter
 import es.indytek.meetfever.ui.recyclerviews.adapters.OpinionRecyclerViewAdapter
 import es.indytek.meetfever.utils.Animations
 import java.time.LocalTime
 
 private const val ARG_PARAM1 = "usuario"
-private const val ARG_PARAM2 = "100opinionesconmasmg"
 
 class TrendingsFragment : Fragment() {
 
@@ -27,13 +26,11 @@ class TrendingsFragment : Fragment() {
     private lateinit var binding: FragmentTrendingsBinding
 
     private lateinit var currentUsuario: Usuario
-    private lateinit var top100OpinionesMasGustadas24H: OpinionWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             currentUsuario = it.getSerializable(ARG_PARAM1) as Usuario
-            top100OpinionesMasGustadas24H = it.getSerializable(ARG_PARAM2) as OpinionWrapper
         }
     }
 
@@ -43,7 +40,7 @@ class TrendingsFragment : Fragment() {
     ): View {
         binding = FragmentTrendingsBinding.inflate(inflater, container, false)
 
-        // Pinto todo lo relacionado con las opiniones
+        // Pinto to.do lo relacionado con las opiniones
         pintar()
 
         return binding.root
@@ -53,10 +50,6 @@ class TrendingsFragment : Fragment() {
     private fun pintar() {
         pintarNombreDelUsuarioQueInicioSesion()
         pintarOpiniones()
-
-        Handler(Looper.getMainLooper()).postDelayed(Runnable {
-            Animations.mostrarVistaSuavemente(binding.contenedorTrendings, 300)
-        }, 100)
     }
 
     // pinta los datos del tio que inició sesión
@@ -81,24 +74,34 @@ class TrendingsFragment : Fragment() {
     // pinto las 100 opiniones con mas megustas de las ultimas 24 horas
     private fun pintarOpiniones() {
 
-        // Creo el layout manager que voy a usar en este recycler
-        val linearLayoutManager: LinearLayoutManager = LinearLayoutManager(context)
-        linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
-        binding.topOpinionesRecycler.layoutManager = linearLayoutManager
+        WebServiceOpinion.find100OpinionesMasGustadas24h(requireContext(), object:
+            WebServiceGenericInterface {
+            override fun callback(any: Any) {
 
-        // lo mismo para el recycler view
-        val recyclerAdapter = OpinionRecyclerViewAdapter(top100OpinionesMasGustadas24H.toList())
-        binding.topOpinionesRecycler.adapter = recyclerAdapter
+                if (any == 0) {
+                    // TODO ERROR
+                } else {
+                    val top100OpinionesMasGustadas24H = any as OpinionWrapper
+                    Animations.pintarLinearRecyclerViewSuavemente(
+                        linearLayoutManager = LinearLayoutManager(requireContext()),
+                        recyclerView = binding.topOpinionesRecycler,
+                        adapter = OpinionRecyclerViewAdapter(top100OpinionesMasGustadas24H),
+                        orientation = LinearLayoutManager.VERTICAL,
+                        duration = 200
+                    )
+                }
+
+            }
+        })
 
     }
 
     companion object {
         @JvmStatic
-        fun newInstance(usuario: Usuario, top100OpinionesMasGustadas24H: OpinionWrapper) =
+        fun newInstance(usuario: Usuario) =
             TrendingsFragment().apply {
                 arguments = Bundle().apply {
                     putSerializable(ARG_PARAM1, usuario)
-                    putSerializable(ARG_PARAM2, top100OpinionesMasGustadas24H)
                 }
             }
     }

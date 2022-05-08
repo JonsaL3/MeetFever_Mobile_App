@@ -32,6 +32,7 @@
             app:layout_constraintVertical_bias="0.19">
 
             <ImageView
+                android:id="@+id/imagen_autor"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 />
@@ -45,11 +46,11 @@
         </FrameLayout>
 
         <TextView
+            android:id="@+id/texto_nombre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat_light"
             android:textColor="@color/white"
-
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -60,8 +61,9 @@
             tools:text="Jonsalo" />
 
         <TextView
-            android:layout_width="326dp"
-            android:layout_height="57dp"
+            android:id="@+id/opinion_text"
+            android:layout_width="364dp"
+            android:layout_height="61dp"
             android:fontFamily="@font/montserrat_light"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"

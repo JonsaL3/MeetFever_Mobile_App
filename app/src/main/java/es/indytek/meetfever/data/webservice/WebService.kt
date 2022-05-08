@@ -33,7 +33,7 @@ object WebService {
                     }
                 },
                 { error ->
-                    Log.w(":::, ", "Parece que Gonzalo no sabe programar")
+                    Log.w(":::, ", "Parece que Gonzalo no sabe programar POST -> $error")
                     //TODO ERROR
                 }
             )
@@ -69,7 +69,7 @@ object WebService {
                     }
                 },
                 { error ->
-                    Log.w(":::, ", "Parece que Gonzalo no sabe  pero GET")
+                    Log.w(":::, ", "Parece que Gonzalo no sabe pero GET -> $error")
                     //TODO ERROR
                 }
             )

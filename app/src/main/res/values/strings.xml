@@ -49,5 +49,7 @@
     <string name="precio_texto">Precio texto:</string>
     <string name="iva_comisi_n_incluido">Iva + Comisión incluido</string>
     <string name="comprar_entrada">Comprar Entrada</string>
+    <string name="meetfever">MeetFever!®</string>
+    <string name="color_your_life">Color your life.</string>
 
 </resources>

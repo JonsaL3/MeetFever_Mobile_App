@@ -3,10 +3,13 @@ package es.indytek.meetfever.ui.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
 import es.indytek.meetfever.data.webservice.WebServiceUsuario
 import es.indytek.meetfever.databinding.ActivityLoginBinding
 import es.indytek.meetfever.models.usuario.Usuario
+import es.indytek.meetfever.utils.Animations
 
 class LoginActivity : AppCompatActivity() {
 
@@ -18,6 +21,9 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+        // cierro la pantalla de carga
+        Animations.esperarYOcultarVistaSuavemente(binding.prePantallaDeCarga, 1000)
 
         // Por defecto, escucho al botón de iniciar sesión
         binding.botonLoguearse.setOnClickListener() {
@@ -41,7 +47,12 @@ class LoginActivity : AppCompatActivity() {
                     if (any == 0) { // en caso de que vaya mal muestro un popup
 
                     } else { // en caso de que vaya bien me voy a la main activity
-                        irAMainActivity(any as Usuario)
+
+                        Animations.mostrarVistaSuavemente(binding.prePantallaDeCarga, 1000)
+                        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+                            irAMainActivity(any as Usuario)
+                        },1000)
+
                     }
 
                 }
@@ -66,6 +77,8 @@ class LoginActivity : AppCompatActivity() {
 
         // me voy a la otra actividad
         startActivity(intent)
+        finish()
+        overridePendingTransition(0, 0)
 
     }
 

@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import es.indytek.meetfever.R
+import es.indytek.meetfever.data.webservice.WebServiceExperiencia
+import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
 import es.indytek.meetfever.databinding.FragmentAllExperiencesBinding
 import es.indytek.meetfever.models.experiencia.ExperienciaWrapper
 import es.indytek.meetfever.models.usuario.Usuario
@@ -16,7 +18,6 @@ import es.indytek.meetfever.ui.recyclerviews.adapters.ExperienciaRecyclerViewAda
 import es.indytek.meetfever.utils.Animations
 
 private const val ARG_PARAM1 = "usuario"
-private const val ARG_PARAM2 = "experiencias"
 
 class AllExperiencesFragment : Fragment() {
 
@@ -25,13 +26,11 @@ class AllExperiencesFragment : Fragment() {
 
     // datos que necesito en este fragmento
     private lateinit var usuario: Usuario
-    private lateinit var experiencias: ExperienciaWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             usuario = it.getSerializable(ARG_PARAM1) as Usuario
-            experiencias = it.getSerializable(ARG_PARAM2) as ExperienciaWrapper
         }
     }
 
@@ -41,7 +40,7 @@ class AllExperiencesFragment : Fragment() {
     ): View {
         binding = FragmentAllExperiencesBinding.inflate(inflater, container, false)
 
-        // Pinto todo lo que necesito en este fragmento
+        // Pinto tohdo lo que necesito en este fragmento
         pintar()
 
         return binding.root
@@ -50,30 +49,37 @@ class AllExperiencesFragment : Fragment() {
     // pinto todas las experiencias en este fragmento y lo que necesite
     private fun pintar() {
         pintarTodasLasExperiencias()
-
-        Handler(Looper.getMainLooper()).postDelayed(Runnable {
-            Animations.mostrarVistaSuavemente(binding.containerAllExperiences, 300)
-        },100)
     }
 
     // pinto las experiencias
     private fun pintarTodasLasExperiencias() {
-        // Creo el layout manager que voy a usar en este recycler
-        val girdLayoutManager = GridLayoutManager(context, 2)
-        binding.recyclerAllExperiences.layoutManager = girdLayoutManager
 
-        // lo mismo para el recycler view
-        val recyclerAdapter = ExperienciaRecyclerViewAdapter(experiencias.toList(), usuario)
-        binding.recyclerAllExperiences.adapter = recyclerAdapter
+        WebServiceExperiencia.findAllExperiencias(requireContext(), object:
+            WebServiceGenericInterface {
+            override fun callback(any: Any) {
+
+                if (any == 0) {
+                    // TODO ERROR
+                } else {
+                    val experiencias = any as ExperienciaWrapper
+                    Animations.pintarGridRecyclerViewSuavemente(
+                        gridLayoutManager = GridLayoutManager(requireContext(), 2),
+                        recyclerView = binding.recyclerAllExperiences,
+                        adapter = ExperienciaRecyclerViewAdapter(experiencias, usuario),
+                        duration = 200
+                    )
+                }
+
+            }
+        })
     }
 
     companion object {
         @JvmStatic
-        fun newInstance(usuario: Usuario, experiencias: ExperienciaWrapper) =
+        fun newInstance(usuario: Usuario) =
             AllExperiencesFragment().apply {
                 arguments = Bundle().apply {
                     putSerializable(ARG_PARAM1, usuario)
-                    putSerializable(ARG_PARAM2, experiencias)
                 }
             }
     }

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
-    >
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:drawable="@drawable/ic_degradado_meet"
+
         />
 
     <item
-        android:drawable="@drawable/ic_interior_boton"
+        android:drawable="@drawable/ic_interior_boton_presionado"
         android:top="1dp"
         android:bottom="1dp"
         android:right="1dp"
