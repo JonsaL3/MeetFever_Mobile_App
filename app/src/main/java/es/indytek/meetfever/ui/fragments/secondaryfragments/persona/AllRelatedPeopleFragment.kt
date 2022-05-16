@@ -3,6 +3,7 @@ package es.indytek.meetfever.ui.fragments.secondaryfragments.persona
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -61,12 +62,16 @@ class AllRelatedPeopleFragment : Fragment() {
                     //TODO ERROR
                 } else {
                     val personas = any as PersonaWrapper
-                    Animations.pintarGridRecyclerViewSuavemente(
-                        gridLayoutManager = GridLayoutManager(requireContext(), 3),
-                        recyclerView = binding.recyclerAllInfluencers,
-                        adapter = PersonaRecyclerViewAdapter(personas),
-                        duration = 200
-                    )
+                    try {
+                        Animations.pintarGridRecyclerViewSuavemente(
+                            gridLayoutManager = GridLayoutManager(requireContext(), 3),
+                            recyclerView = binding.recyclerAllInfluencers,
+                            adapter = PersonaRecyclerViewAdapter(personas),
+                            duration = 200
+                        )
+                    } catch (e: IllegalStateException) {
+                        Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
+                    }
                 }
 
             }

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:id="@+id/viewholder_experiencia"
     android:layout_margin="5dp">
@@ -13,20 +14,20 @@
         android:layout_height="90dp"
         >
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/imagenTopExperiencia"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:adjustViewBounds="true"
             android:scaleType="centerCrop"
-
-            android:src="@color/material_dynamic_primary30"
+            app:shapeAppearanceOverlay="@style/roundCorners"
             />
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/degradado_experiencia"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/ic_generic_experience"
+            app:shapeAppearanceOverlay="@style/roundCorners"
             />
 
         <TextView

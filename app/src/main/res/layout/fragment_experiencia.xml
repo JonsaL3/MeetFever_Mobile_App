@@ -10,7 +10,7 @@
     <androidx.core.widget.NestedScrollView
         android:id="@+id/experienica_container"
         android:layout_width="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_height="match_parent">
 
         <LinearLayout
@@ -55,16 +55,22 @@
                     android:layout_height="match_parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <ImageView
+                    <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/imagen_experiencia"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        app:shapeAppearanceOverlay="@style/roundCorners"
                         />
 
-                    <ImageView
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/degradado_experiencia"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/ic_gradient_shape_experiencias" />
+                        android:background="@drawable/ic_gradient_shape_experiencias_square"
+                        android:scaleType="centerCrop"
+                        app:shapeAppearanceOverlay="@style/roundCorners"
+                        />
 
                     <TextView
                         android:id="@+id/titulo_experiencia"
@@ -88,16 +94,21 @@
                     android:layout_height="match_parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <ImageView
+                    <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/imagen_empresa_experiencia"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        app:shapeAppearanceOverlay="@style/roundCorners"
                         />
 
-                    <ImageView
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/degradado_empresa_experiencia"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/ic_gradient_shape_experiencias"
+                        android:background="@drawable/ic_gradient_shape_experiencias_square"
+                        android:scaleType="centerCrop"
+                        app:shapeAppearanceOverlay="@style/roundCorners"
                         />
 
                     <TextView
@@ -193,7 +204,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="5dp"
                 android:fontFamily="@font/montserrat_light"
-                android:text="@string/precio_texto"
+                android:text="Precio:"
                 android:textColor="@color/white"
                 android:textSize="17sp"
                 />

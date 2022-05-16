@@ -65,4 +65,10 @@ dependencies {
     // implemento palette para obtener colores de imágenes
     implementation "androidx.palette:palette:1.0.0"
 
+    // Navbar animada
+    implementation 'nl.joery.animatedbottombar:library:1.1.0'
+
+    // Para floatings con multiples acciones animados
+    implementation 'io.github.yavski:fab-speed-dial:1.0.6'
+
 }

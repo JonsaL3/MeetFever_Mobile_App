@@ -3,6 +3,7 @@ package es.indytek.meetfever.ui.fragments.secondaryfragments.empresa
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -62,12 +63,16 @@ class AllExperiencesFragment : Fragment() {
                     // TODO ERROR
                 } else {
                     val experiencias = any as ExperienciaWrapper
-                    Animations.pintarGridRecyclerViewSuavemente(
-                        gridLayoutManager = GridLayoutManager(requireContext(), 2),
-                        recyclerView = binding.recyclerAllExperiences,
-                        adapter = ExperienciaRecyclerViewAdapter(experiencias, usuario),
-                        duration = 200
-                    )
+                    try {
+                        Animations.pintarGridRecyclerViewSuavemente(
+                            gridLayoutManager = GridLayoutManager(requireContext(), 2),
+                            recyclerView = binding.recyclerAllExperiences,
+                            adapter = ExperienciaRecyclerViewAdapter(experiencias, usuario),
+                            duration = 200
+                        )
+                    } catch (e: IllegalStateException) {
+                        Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
+                    }
                 }
 
             }

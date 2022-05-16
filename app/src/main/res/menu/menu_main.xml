@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <item
+        android:id="@+id/redactar_fever"
+        android:title="@string/redactar_fever"
+        android:icon="@drawable/ic_redactar_fever"
+        />
+    <item
+        android:id="@+id/ver_perfil"
+        android:title="@string/ver_mi_perfil"
+        android:icon="@drawable/ic_profile_image_icon"
+        />
+
+</menu>

@@ -6,7 +6,9 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:id="@+id/viewholder_persona"
-    android:layout_margin="5dp">
+    android:layout_marginStart="10dp"
+    android:layout_marginVertical="5dp"
+    >
 
     <FrameLayout
         android:layout_width="wrap_content"
@@ -22,14 +24,16 @@
             android:id="@+id/imagen"
             android:layout_width="115dp"
             android:layout_height="115dp"
+            app:shapeAppearance="@style/circular"
             android:scaleType="centerCrop"
-            app:shapeAppearanceOverlay="@style/roundCorners"
+            android:layout_gravity="center"
             />
 
         <ImageView
+            android:layout_gravity="center"
             android:id="@+id/degradado"
-            android:layout_width="115dp"
-            android:layout_height="115dp"
+            android:layout_width="116dp"
+            android:layout_height="116dp"
             android:src="@drawable/ic_blured_edges"
             />
 

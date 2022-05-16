@@ -6,7 +6,9 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:id="@+id/viewholder_empresa"
-    android:layout_margin="5dp">
+    android:layout_marginStart="10dp"
+    android:layout_marginVertical="5dp"
+    >
 
     <FrameLayout
         android:layout_width="wrap_content"

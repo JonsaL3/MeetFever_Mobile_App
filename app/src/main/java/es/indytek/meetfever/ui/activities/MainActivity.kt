@@ -2,13 +2,17 @@ package es.indytek.meetfever.ui.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import es.indytek.meetfever.R
 import es.indytek.meetfever.databinding.ActivityMainBinding
 import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.ui.fragments.mainfragments.ExplorerFragment
 import es.indytek.meetfever.ui.fragments.mainfragments.PeopleFragment
 import es.indytek.meetfever.ui.fragments.mainfragments.TrendingsFragment
+import es.indytek.meetfever.ui.fragments.secondaryfragments.fever.RedactarFeverFragment
+import es.indytek.meetfever.ui.fragments.secondaryfragments.perfil.PerfilFragment
 import es.indytek.meetfever.utils.Animations
+import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter
 import nl.joery.animatedbottombar.AnimatedBottomBar
 
 class MainActivity : AppCompatActivity() {
@@ -31,6 +35,9 @@ class MainActivity : AppCompatActivity() {
 
         // el resto cargarán en función del elemento que se seleccione en la navbar
         cargarFragmentosDesdeNavbar()
+
+        // por último, cargo los botones suplementarios
+        cargarBotonesSuplementarios()
 
         // por defecto cargo el explorer fragment
         cargarExplorerFragment()
@@ -72,6 +79,30 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    // los botones extra floating
+    private fun cargarBotonesSuplementarios() {
+
+        binding.menuAccionRapida.setMenuListener(object : SimpleMenuListenerAdapter() {
+            override fun onMenuItemSelected(menuItem: MenuItem?): Boolean {
+                if (menuItem != null) {
+
+                    when(menuItem.itemId) {
+                        R.id.redactar_fever -> {
+                            redactarFever()
+                        }
+
+                        R.id.ver_perfil -> {
+                            cargarPerfil()
+                        }
+                    }
+
+                }
+                return super.onMenuItemSelected(menuItem)
+            }
+        })
+
+    }
+
     // me cargo los datos del usuario que inició session
     private fun cargarUsuarioDesdeBundle() {
         val bundle = intent.extras
@@ -93,6 +124,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun cargarTrendingsFragment() {
         val fragmento = TrendingsFragment.newInstance(currentUsuario)
+        supportFragmentManager.beginTransaction().replace(R.id.frame_layout,fragmento).commit()
+    }
+
+    private fun cargarPerfil() {
+        val fragmento = PerfilFragment.newInstance(currentUsuario)
+        supportFragmentManager.beginTransaction().replace(R.id.frame_layout,fragmento).commit()
+    }
+
+    private fun redactarFever() {
+        val fragmento = RedactarFeverFragment.newInstance(currentUsuario)
         supportFragmentManager.beginTransaction().replace(R.id.frame_layout,fragmento).commit()
     }
 

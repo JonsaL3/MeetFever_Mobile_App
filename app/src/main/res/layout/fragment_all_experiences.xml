@@ -1,55 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragments.secondaryfragments.empresa.AllEmpresasFragment"
+    tools:context=".ui.fragments.secondaryfragments.empresa.AllExperiencesFragment"
     android:background="@drawable/ic_rectangulo_meet"
     android:orientation="vertical"
-    android:padding="15dp"
     >
 
     <LinearLayout
-        android:id="@+id/container_all_experiences"
-        android:visibility="visible"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <GridLayout
-            android:layout_marginTop="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/botonAtras"
-                android:layout_width="30dp"
-                android:layout_marginStart="10dp"
-                android:layout_height="30dp"
-                android:textColor="@color/white"
-                android:background="@drawable/ic_back_button"
-                android:fontFamily="@font/montserrat_light"
-                android:textAllCaps="false"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="30dp"
-                android:layout_column="0"
-                android:layout_row="0"
-                />
-
-            <TextView
-                android:id="@+id/textView5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/montserrat_light"
-                android:text="@string/experiencias_destacadas"
-                android:textColor="@color/white"
-                android:gravity="center_vertical"
-                android:textSize="23sp"
-                android:layout_column="1"
-                android:layout_row="0"
-                />
-
-        </GridLayout>
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_light"
+            android:text="@string/todas_las_experiencias_destacadas"
+            android:textColor="@color/white"
+            android:gravity="center_vertical"
+            android:textSize="23sp"
+            android:layout_marginTop="10dp"
+            />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerAllExperiences"
@@ -61,4 +36,4 @@
     </LinearLayout>
 
 
-</LinearLayout>
+</androidx.core.widget.NestedScrollView>

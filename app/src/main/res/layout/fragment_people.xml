@@ -96,6 +96,7 @@
                 android:text="@string/top_influencers"
                 android:textColor="@color/white"
                 android:textSize="22sp"
+                android:layout_marginTop="-10dp"
                 />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -113,6 +114,7 @@
                 android:text="@string/personas_que_quiz_s_conozcas"
                 android:textColor="@color/white"
                 android:textSize="22sp"
+                android:layout_marginVertical="10dp"
                 />
 
             <androidx.recyclerview.widget.RecyclerView

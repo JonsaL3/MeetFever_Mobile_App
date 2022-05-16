@@ -1,5 +1,6 @@
 package es.indytek.meetfever.ui.recyclerviews.viewholders
 
+import android.graphics.PorterDuff
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -25,7 +26,10 @@ class ExperienciaViewHolder(
 
         val foto = objeto.foto
         foto?.let {
-            Utils.putBase64ImageIntoImageView(binding.imagenTopExperiencia, it, itemView.context)
+            Utils.putBase64ImageIntoImageViewWithPlaceholder(binding.imagenTopExperiencia, it, itemView.context, R.drawable.ic_default_experiencie_true_tone)
+            binding.degradadoExperiencia.setColorFilter(Utils.getDominantColorInImageFromBase64(foto), PorterDuff.Mode.SRC_ATOP)
+        }?: kotlin.run {
+            Utils.putResourceImageIntoImageView(binding.imagenTopExperiencia, R.drawable.ic_default_experiencie_true_tone, itemView.context)
         }
 
         binding.viewholderExperiencia.setOnClickListener {

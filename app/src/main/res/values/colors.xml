@@ -26,5 +26,6 @@
     <color name="gris_hint">#838488</color>
     <color name="negro_botones">#292a2f</color>
     <color name="semi_gris">#37393F</color>
+    <color name="naranja_opinion">#E2986C</color>
 
 </resources>

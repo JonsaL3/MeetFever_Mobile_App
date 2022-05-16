@@ -92,13 +92,16 @@
                 android:text="@string/feevers_mas_valorados_del_dia"
                 android:textColor="@color/white"
                 android:textSize="22sp"
+                android:layout_marginTop="-10dp"
+                android:layout_marginBottom="5dp"
                 />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/top_opiniones_recycler"
                 android:layout_gravity="center"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
                 />
 
         </LinearLayout>

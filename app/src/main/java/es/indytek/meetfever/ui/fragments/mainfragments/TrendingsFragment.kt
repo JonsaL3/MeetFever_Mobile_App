@@ -1,8 +1,7 @@
 package es.indytek.meetfever.ui.fragments.mainfragments
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -60,11 +59,11 @@ class TrendingsFragment : Fragment() {
 
         // Le pongo un mensaje u otro en funcion de la hora
         if (hora.hour >= 18 || hora.hour <= 6) {
-            "¡${this.getString(R.string.buenos_dias)} ${currentUsuario.nick}!".also {
+            "¡${this.getString(R.string.buenas_noches)} ${currentUsuario.nick}!".also {
                 binding.textoBuenosDias.text = it
             }
         } else {
-            "¡${this.getString(R.string.buenas_noches)} ${currentUsuario.nick}!".also {
+            "¡${this.getString(R.string.buenos_dias)} ${currentUsuario.nick}!".also {
                 binding.textoBuenosDias.text = it
             }
         }
@@ -82,13 +81,17 @@ class TrendingsFragment : Fragment() {
                     // TODO ERROR
                 } else {
                     val top100OpinionesMasGustadas24H = any as OpinionWrapper
-                    Animations.pintarLinearRecyclerViewSuavemente(
-                        linearLayoutManager = LinearLayoutManager(requireContext()),
-                        recyclerView = binding.topOpinionesRecycler,
-                        adapter = OpinionRecyclerViewAdapter(top100OpinionesMasGustadas24H),
-                        orientation = LinearLayoutManager.VERTICAL,
-                        duration = 200
-                    )
+                    try {
+                        Animations.pintarLinearRecyclerViewSuavemente(
+                            linearLayoutManager = LinearLayoutManager(requireContext()),
+                            recyclerView = binding.topOpinionesRecycler,
+                            adapter = OpinionRecyclerViewAdapter(top100OpinionesMasGustadas24H, TrendingsFragment::class.java),
+                            orientation = LinearLayoutManager.VERTICAL,
+                            duration = 200
+                        )
+                    } catch (e: IllegalStateException) {
+                        Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
+                    }
                 }
 
             }

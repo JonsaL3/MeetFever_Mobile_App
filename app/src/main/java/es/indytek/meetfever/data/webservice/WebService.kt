@@ -25,7 +25,9 @@ object WebService {
                     Log.w("prueba", resGson.toString())
 
                     if (resGson.rETCODE == 0) {
-                        resGson.jSONOUT?.let { callback.callback(it) }
+                        resGson.jSONOUT?.let {
+                            callback.callback(it)
+                        }
                     } else {
                         // TODO
                         callback.callback("")

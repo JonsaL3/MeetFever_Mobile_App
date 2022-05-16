@@ -1,5 +1,6 @@
 package es.indytek.meetfever.ui.fragments.secondaryfragments.experiencia
 
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -15,6 +16,8 @@ import es.indytek.meetfever.utils.Animations
 import es.indytek.meetfever.utils.Constantes
 import es.indytek.meetfever.utils.Utils
 import java.time.LocalTime
+import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 
 private const val ARG_PARAM1 = "usuario"
 private const val ARG_PARAM2 = "experiencia"
@@ -52,21 +55,39 @@ class ExperienciaFragment : Fragment() {
     private fun pintar() {
         pintarNombreDelUsuarioQueInicioSesion()
         pintarExperiencia()
-
-        Handler(Looper.getMainLooper()).postDelayed(Runnable {
-            Animations.mostrarVistaSuavemente(binding.experienicaContainer, 300)
-        },100)
     }
 
     // pinto los datos de la experiencia
     private fun pintarExperiencia() {
+        // pinto los textos de la experiencia
         binding.tituloExperiencia.text = experiencia.titulo
         binding.descripcionExperiencia.text = experiencia.descripcion
         binding.fechaExperiencia.text = experiencia.fechaCelebracion.format("dd:MM:yyyy a las HH:mm").toString()
-        binding.precioCifra.text = (experiencia.precio * Constantes.COMISION_MEET_FEVER * Constantes.IVA).toString() + "€"
-        experiencia.foto?.let {
-            Utils.putBase64ImageIntoImageView(binding.imagenExperiencia, experiencia.foto!!, requireContext())
+
+        // calculo el precio mas el iba mas la comisión
+        ((experiencia.precio * Constantes.COMISION_MEET_FEVER * Constantes.IVA).roundToInt().toString() + "€").also { binding.precioCifra.text = it }
+
+        // pinto la imagen de la experiencia
+        val foto = experiencia.foto
+        foto?.let {
+            Utils.putBase64ImageIntoImageViewCircularWithPlaceholder(binding.imagenExperiencia, it, requireContext(), R.drawable.ic_default_experiencie_true_tone)
+            binding.degradadoExperiencia.setColorFilter(Utils.getDominantColorInImageFromBase64(foto), PorterDuff.Mode.SRC_ATOP)
+        }?: kotlin.run {
+            Utils.putResourceImageIntoImageView(binding.imagenExperiencia, R.drawable.ic_default_experiencie_true_tone, requireContext())
         }
+
+        // pinto la imagen de la empresa que organiza la experiencia
+        val fotoEmpresa = experiencia.empresa.fotoPerfil
+        fotoEmpresa?.let {
+            Utils.putBase64ImageIntoImageViewWithPlaceholder(binding.imagenEmpresaExperiencia, it, requireContext(), R.drawable.ic_default_enterprise_black_and_white)
+            binding.degradadoEmpresaExperiencia.setColorFilter(Utils.getDominantColorInImageFromBase64(it), PorterDuff.Mode.SRC_ATOP)
+        }?: kotlin.run {
+            binding.imagenEmpresaExperiencia.setImageResource(R.drawable.ic_default_enterprise_black_and_white)
+        }
+
+        // pinto el nombre de la empresa que organiza la experiencia
+        binding.botonVerEmpresaTexto.text = experiencia.empresa.nombreEmpresa
+
     }
 
     // pinta los datos del tio que inició sesión

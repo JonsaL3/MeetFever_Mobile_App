@@ -1,9 +1,9 @@
 
 package es.indytek.meetfever.ui.fragments.mainfragments
 
+import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +16,6 @@ import es.indytek.meetfever.data.webservice.WebServiceExperiencia
 import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
 import es.indytek.meetfever.databinding.FragmentExplorerBinding
 import es.indytek.meetfever.models.empresa.EmpresaWrapper
-import es.indytek.meetfever.models.experiencia.Experiencia
 import es.indytek.meetfever.models.experiencia.ExperienciaWrapper
 import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.ui.fragments.secondaryfragments.empresa.AllEmpresasFragment
@@ -117,13 +116,16 @@ class ExplorerFragment : Fragment() {
                 else {
                     // Una vez encontradas las pinto suavemente
                     val experiencias = any as ExperienciaWrapper
-                    Animations.pintarGridRecyclerViewSuavemente(
-                        gridLayoutManager = GridLayoutManager(requireContext(), 2),
-                        recyclerView = binding.experienciaDestacadasRecyclerView,
-                        adapter = ExperienciaRecyclerViewAdapter(experiencias, currentUsuario),
-                        duration = 200
-                    )
-
+                    try {
+                        Animations.pintarGridRecyclerViewSuavemente(
+                            gridLayoutManager = GridLayoutManager(requireContext(), 2),
+                            recyclerView = binding.experienciaDestacadasRecyclerView,
+                            adapter = ExperienciaRecyclerViewAdapter(experiencias, currentUsuario),
+                            duration = 200
+                        )
+                    } catch (e: IllegalStateException) {
+                        Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
+                    }
                 }
 
             }
@@ -143,14 +145,17 @@ class ExplorerFragment : Fragment() {
                 else {
                     // Una vez encontradas las pinto suavemente
                     val empresas = any as EmpresaWrapper
-                    Animations.pintarLinearRecyclerViewSuavemente(
-                        linearLayoutManager = LinearLayoutManager(requireContext()),
-                        recyclerView = binding.localesTrendingRecycler,
-                        adapter = EmpresaRecyclerViewAdapter(empresas),
-                        orientation = LinearLayoutManager.HORIZONTAL,
-                        duration = 200
-                    )
-
+                    try {
+                        Animations.pintarLinearRecyclerViewSuavemente(
+                            linearLayoutManager = LinearLayoutManager(requireContext()),
+                            recyclerView = binding.localesTrendingRecycler,
+                            adapter = EmpresaRecyclerViewAdapter(empresas),
+                            orientation = LinearLayoutManager.HORIZONTAL,
+                            duration = 200
+                        )
+                    } catch (e: Exception) {
+                        Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
+                    }
                 }
             }
         })

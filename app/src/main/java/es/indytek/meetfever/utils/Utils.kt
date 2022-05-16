@@ -10,6 +10,8 @@ import android.net.NetworkCapabilities
 import android.util.Base64
 import android.util.Log
 import android.widget.ImageView
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.palette.graphics.Palette
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -84,6 +86,29 @@ object Utils {
 
     }
 
+    fun putBase64ImageIntoImageViewWithoutCornersWithPlaceholder(imageView: ImageView, base64Image: String, context: Context, placeholder: Int) {
+        var requestOptions = RequestOptions()
+        requestOptions = requestOptions.transform(CenterCrop())
+
+        Glide.with(context)
+            .load(Base64.decode(base64Image, Base64.DEFAULT))
+            .placeholder(placeholder)
+            .apply(requestOptions)
+            .into(imageView)
+
+    }
+
+    fun putBase64ImageIntoImageViewCircularWithPlaceholder(imageView: ImageView, base64Image: String, context: Context, placeholder: Int) {
+        var requestOptions = RequestOptions()
+        requestOptions = requestOptions.transform(CenterCrop(), RoundedCorners(55))
+
+        Glide.with(context)
+            .load(Base64.decode(base64Image, Base64.DEFAULT))
+            .apply(requestOptions)
+            .placeholder(placeholder)
+            .into(imageView)
+    }
+
     fun putBase64ImageIntoImageViewCircular(imageView: ImageView, base64Image: String, context: Context) {
 
         var requestOptions = RequestOptions()
@@ -113,9 +138,44 @@ object Utils {
 
     }
 
-    fun getDominantColorFromResourceImage(resourceImage: Int, context: Context): Int {
-        val image = BitmapFactory.decodeResource(context.resources, resourceImage)
-        return getDominantColorInImage(image)
+    fun putResourceImageIntoImageView(imageView: ImageView, resourceImage: Int, context: Context) {
+        var requestOptions = RequestOptions()
+        requestOptions = requestOptions.transform(CenterCrop(), RoundedCorners(50))
+        Glide.with(context)
+            .load(resourceImage)
+            .apply(requestOptions)
+            .into(imageView)
     }
+
+    fun putResourceImageIntoImageViewCircular(imageView: ImageView, resourceImage: Int, context: Context) {
+        var requestOptions = RequestOptions()
+        requestOptions = requestOptions.transform(CenterCrop(), RoundedCorners(500))
+        Glide.with(context)
+            .load(resourceImage)
+            .apply(requestOptions)
+            .into(imageView)
+    }
+
+    fun putResourceImageIntoImageViewWithoutCorners(imageView: ImageView, resourceImage: Int, context: Context) {
+        var requestOptions = RequestOptions()
+        requestOptions = requestOptions.transform(CenterCrop())
+        Glide.with(context)
+            .load(resourceImage)
+            .apply(requestOptions)
+            .into(imageView)
+    }
+
+    fun getColorWithAlpha(color: Int, alpha: Float): Int {
+        val a = Math.round(Color.alpha(color) * alpha)
+        val r = Color.red(color)
+        val g = Color.green(color)
+        val b = Color.blue(color)
+        return Color.argb(a, r, g, b)
+    }
+
+    fun setTextColorAsResource(textView: TextView, color: Int, context: Context) {
+        textView.setTextColor(ContextCompat.getColor(context, color))
+    }
+
 
 }

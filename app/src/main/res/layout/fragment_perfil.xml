@@ -4,11 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ic_background_gradient_shape_profile">
+    android:id="@+id/fragment_perfil"
+    android:backgroundTintMode="multiply"
+    android:background="@drawable/ic_solid_background_profile">
+
+    <ImageView
+        android:id="@+id/color_fondo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/ic_background_gradient_shape_profile"
+        android:backgroundTintMode="multiply"
+        android:visibility="visible"
+        />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/container_profile"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -104,9 +114,10 @@
                         android:adjustViewBounds="true"
                         android:scaleType="centerCrop"
                         tools:background="@tools:sample/avatars"
-                        app:shapeAppearanceOverlay="@style/roundTopCorners"/>
+                        app:shapeAppearanceOverlay="@style/roundTopCorners"
+                        />
 
-                    <ImageView
+                    <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/filterImage"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
@@ -116,13 +127,13 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintVertical_bias="1.0"
+                        android:background="@drawable/ic_filterimage"
                         />
-                    <!-- TODO AÑADIR FILTER IMAGE -->
 
                 </FrameLayout>
 
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/profilePicture"
                     android:layout_width="171dp"
                     android:layout_height="167dp"
@@ -132,7 +143,9 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="1.0"
-                    tools:background="@tools:sample/avatars" />
+                    tools:background="@tools:sample/avatars"
+                    app:shapeAppearance="@style/circular"
+                    />
 
                 <ImageView
                     android:id="@+id/bluredEdge"
@@ -146,7 +159,7 @@
                     app:layout_constraintVertical_bias="1.0"
                     tools:background="@drawable/ic_blured_edges" />
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/isFamousPeopleFramework"
                     android:layout_width="167dp"
                     android:layout_height="167dp"
@@ -156,7 +169,9 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="1.0"
-                    tools:background="@drawable/ic_famous_edges" />
+                    tools:background="@drawable/ic_famous_edges"
+                    app:shapeAppearance="@style/circular"
+                    />
 
 
                 <TextView
@@ -204,7 +219,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/opiniones_usuario_recycler"
                 android:layout_gravity="center"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 />
 

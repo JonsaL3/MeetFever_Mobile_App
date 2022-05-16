@@ -1,5 +1,6 @@
 package es.indytek.meetfever.ui.recyclerviews.viewholders
 
+import android.graphics.PorterDuff
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -28,7 +29,9 @@ class PersonaViewHolder(
         // Si tiene foto de perfil, la pinto
         val foto = objeto.fotoPerfil
         foto?.let {
-            Utils.putBase64ImageIntoImageViewCircular(binding.imagen, it, itemView.context)
+            Utils.putBase64ImageIntoImageViewCircularWithPlaceholder(binding.imagen, it, itemView.context, R.drawable.ic_default_user_image)
+        }?: kotlin.run {
+            Utils.putResourceImageIntoImageViewCircular(binding.imagen, R.drawable.ic_default_experience, itemView.context)
         }
 
         binding.viewholderPersona.setOnClickListener {
@@ -39,25 +42,9 @@ class PersonaViewHolder(
 
     // al hacer click necesito la lista de opiniones para pintarla
     private fun onClick(persona: Persona) {
-
         val activity = view.context as AppCompatActivity
-        var opiniones: OpinionWrapper
-
-        // pido la opinion
-        WebServiceOpinion.obtenerOpinionPorIdAutor(persona, itemView.context, object: WebServiceGenericInterface{
-            override fun callback(any: Any) {
-
-                if (any == 0) {
-                    opiniones = OpinionWrapper()
-                } else {
-                    opiniones = any as OpinionWrapper
-                }
-
-                val fragmento = PerfilFragment.newInstance(persona, opiniones)
-                activity.supportFragmentManager.beginTransaction().replace(R.id.frame_layout,fragmento).commit()
-            }
-        })
-
+        val fragmento = PerfilFragment.newInstance(persona)
+        activity.supportFragmentManager.beginTransaction().replace(R.id.frame_layout,fragmento).commit()
     }
 
 }

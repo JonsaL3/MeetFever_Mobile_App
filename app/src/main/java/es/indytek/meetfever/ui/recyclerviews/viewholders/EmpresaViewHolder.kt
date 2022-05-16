@@ -1,7 +1,5 @@
 package es.indytek.meetfever.ui.recyclerviews.viewholders
 
-import android.graphics.Color
-import android.graphics.ColorFilter
 import android.graphics.PorterDuff
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -31,8 +29,10 @@ class EmpresaViewHolder(
         val foto = objeto.fotoPerfil
 
         foto?.let {
-            Utils.putBase64ImageIntoImageViewWithPlaceholder(binding.imagen, it, itemView.context, R.drawable.ic_default_svg_image)
+            Utils.putBase64ImageIntoImageViewWithPlaceholder(binding.imagen, it, itemView.context, R.drawable.ic_default_enterprise_black_and_white)
             binding.degradado.setColorFilter(Utils.getDominantColorInImageFromBase64(foto), PorterDuff.Mode.SRC_ATOP)
+        }?: kotlin.run {
+            binding.imagen.setImageResource(R.drawable.ic_default_enterprise_black_and_white)
         }
 
         // en caso de click cargo el perfil
@@ -48,8 +48,7 @@ class EmpresaViewHolder(
         var opiniones: OpinionWrapper
 
         // pido la opinion
-        WebServiceOpinion.obtenerOpinionPorIdAutor(empresa, itemView.context, object:
-            WebServiceGenericInterface {
+        WebServiceOpinion.obtenerOpinionPorIdAutor(empresa, itemView.context, object: WebServiceGenericInterface {
             override fun callback(any: Any) {
 
                 if (any == 0) {
@@ -58,7 +57,7 @@ class EmpresaViewHolder(
                     opiniones = any as OpinionWrapper
                 }
 
-                val fragmento = PerfilFragment.newInstance(empresa, opiniones)
+                val fragmento = PerfilFragment.newInstance(empresa)
                 activity.supportFragmentManager.beginTransaction().replace(R.id.frame_layout,fragmento).commit()
             }
         })

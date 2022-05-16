@@ -7,6 +7,12 @@
         <item name="cornerSizeTopRight">23dp</item>
     </style>
 
+    <style name="roundBottomCorners" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeBottomLeft">23dp</item>
+        <item name="cornerSizeBottomRight">23dp</item>
+    </style>
+
     <style name="Button.White" parent="ThemeOverlay.AppCompat">
         <item name="colorAccent">@android:color/white</item>
     </style>
@@ -17,6 +23,11 @@
         <item name="cornerSizeTopRight">23dp</item>
         <item name="cornerSizeBottomLeft">23dp</item>
         <item name="cornerSizeBottomRight">23dp</item>
+    </style>
+
+    <!-- para hacer una imagen shapable totalmente circular -->
+    <style name="circular" parent="">
+        <item name="cornerSize">50%</item>
     </style>
 
 </resources>

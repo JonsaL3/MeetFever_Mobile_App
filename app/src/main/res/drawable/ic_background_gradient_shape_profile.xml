@@ -5,9 +5,10 @@
         android:type="linear"
         android:angle="-45"
         android:centerX="0.5"
-        android:startColor="#2F3136"
-        android:centerColor="@color/seminegro_fondo"
-        android:endColor="#4c4e52" />
+        android:startColor="#00000000"
+        android:centerColor="#00000000"
+        android:endColor="#22FFFFFF"
+        />
 
     <corners android:radius="25dp"/>
 

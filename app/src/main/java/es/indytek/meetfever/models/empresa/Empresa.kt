@@ -2,6 +2,7 @@ package es.indytek.meetfever.models.empresa
 
 import com.google.gson.annotations.SerializedName
 import es.indytek.meetfever.models.usuario.Usuario
+import org.json.JSONObject
 
 class Empresa (
 
@@ -34,5 +35,17 @@ class Empresa (
     var dniPersona: String = "",
 
 ) : Usuario(id, correo, contrasena, nick, fotoFondo, fotoPerfil, telefono, frase) {
+
+    override fun toJsonObject(): JSONObject = JSONObject().apply {
+        super.toJsonObject()
+        put("Nombre_Empresa", nombreEmpresa)
+        put("Cif", cif)
+        put("Direccion_Fiscal", direccionFiscal)
+        put("Direccion_Facturacion", direccionFacturacion)
+        put("Nombre_Persona", nombrePersona)
+        put("Apellido1_Persona", apellido1Persona)
+        put("Apellido2_Persona", apellido2Persona)
+        put("Dni_Persona", dniPersona)
+    }
 
 }

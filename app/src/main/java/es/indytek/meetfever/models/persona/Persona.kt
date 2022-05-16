@@ -3,6 +3,7 @@ package es.indytek.meetfever.models.persona
 import com.google.gson.annotations.SerializedName
 import es.indytek.meetfever.models.sexo.Sexo
 import es.indytek.meetfever.models.usuario.Usuario
+import org.json.JSONObject
 import java.time.LocalDate
 
 class Persona (
@@ -31,6 +32,16 @@ class Persona (
     @SerializedName("dni")
     var dni: String,
 
-    ) : Usuario(id, correo, contrasena, nick, fotoFondo, fotoPerfil, telefono, frase) {
+) : Usuario(id, correo, contrasena, nick, fotoFondo, fotoPerfil, telefono, frase) {
+
+    override fun toJsonObject(): JSONObject = JSONObject().apply {
+        super.toJsonObject()
+        put("Nombre", nombre)
+        put("Apellido1", apellido1)
+        put("Apellido2", apellido2)
+        put("Sexo", sexo.toString())
+        put("Fecha_Nacimiento", fechaNacimiento.toString())
+        put("dni", dni)
+    }
 
 }

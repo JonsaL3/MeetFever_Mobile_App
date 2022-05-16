@@ -51,5 +51,12 @@
     <string name="comprar_entrada">Comprar Entrada</string>
     <string name="meetfever">MeetFever!®</string>
     <string name="color_your_life">Color your life.</string>
+    <string name="todas_las_experiencias_destacadas">Todas las experiencias destacadas</string>
+    <string name="ver_mi_perfil">Ver mi perfil</string>
+    <string name="redactar_fever">Redactar Fever!</string>
+    <string name="publicar_fever">Publicar Fever!</string>
+    <string name="meetmoji_emoji_que_represente_como_fu_tu_experiencia">Meetmoji (Emoji que represente como fué tu experiencia):</string>
+    <string name="no_seleccionado">No seleccionado</string>
+    <string name="_0_250_caracteres">0/250 Caracteres</string>
 
 </resources>

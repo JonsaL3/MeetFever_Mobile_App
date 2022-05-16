@@ -53,11 +53,9 @@ object WebServiceOpinion {
     fun obtenerOpinionPorIdAutor(autor: Usuario, context: Context, callback : WebServiceGenericInterface) {
 
         val url = "interface/api/meetfever/opinion/ObtenerOpinionPorIdAutor"
-        val jsonObject = JSONObject()
+        val jsonObject = JSONObject().put("Id_Autor", autor.id)
 
         try {
-
-            jsonObject.put("Id_Autor", autor.id)
 
             WebService.processRequestPost(context, url, jsonObject, object: WebServiceGenericInterface {
                 override fun callback(any: Any) {
