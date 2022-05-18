@@ -17,6 +17,42 @@ import java.time.LocalDateTime
 
 object WebServiceOpinion {
 
+    // busco una opinion por cualquiera de sus campos
+    fun buscarOpinion(busqueda: String, context: Context, callback : WebServiceGenericInterface) {
+
+        val url = "interface/api/meetfever/opinion/BUSQUEDAOPINION" // TODO URL DE ALBERTO
+        val jsonObject = JSONObject().apply {
+            put("busqueda", busqueda)
+        }
+
+        try {
+
+            WebService.processRequestPost(context, url, jsonObject, object: WebServiceGenericInterface {
+                override fun callback(any: Any) {
+
+                    if (any.toString().isNotEmpty()) {
+                        // Obtengo el response
+                        val opiniones = GsonBuilder()
+                            .registerTypeAdapter(LocalDate::class.java, LocalDateTypeAdapter())
+                            .create()
+                            .fromJson(any.toString(), OpinionWrapper::class.java)
+                        if (opiniones.size > 0)
+                            callback.callback(opiniones)
+                        else
+                            callback.callback(0)
+                    } else {
+                        callback.callback(0)
+                    }
+
+                }
+            })
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
+
     // Obtener las 100 opiniones mas gustadas de las ultimas 24 horas
     fun find100OpinionesMasGustadas24h(context: Context, callback : WebServiceGenericInterface) {
 

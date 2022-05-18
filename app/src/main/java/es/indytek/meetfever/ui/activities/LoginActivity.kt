@@ -25,9 +25,20 @@ class LoginActivity : AppCompatActivity() {
         // cierro la pantalla de carga
         Animations.esperarYOcultarVistaSuavemente(binding.prePantallaDeCarga, 1000)
 
+        listenButtons()
+
+    }
+
+    // todos los botones de esta pantalla los escucho
+    private fun listenButtons() {
+
         // Por defecto, escucho al botón de iniciar sesión
         binding.botonLoguearse.setOnClickListener() {
             iniciarSesion()
+        }
+
+        binding.botonIrARegistrarse.setOnClickListener() {
+            irARegistrarse()
         }
 
     }
@@ -62,6 +73,14 @@ class LoginActivity : AppCompatActivity() {
             // TODO error
         }
 
+    }
+
+    // me muevo a la actividad de registra
+    private fun irARegistrarse() {
+        val intent = Intent(this, RegistroActivity::class.java)
+        startActivity(intent)
+        finish()
+        overridePendingTransition(0, 0)
     }
 
     // Me muevo a la main activity si se ha iniciado sesión correctamente

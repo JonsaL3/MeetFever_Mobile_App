@@ -116,7 +116,6 @@ class PerfilFragment : Fragment() {
                             recyclerView = binding.opinionesUsuarioRecycler,
                             adapter = OpinionRecyclerViewAdapter(opiniones, PerfilFragment::class.java),
                             orientation = LinearLayoutManager.VERTICAL,
-                            duration = 200
                         )
                     } catch (e: IllegalStateException) {
                         Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")

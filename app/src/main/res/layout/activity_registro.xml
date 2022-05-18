@@ -87,23 +87,6 @@
                 />
 
             <EditText
-                android:id="@+id/inputNumeroTelefonoRegistro"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="50dp"
-                android:background="@drawable/ic_inputs_login"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="@string/n_mero_de_tel_fono"
-                android:inputType="text"
-                android:fontFamily="@font/montserrat_light"
-                android:textSize="15sp"
-                android:layout_marginTop="40dp"
-                android:textColor="@color/gris_textos"
-                android:textColorHint="@color/gris_textos"
-                />
-
-            <EditText
                 android:id="@+id/inputContrasenaRegistro"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -137,6 +120,31 @@
                 android:textColorHint="@color/gris_textos"
                 />
 
+            <LinearLayout
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cuenta_de_empresa"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    android:fontFamily="@font/montserrat_light"
+                    />
+
+                <CheckBox
+                    android:id="@+id/checkEmpresa"
+                    android:textColorHint="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
             <!-- En caso de que sea cuenta de empresa solo se pintará esto -->
 
             <androidx.appcompat.widget.AppCompatButton
@@ -148,7 +156,7 @@
                 android:textColor="@color/white"
                 android:background="@drawable/ic_custom_boton"
                 android:fontFamily="@font/montserrat_light"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="20dp"
                 android:textAllCaps="false"
                 />
 

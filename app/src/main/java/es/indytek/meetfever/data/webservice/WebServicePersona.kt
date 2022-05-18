@@ -11,6 +11,42 @@ import java.time.LocalDate
 
 object WebServicePersona {
 
+    // busco una persona por cualquiera de sus campos
+    fun buscarPersonas(busqueda: String, context: Context, callback : WebServiceGenericInterface) {
+
+        val url = "interface/api/meetfever/persona/BUSQUEDAPERSONA" // TODO URL DE ALBERTO
+        val jsonObject = JSONObject().apply {
+            put("busqueda", busqueda)
+        }
+
+        try {
+
+            WebService.processRequestPost(context, url, jsonObject, object: WebServiceGenericInterface {
+                override fun callback(any: Any) {
+
+                    if (any.toString().isNotEmpty()) {
+                        // Obtengo el response
+                        val personas = GsonBuilder()
+                            .registerTypeAdapter(LocalDate::class.java, LocalDateTypeAdapter())
+                            .create()
+                            .fromJson(any.toString(), PersonaWrapper::class.java)
+                        if (personas.size > 0)
+                            callback.callback(personas)
+                        else
+                            callback.callback(0)
+                    } else {
+                        callback.callback(0)
+                    }
+
+                }
+            })
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
+
     // Obtengo las 10 personas con mas seguidores
     fun findTop10PersonasConMasSeguidores(context: Context, callback : WebServiceGenericInterface) {
 
