@@ -1,7 +1,10 @@
 package es.indytek.meetfever.ui.fragments.secondaryfragments.fever
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Spannable
 import android.text.style.ForegroundColorSpan
 import android.util.Log
@@ -20,14 +23,27 @@ import es.indytek.meetfever.databinding.FragmentRedactarFeverBinding
 import es.indytek.meetfever.models.emoticono.EmoticonoWrapper
 import es.indytek.meetfever.models.empresa.Empresa
 import es.indytek.meetfever.models.usuario.Usuario
+import es.indytek.meetfever.ui.fragments.viewModels.RedactarFeverViewModel
 import es.indytek.meetfever.ui.recyclerviews.adapters.IconoRecyclerViewAdapter
 import es.indytek.meetfever.utils.Animations
 import es.indytek.meetfever.utils.Utils
+import kotlinx.coroutines.*
+import java.lang.Runnable
+import kotlin.coroutines.CoroutineContext
+import androidx.fragment.app.viewModels
 
 
 private const val ARG_PARAM1 = "currentUsuario"
 
-class RedactarFeverFragment : Fragment() {
+class RedactarFeverFragment : Fragment(), CoroutineScope {
+    //job para la coroutines
+    private var job: Job = Job()
+
+    //creando el contexto de la coroutines
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
+
+//    private val redactarFeverViewModel: RedactarFeverViewModel by viewModels()
 
     private lateinit var binding: FragmentRedactarFeverBinding
     private lateinit var currentUsuario: Usuario
@@ -53,6 +69,11 @@ class RedactarFeverFragment : Fragment() {
         procesadorDeTextoYCaracteres()
 
         return binding.root
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
     }
 
     // cuento que el usuario no supere los 250 caracteres
@@ -164,6 +185,7 @@ class RedactarFeverFragment : Fragment() {
 
     // pintar todzxo
     private fun pintar() {
+
         pintarIconosSeleccionables()
         pintarDatosUsuario()
     }
@@ -183,15 +205,20 @@ class RedactarFeverFragment : Fragment() {
     }
 
     // pinto todos los emoticonos que puede seleccionar y estén en la base de datos remota
+    @OptIn(DelicateCoroutinesApi::class)
     private fun pintarIconosSeleccionables() {
-
         WebServiceEmoticono.obtenerTodosLosEmoticonos(requireContext(), object: WebServiceGenericInterface {
             override fun callback(any: Any) {
+
+                //binding.animationView.visibility = View.GONE
 
                 if (any == 0) {
                     // TODO ERROR
                 } else {
+
                     val emoticonos = any as EmoticonoWrapper
+
+                    Animations.ocultarVistaSuavemente(binding.animationView, 500)
 
                     try {
                         Animations.pintarGridRecyclerViewSuavemente(
@@ -204,6 +231,8 @@ class RedactarFeverFragment : Fragment() {
                     } catch (e: Exception) {
                         Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
                     }
+
+
 
                 }
 

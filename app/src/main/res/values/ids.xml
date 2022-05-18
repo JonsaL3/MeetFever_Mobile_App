@@ -2,4 +2,5 @@
 <resources>
     <item name="color_fondo" type="id" />
     <item name="foto_perfil" type="id" />
+    <item name="animationView" type="id" />
 </resources>
