@@ -81,45 +81,102 @@
 
             </FrameLayout>
 
-            <!-- Las 4 experiencias mas mencionadas o que se yo -->
+            <LinearLayout
+                android:id="@+id/explorer_normal"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/experienciasDestacadasTexto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:fontFamily="@font/montserrat_light"
-                android:text="@string/experiencias_destacadas"
-                android:textColor="@color/white"
-                android:textSize="22sp"
-                />
+                <!-- Las 4 experiencias mas mencionadas o que se yo -->
 
-           <androidx.recyclerview.widget.RecyclerView
-               android:id="@+id/experienciaDestacadasRecyclerView"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_gravity="center"
-               />
+                <TextView
+                    android:id="@+id/experienciasDestacadasTexto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/montserrat_light"
+                    android:text="@string/experiencias_destacadas"
+                    android:textColor="@color/white"
+                    android:textSize="22sp"
+                    />
 
-            <!-- Horizontal scroll view con los locales con mas seguidores -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/experienciaDestacadasRecyclerView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    />
 
-            <TextView
-                android:id="@+id/localesTrendingTexto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:fontFamily="@font/montserrat_light"
-                android:text="@string/top_locales"
-                android:textColor="@color/white"
-                android:textSize="22sp"
-                />
+                <!-- Horizontal scroll view con los locales con mas seguidores -->
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/localesTrendingRecycler"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                />
+                <TextView
+                    android:id="@+id/localesTrendingTexto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/montserrat_light"
+                    android:text="@string/top_locales"
+                    android:textColor="@color/white"
+                    android:textSize="22sp"
+                    />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/localesTrendingRecycler"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/explorer_busqueda"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Las 4 experiencias mas mencionadas o que se yo -->
+
+                <TextView
+                    android:id="@+id/experiencias_encontradas_texto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/montserrat_light"
+                    android:text="@string/experiencias_destacadas"
+                    android:textColor="@color/white"
+                    android:textSize="22sp"
+                    />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/experiencias_encontradas_recycler"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    />
+
+                <!-- Horizontal scroll view con los locales con mas seguidores -->
+
+                <TextView
+                    android:id="@+id/locales_encontrados_texto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/montserrat_light"
+                    android:text="@string/top_locales"
+                    android:textColor="@color/white"
+                    android:textSize="22sp"
+                    />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/locales_Encontrados_recycler"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    />
+
+            </LinearLayout>
 
         </LinearLayout>
 
