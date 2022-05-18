@@ -84,7 +84,7 @@
             </FrameLayout>
 
             <TextView
-                android:id="@+id/localesTrendingTexto"
+                android:id="@+id/fevers_valorados_texto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -102,6 +102,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="5dp"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/busqueda_opiniones_recycler_view"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:visibility="gone"
                 />
 
         </LinearLayout>

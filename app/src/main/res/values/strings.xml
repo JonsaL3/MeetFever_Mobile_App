@@ -58,5 +58,8 @@
     <string name="meetmoji_emoji_que_represente_como_fu_tu_experiencia">Meetmoji (Emoji que represente como fué tu experiencia):</string>
     <string name="no_seleccionado">No seleccionado</string>
     <string name="_0_250_caracteres">0/250 Caracteres</string>
+    <string name="cuenta_de_empresa">Cuenta de empresa:</string>
+    <string name="experiencias_encontradas">Experiencias encontradas</string>
+    <string name="locales_encontrados">Locales encontrados</string>
 
 </resources>

@@ -1,13 +1,14 @@
 package es.indytek.meetfever.ui.fragments.mainfragments
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import es.indytek.meetfever.R
 import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
@@ -31,6 +32,8 @@ class PeopleFragment : Fragment() {
     // datos que necesito
     private lateinit var currentUsuario: Usuario
 
+    private var contenidoOculto = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -50,8 +53,80 @@ class PeopleFragment : Fragment() {
         // cargo los listeners para ver las listas correspondientes
         cargarListeners()
 
+        // inicio el motor de busqueda
+        motorDeBusqueda()
+
         return binding.root
     }
+
+    // Preparo las busquedas
+    private fun motorDeBusqueda() {
+
+        val textWatcher = object: TextWatcher {
+
+            override fun afterTextChanged(s: Editable?) {}
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+                if (s.toString().isEmpty()) {
+                    mostrarContenido()
+                } else {
+                    ocultarContenido()
+                    WebServicePersona.buscarPersonas(s.toString(), requireContext(), object: WebServiceGenericInterface {
+                        override fun callback(any: Any) {
+
+                            if (any == 0) {
+                                // TODO ERROR
+                            } else {
+                                val personas = any as PersonaWrapper
+                                //ocultarContenido()
+                                try {
+                                    Animations.pintarGridRecyclerViewSuavemente(
+                                        gridLayoutManager = GridLayoutManager(requireContext(), 3),
+                                        recyclerView = binding.busquedaPersonasRecyclerView,
+                                        adapter = PersonaRecyclerViewAdapter(personas)
+                                    )
+                                } catch (e: IllegalStateException) {
+                                    Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
+                                }
+                            }
+
+                        }
+                    })
+
+                }
+
+            }
+        }
+
+        binding.inputMainActivityPeople.addTextChangedListener(textWatcher)
+
+    }
+
+    private fun ocultarContenido() {
+        if (!contenidoOculto) {
+            contenidoOculto = true
+            Animations.ocultarVistaSuavemente(binding.localesTrendingTexto)
+            Animations.ocultarVistaSuavemente(binding.topPersonasRecyclerView)
+            Animations.ocultarVistaSuavemente(binding.personasQueQuizasConozcasRecyclerView)
+            Animations.ocultarVistaSuavemente(binding.personasQueQuizasConozcasTexto)
+
+            Animations.mostrarVistaSuavemente(binding.busquedaPersonasRecyclerView)
+        }
+    }
+
+    private fun mostrarContenido() {
+        contenidoOculto = false
+        Animations.mostrarVistaSuavemente(binding.localesTrendingTexto)
+        Animations.mostrarVistaSuavemente(binding.topPersonasRecyclerView)
+        Animations.mostrarVistaSuavemente(binding.personasQueQuizasConozcasRecyclerView)
+        Animations.mostrarVistaSuavemente(binding.personasQueQuizasConozcasTexto)
+
+        Animations.ocultarVistaSuavemente(binding.busquedaPersonasRecyclerView)
+    }
+
     // listeners que necesito
     private fun cargarListeners() {
 
@@ -113,7 +188,6 @@ class PeopleFragment : Fragment() {
                             recyclerView = binding.topPersonasRecyclerView,
                             adapter = PersonaRecyclerViewAdapter(personas),
                             orientation = LinearLayoutManager.HORIZONTAL,
-                            duration = 200
                         )
                     } catch (e: IllegalStateException) {
                         Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
@@ -142,7 +216,6 @@ class PeopleFragment : Fragment() {
                             recyclerView = binding.personasQueQuizasConozcasRecyclerView,
                             adapter = PersonaRecyclerViewAdapter(personas),
                             orientation = LinearLayoutManager.HORIZONTAL,
-                            duration = 200
                         )
                     } catch (e: IllegalStateException) {
                         Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")

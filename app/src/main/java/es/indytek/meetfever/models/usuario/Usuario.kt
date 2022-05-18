@@ -1,5 +1,6 @@
 package es.indytek.meetfever.models.usuario
 
+import android.util.Log
 import com.google.gson.annotations.SerializedName
 import org.json.JSONObject
 import java.io.Serializable
@@ -18,18 +19,19 @@ open class Usuario (
     @SerializedName("Nick")
     var nick: String = "",
     @SerializedName("Foto_Fondo")
-    var fotoFondo: String? = "",
+    var fotoFondo: String? = null,
     @SerializedName("Foto_Perfil")
-    var fotoPerfil: String? = "",
+    var fotoPerfil: String? = null,
     @SerializedName("Telefono")
-    var telefono: String? = "",
+    var telefono: String? = null,
     @SerializedName("Frase")
-    var frase: String? = ""
+    var frase: String? = null
 
 ) : Serializable {
 
     open fun toJsonObject(): JSONObject = JSONObject().apply {
-        put("Id", id)
+        Log.d(":::", "LLAMO A PAPA")
+        put("Id", id.toString())
         put("Correo", correo)
         put("Contrasena", contrasena)
         put("Nick", nick)
@@ -37,6 +39,10 @@ open class Usuario (
         put("Foto_Fondo", fotoFondo)
         put("Telefono", telefono)
         put("Frase", frase)
+    }
+
+    override fun toString(): String {
+        return super.toString() + " " + id + " " + correo + " " + contrasena + " " + nick + " " + fotoFondo + " " + fotoPerfil + " " + telefono + " " + frase
     }
 
 }

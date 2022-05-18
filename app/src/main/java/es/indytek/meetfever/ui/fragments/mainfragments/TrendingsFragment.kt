@@ -1,19 +1,25 @@
 package es.indytek.meetfever.ui.fragments.mainfragments
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import es.indytek.meetfever.R
 import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
 import es.indytek.meetfever.data.webservice.WebServiceOpinion
+import es.indytek.meetfever.data.webservice.WebServicePersona
 import es.indytek.meetfever.databinding.FragmentTrendingsBinding
 import es.indytek.meetfever.models.opinion.OpinionWrapper
+import es.indytek.meetfever.models.persona.PersonaWrapper
 import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.ui.recyclerviews.adapters.OpinionRecyclerViewAdapter
+import es.indytek.meetfever.ui.recyclerviews.adapters.PersonaRecyclerViewAdapter
 import es.indytek.meetfever.utils.Animations
 import java.time.LocalTime
 
@@ -23,8 +29,9 @@ class TrendingsFragment : Fragment() {
 
     // bindeo de las vistas
     private lateinit var binding: FragmentTrendingsBinding
-
     private lateinit var currentUsuario: Usuario
+
+    private var contenidoOculto = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +49,75 @@ class TrendingsFragment : Fragment() {
         // Pinto to.do lo relacionado con las opiniones
         pintar()
 
+        // inicializo el motor de busqueda
+        motorDeBusqueda()
+
         return binding.root
+    }
+
+    // Preparo las busquedas
+    private fun motorDeBusqueda() {
+
+        val textWatcher = object: TextWatcher {
+
+            override fun afterTextChanged(s: Editable?) {}
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+                if (s.toString().isEmpty()) {
+                    mostrarContenido()
+                } else {
+                    ocultarContenido()
+                    WebServiceOpinion.buscarOpinion(s.toString(), requireContext(), object: WebServiceGenericInterface {
+                        override fun callback(any: Any) {
+
+                            if (any == 0) {
+                                // TODO ERROR
+                            } else {
+                                val opiniones = any as OpinionWrapper
+                                //ocultarContenido()
+                                try {
+                                    Animations.pintarLinearRecyclerViewSuavemente(
+                                        linearLayoutManager = LinearLayoutManager(requireContext()),
+                                        recyclerView = binding.busquedaOpinionesRecyclerView,
+                                        adapter = OpinionRecyclerViewAdapter(opiniones, TrendingsFragment::class.java),
+                                        orientation = LinearLayoutManager.VERTICAL
+                                    )
+                                } catch (e: IllegalStateException) {
+                                    Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
+                                }
+                            }
+
+                        }
+                    })
+
+                }
+
+            }
+        }
+
+        binding.inputMainActivityTrendings.addTextChangedListener(textWatcher)
+
+    }
+
+    private fun ocultarContenido() {
+        if (!contenidoOculto) {
+            contenidoOculto = true
+            Animations.ocultarVistaSuavemente(binding.feversValoradosTexto)
+            Animations.ocultarVistaSuavemente(binding.topOpinionesRecycler)
+
+            Animations.mostrarVistaSuavemente(binding.busquedaOpinionesRecyclerView)
+        }
+    }
+
+    private fun mostrarContenido() {
+        contenidoOculto = false
+        Animations.mostrarVistaSuavemente(binding.feversValoradosTexto)
+        Animations.mostrarVistaSuavemente(binding.topOpinionesRecycler)
+
+        Animations.ocultarVistaSuavemente(binding.busquedaOpinionesRecyclerView)
     }
 
     // esta funcion llama a todas las funciones de dibujado
@@ -87,7 +162,6 @@ class TrendingsFragment : Fragment() {
                             recyclerView = binding.topOpinionesRecycler,
                             adapter = OpinionRecyclerViewAdapter(top100OpinionesMasGustadas24H, TrendingsFragment::class.java),
                             orientation = LinearLayoutManager.VERTICAL,
-                            duration = 200
                         )
                     } catch (e: IllegalStateException) {
                         Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")

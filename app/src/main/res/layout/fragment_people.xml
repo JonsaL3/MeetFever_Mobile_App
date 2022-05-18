@@ -123,6 +123,13 @@
                 android:layout_height="wrap_content"
                 />
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/busqueda_personas_recycler_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                />
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

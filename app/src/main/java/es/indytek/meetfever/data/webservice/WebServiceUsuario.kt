@@ -1,15 +1,18 @@
 package es.indytek.meetfever.data.webservice
 
 import android.content.Context
+import android.util.Log
 import com.google.gson.GsonBuilder
 import es.indytek.meetfever.models.empresa.Empresa
 import es.indytek.meetfever.models.persona.Persona
+import es.indytek.meetfever.models.usuario.Usuario
 import org.json.JSONObject
 import java.lang.Exception
+import java.lang.IllegalArgumentException
 
 object WebServiceUsuario {
 
-    // Obtener todas las empresas
+    // Iniciar Sesión
     fun inciarSesion(correo: String, contrasena: String, context: Context, callback : WebServiceGenericInterface) {
 
         val url = "interface/api/meetfever/usuario/IniciarSesion"
@@ -55,6 +58,40 @@ object WebServiceUsuario {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    // Registrarse
+    fun registrarse(usuario: Usuario, context: Context, callback : WebServiceGenericInterface) {
+
+        val url: String
+//        val jsonObject = usuario.toJsonObject()
+        val jsonObject = usuario.toJsonObject()
+
+        if (usuario is Empresa) {
+            "interface/api/meetfever/empresa/InsertarEmpresa".let {
+                url = it
+            }
+        } else if (usuario is Persona) {
+            "interface/api/meetfever/persona/InsertarPersona".let {
+                url = it
+            }
+        } else throw IllegalArgumentException("El usuario no es de tipo Empresa o Persona")
+
+        Log.d(":::", "REGISTRANDO -> ${usuario.toJsonObject()}")
+
+
+        WebService.processRequestPost(context, url, jsonObject, object: WebServiceGenericInterface {
+            override fun callback(any: Any) {
+
+                if (any.toString().isNotEmpty()) {
+                    callback.callback(any)
+                } else  {
+                    callback.callback(0)
+                }
+
+            }
+        })
+
     }
 
 }
