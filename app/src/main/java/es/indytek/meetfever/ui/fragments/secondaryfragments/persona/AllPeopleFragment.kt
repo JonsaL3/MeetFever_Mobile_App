@@ -65,7 +65,6 @@ class AllPeopleFragment : Fragment() {
                             gridLayoutManager = GridLayoutManager(requireContext(), 3),
                             recyclerView = binding.recyclerAllInfluencers,
                             adapter = PersonaRecyclerViewAdapter(personas),
-                            duration = 200
                         )
                     } catch (e: IllegalStateException) {
                         Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")

@@ -1,8 +1,9 @@
 
 package es.indytek.meetfever.ui.fragments.mainfragments
 
-import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,14 +15,17 @@ import es.indytek.meetfever.R
 import es.indytek.meetfever.data.webservice.WebServiceEmpresa
 import es.indytek.meetfever.data.webservice.WebServiceExperiencia
 import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
+import es.indytek.meetfever.data.webservice.WebServicePersona
 import es.indytek.meetfever.databinding.FragmentExplorerBinding
 import es.indytek.meetfever.models.empresa.EmpresaWrapper
 import es.indytek.meetfever.models.experiencia.ExperienciaWrapper
+import es.indytek.meetfever.models.opinion.OpinionWrapper
 import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.ui.fragments.secondaryfragments.empresa.AllEmpresasFragment
 import es.indytek.meetfever.ui.fragments.secondaryfragments.empresa.AllExperiencesFragment
 import es.indytek.meetfever.ui.recyclerviews.adapters.EmpresaRecyclerViewAdapter
 import es.indytek.meetfever.ui.recyclerviews.adapters.ExperienciaRecyclerViewAdapter
+import es.indytek.meetfever.ui.recyclerviews.adapters.OpinionRecyclerViewAdapter
 import es.indytek.meetfever.utils.Animations
 import java.time.LocalTime
 import java.util.stream.Collectors
@@ -36,6 +40,8 @@ class ExplorerFragment : Fragment() {
 
     // datos que necesito
     private lateinit var currentUsuario: Usuario
+
+    private var contenidoOculto = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +63,94 @@ class ExplorerFragment : Fragment() {
         // arranco los listeners que necesito
         arrancarListeners()
 
+        // arranco el motor de busqueda
+        motorDeBusqueda()
+
         return binding.root
+    }
+
+    // Preparo las busquedas
+    private fun motorDeBusqueda() {
+
+        val textWatcher = object: TextWatcher {
+
+            override fun afterTextChanged(s: Editable?) {}
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+                if (s.toString().isEmpty()) {
+                    mostrarContenido()
+                } else {
+                    ocultarContenido()
+                    WebServiceEmpresa.buscarEmpresa(s.toString(), requireContext(), object: WebServiceGenericInterface {
+                        override fun callback(any: Any) {
+
+                            if (any == 0) {
+                                // TODO ERROR
+                            } else {
+                                val empresas = any as EmpresaWrapper
+                                //ocultarContenido()
+                                try {
+                                    Animations.pintarGridRecyclerViewSuavemente(
+                                        gridLayoutManager = GridLayoutManager(requireContext(), 3),
+                                        recyclerView = binding.localesEncontradosRecycler,
+                                        adapter = EmpresaRecyclerViewAdapter(empresas),
+                                    )
+                                } catch (e: IllegalStateException) {
+                                    Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
+                                }
+                            }
+
+                        }
+                    })
+
+                    WebServiceExperiencia.buscarExperiencia(s.toString(), requireContext(), object: WebServiceGenericInterface {
+                        override fun callback(any: Any) {
+
+                            if (any == 0) {
+                                // TODO ERROR
+                            } else {
+                                val experiencias = any as ExperienciaWrapper
+                                //ocultarContenido()
+                                try {
+                                    Animations.pintarGridRecyclerViewSuavemente(
+                                        gridLayoutManager = GridLayoutManager(requireContext(), 3),
+                                        recyclerView = binding.experienciasEncontradasRecycler,
+                                        adapter = ExperienciaRecyclerViewAdapter(experiencias, currentUsuario)
+                                    )
+                                } catch (e: IllegalStateException) {
+                                    Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
+                                }
+                            }
+
+                        }
+                    })
+
+                }
+
+            }
+        }
+
+        binding.inputMainActivityExplorer.addTextChangedListener(textWatcher)
+
+    }
+
+    private fun ocultarContenido() {
+        if (!contenidoOculto) {
+            contenidoOculto = true
+            Animations.ocultarVistaSuavemente(binding.explorerNormal)
+
+            Animations.mostrarVistaSuavemente(binding.explorerBusqueda)
+        }
+    }
+
+    private fun mostrarContenido() {
+        contenidoOculto = false
+        Animations.ocultarVistaSuavemente(binding.explorerBusqueda)
+
+        Animations.mostrarVistaSuavemente(binding.explorerNormal)
     }
 
     // preparo los listeners
@@ -121,7 +214,6 @@ class ExplorerFragment : Fragment() {
                             gridLayoutManager = GridLayoutManager(requireContext(), 2),
                             recyclerView = binding.experienciaDestacadasRecyclerView,
                             adapter = ExperienciaRecyclerViewAdapter(experiencias, currentUsuario),
-                            duration = 200
                         )
                     } catch (e: IllegalStateException) {
                         Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
@@ -151,7 +243,6 @@ class ExplorerFragment : Fragment() {
                             recyclerView = binding.localesTrendingRecycler,
                             adapter = EmpresaRecyclerViewAdapter(empresas),
                             orientation = LinearLayoutManager.HORIZONTAL,
-                            duration = 200
                         )
                     } catch (e: Exception) {
                         Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
