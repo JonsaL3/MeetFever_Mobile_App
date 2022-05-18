@@ -107,12 +107,26 @@
             app:layout_constraintVertical_bias="0.8"
             tools:ignore="SmallSp" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/lista_de_iconos"
-            android:layout_width="wrap_content"
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.airbnb.lottie.LottieAnimationView
+            android:layout_marginTop="50dp"
+            android:id="@+id/animationView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp" />
+            app:lottie_rawRes="@raw/loading_animation"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/lista_de_iconos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/no_seleccionado"

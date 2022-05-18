@@ -23,7 +23,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(view)
 
         // cierro la pantalla de carga
-        Animations.esperarYOcultarVistaSuavemente(binding.prePantallaDeCarga, 1000)
+        //Animations.esperarYOcultarVistaSuavemente(binding.prePantallaDeCarga, 3000)
 
         listenButtons()
 
@@ -59,10 +59,10 @@ class LoginActivity : AppCompatActivity() {
 
                     } else { // en caso de que vaya bien me voy a la main activity
 
-                        Animations.mostrarVistaSuavemente(binding.prePantallaDeCarga, 1000)
+                        Animations.mostrarVistaSuavemente(binding.prePantallaDeCarga, 700)
                         Handler(Looper.getMainLooper()).postDelayed(Runnable {
                             irAMainActivity(any as Usuario)
-                        },1000)
+                        },2000)
 
                     }
 
@@ -97,7 +97,7 @@ class LoginActivity : AppCompatActivity() {
         // me voy a la otra actividad
         startActivity(intent)
         finish()
-        overridePendingTransition(0, 0)
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
 
     }
 

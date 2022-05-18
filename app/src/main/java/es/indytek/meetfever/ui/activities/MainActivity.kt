@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         cargarExplorerFragment()
 
         // quito la pantalla de carga
-        Animations.ocultarVistaSuavemente(binding.pantallaDeCarga, 1000)
+        //Animations.ocultarVistaSuavemente(binding.pantallaDeCarga, 1000)
 
     }
 

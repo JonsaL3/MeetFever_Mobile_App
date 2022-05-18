@@ -71,4 +71,14 @@ dependencies {
     // Para floatings con multiples acciones animados
     implementation 'io.github.yavski:fab-speed-dial:1.0.6'
 
+    //lotti
+    implementation "com.airbnb.android:lottie:5.0.2"
+
+    //Dispatchers.Main
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
+
+    // ViewModel
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
+    implementation 'androidx.fragment:fragment-ktx:1.4.1'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 }
