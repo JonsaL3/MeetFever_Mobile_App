@@ -70,11 +70,12 @@
         <entry key="..\:/Users/gonza/Desktop/MeetFever/app/src/main/res/menu-v26/tabs.xml" value="0.3734375" />
         <entry key="..\:/Users/gonza/Desktop/MeetFever/app/src/main/res/menu/menu_main.xml" value="0.346875" />
         <entry key="..\:/Users/gonza/Desktop/MeetFever/app/src/main/res/menu/tabs.xml" value="0.33" />
-        <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/layout/activity_registro.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/layout/fragment_explorer.xml" value="0.35104166666666664" />
-        <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/layout/fragment_followed_following.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/layout/fragment_people.xml" value="0.35104166666666664" />
-        <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/layout/fragment_trendings.xml" value="0.35104166666666664" />
+        <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/drawable/background_gradient_default_colors.xml" value="0.33" />
+        <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/drawable/background_gradient_default_colors_no_radius.xml" value="0.306" />
+        <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/drawable/ic_background_gradient_shape.xml" value="0.33" />
+        <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/layout/activity_login.xml" value="0.33" />
+        <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/layout/fragment_redactar_fever.xml" value="0.3026041666666667" />
       </map>
     </option>
   </component>
