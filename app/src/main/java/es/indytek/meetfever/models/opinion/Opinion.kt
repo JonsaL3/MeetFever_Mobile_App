@@ -21,6 +21,8 @@ data class Opinion(
     var autor: Usuario,
     @SerializedName("Id_Empresa")
     var idEmpresa: Int = 0,
+    @SerializedName("Id_Experiencia")
+    var idExperiencia: Int = 0,
     @SerializedName("Titulo")
     var titulo: String = "",
 
