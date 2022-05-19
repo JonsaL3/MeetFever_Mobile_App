@@ -30,8 +30,6 @@ import es.indytek.meetfever.utils.Utils
 import kotlinx.coroutines.*
 import java.lang.Runnable
 import kotlin.coroutines.CoroutineContext
-import androidx.fragment.app.viewModels
-
 
 private const val ARG_PARAM1 = "currentUsuario"
 
@@ -205,7 +203,6 @@ class RedactarFeverFragment : Fragment(), CoroutineScope {
     }
 
     // pinto todos los emoticonos que puede seleccionar y estén en la base de datos remota
-    @OptIn(DelicateCoroutinesApi::class)
     private fun pintarIconosSeleccionables() {
         WebServiceEmoticono.obtenerTodosLosEmoticonos(requireContext(), object: WebServiceGenericInterface {
             override fun callback(any: Any) {

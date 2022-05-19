@@ -70,7 +70,15 @@ class OpinionViewHolder(
             }
         }
 
-        // TODO compruebo si el usuario le dió me gusta o no para pintar un corazon u otro
+        // pinto el numero de me gustas
+        binding.numeroMeGusta.text = objeto.numeroLikes.toString()
+
+        // pinto el me gusta en caso de que el usuario le haya dado like
+        if (objeto.like) {
+            Utils.putResourceImageIntoImageViewWithoutCorners(binding.botonMeGusta, R.drawable.ic_likedbutton, itemView.context)
+        } else {
+            Utils.putResourceImageIntoImageViewWithoutCorners(binding.botonMeGusta, R.drawable.ic_likebutton, itemView.context)
+        }
 
         // TODO pinto el numero de megustas de la opinion
 
@@ -85,7 +93,25 @@ class OpinionViewHolder(
                 @RequiresApi(Build.VERSION_CODES.Q)
                 override fun callback(any: Any) {
 
-                    // TODO esto ha de ejecutarse una vez sepa si le he dado a me gusta o no
+                    if (any == 0) {
+                        // TODO ERROR
+                    } else {
+
+                        if (!objeto.like) {
+                            objeto.numeroLikes += 1
+                            objeto.like = true
+                            Utils.putResourceImageIntoImageViewWithoutCorners(binding.botonMeGusta, R.drawable.ic_likedbutton, itemView.context)
+                            binding.numeroMeGusta.text = objeto.numeroLikes.toString()
+
+                        } else {
+                            objeto.numeroLikes -= 1
+                            objeto.like = false
+                            Utils.putResourceImageIntoImageViewWithoutCorners(binding.botonMeGusta, R.drawable.ic_likebutton, itemView.context)
+                            binding.numeroMeGusta.text = objeto.numeroLikes.toString()
+
+                        }
+
+                    }
 
                 }
             })

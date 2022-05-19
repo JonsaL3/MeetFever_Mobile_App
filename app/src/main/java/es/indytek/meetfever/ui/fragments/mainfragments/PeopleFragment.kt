@@ -86,7 +86,7 @@ class PeopleFragment : Fragment() {
                                     Animations.pintarGridRecyclerViewSuavemente(
                                         gridLayoutManager = GridLayoutManager(requireContext(), 3),
                                         recyclerView = binding.busquedaPersonasRecyclerView,
-                                        adapter = PersonaRecyclerViewAdapter(personas)
+                                        adapter = PersonaRecyclerViewAdapter(personas, currentUsuario)
                                     )
                                 } catch (e: IllegalStateException) {
                                     Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
@@ -186,7 +186,7 @@ class PeopleFragment : Fragment() {
                         Animations.pintarLinearRecyclerViewSuavemente(
                             linearLayoutManager = LinearLayoutManager(requireContext()),
                             recyclerView = binding.topPersonasRecyclerView,
-                            adapter = PersonaRecyclerViewAdapter(personas),
+                            adapter = PersonaRecyclerViewAdapter(personas, currentUsuario),
                             orientation = LinearLayoutManager.HORIZONTAL,
                         )
                     } catch (e: IllegalStateException) {
@@ -214,7 +214,7 @@ class PeopleFragment : Fragment() {
                         Animations.pintarLinearRecyclerViewSuavemente(
                             linearLayoutManager = LinearLayoutManager(requireContext()),
                             recyclerView = binding.personasQueQuizasConozcasRecyclerView,
-                            adapter = PersonaRecyclerViewAdapter(personas),
+                            adapter = PersonaRecyclerViewAdapter(personas, currentUsuario),
                             orientation = LinearLayoutManager.HORIZONTAL,
                         )
                     } catch (e: IllegalStateException) {

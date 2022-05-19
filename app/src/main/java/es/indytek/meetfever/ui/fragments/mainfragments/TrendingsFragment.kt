@@ -148,7 +148,7 @@ class TrendingsFragment : Fragment() {
     // pinto las 100 opiniones con mas megustas de las ultimas 24 horas
     private fun pintarOpiniones() {
 
-        WebServiceOpinion.find100OpinionesMasGustadas24h(requireContext(), object:
+        WebServiceOpinion.find100OpinionesMasGustadas24h(currentUsuario.id, requireContext(), object:
             WebServiceGenericInterface {
             override fun callback(any: Any) {
 

@@ -21,6 +21,7 @@ import es.indytek.meetfever.ui.recyclerviews.adapters.PersonaRecyclerViewAdapter
 import es.indytek.meetfever.utils.Animations
 
 private const val ARG_PARAM1 = "usuario"
+private const val ARG_PARAM2 = "currentUsuario"
 
 class AllEmpresasFragment : Fragment() {
 
@@ -67,7 +68,7 @@ class AllEmpresasFragment : Fragment() {
                         Animations.pintarGridRecyclerViewSuavemente(
                             gridLayoutManager = GridLayoutManager(requireContext(), 3),
                             recyclerView = binding.recyclerAllEmpresas,
-                            adapter = EmpresaRecyclerViewAdapter(empresas),
+                            adapter = EmpresaRecyclerViewAdapter(empresas, usuario),
                         )
                     } catch (e: IllegalStateException) {
                         Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
