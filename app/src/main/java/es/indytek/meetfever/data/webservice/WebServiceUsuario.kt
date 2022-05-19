@@ -4,13 +4,79 @@ import android.content.Context
 import android.util.Log
 import com.google.gson.GsonBuilder
 import es.indytek.meetfever.models.empresa.Empresa
+import es.indytek.meetfever.models.mesigue.MeSigue
 import es.indytek.meetfever.models.persona.Persona
+import es.indytek.meetfever.models.typeAdapters.LocalDateTimeTypeAdapter
 import es.indytek.meetfever.models.usuario.Usuario
 import org.json.JSONObject
 import java.lang.Exception
 import java.lang.IllegalArgumentException
+import java.time.LocalDateTime
 
 object WebServiceUsuario {
+
+    // pregunto si ya sigo a un usuario
+    fun isSeguidoPorUser(idSeguidor: Int, idSeguido: Int, context: Context, callback : WebServiceGenericInterface) {
+
+        val url = "interface/api/meetfever/usuario/IsFollow"
+        val jsonObject = JSONObject().apply {
+            put("Seguidor", idSeguidor)
+            put("Seguido", idSeguido)
+        }
+
+        try {
+
+            WebService.processRequestPost(context, url, jsonObject, object: WebServiceGenericInterface {
+                override fun callback(any: Any) {
+
+                    if (any.toString().isNotEmpty()) {
+
+                        val isFollowed = GsonBuilder()
+                            .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeTypeAdapter())
+                            .create()
+                            .fromJson(any.toString(), MeSigue::class.java)
+
+                        callback.callback(isFollowed)
+
+                    } else {
+                        callback.callback(0)
+                    }
+
+                }
+            })
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    // seguir o dejar de seguir SeguirAUnUsuario
+    fun seguirDejarDeSeguir(idSeguidor: Int, idSeguido: Int, context: Context, callback : WebServiceGenericInterface) {
+
+        val url = "interface/api/meetfever/usuario/SeguirAUnUsuario"
+        val jsonObject = JSONObject().apply {
+            put("Seguidor", idSeguidor)
+            put("Seguido", idSeguido)
+        }
+
+        try {
+
+            WebService.processRequestPost(context, url, jsonObject, object: WebServiceGenericInterface {
+                override fun callback(any: Any) {
+
+                    if (any.toString().isNotEmpty()) {
+                        callback.callback(any)
+                    } else {
+                        callback.callback(0)
+                    }
+
+                }
+            })
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 
     // Iniciar Sesión
     fun inciarSesion(correo: String, contrasena: String, context: Context, callback : WebServiceGenericInterface) {

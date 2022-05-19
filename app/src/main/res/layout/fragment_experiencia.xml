@@ -245,7 +245,7 @@
                 />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/botonLoguearse"
+                android:id="@+id/boton_pagar"
                 android:layout_width="150dp"
                 android:layout_gravity="center"
                 android:layout_height="40dp"
@@ -255,6 +255,7 @@
                 android:fontFamily="@font/montserrat_light"
                 android:layout_marginTop="30dp"
                 android:textAllCaps="false"
+                android:layout_marginBottom="50dp"
                 />
 
         </LinearLayout>

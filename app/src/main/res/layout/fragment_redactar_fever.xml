@@ -41,7 +41,7 @@
             android:layout_marginHorizontal="10dp"
             android:gravity="center">
 
-            <com.google.android.material.imageview.ShapeableImageView
+            <ImageView
                 android:id="@+id/foto_perfil"
                 android:layout_width="50dp"
                 android:layout_height="50dp"

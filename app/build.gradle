@@ -49,10 +49,6 @@ dependencies {
     // Volley, mejor que retrofit
     implementation 'com.android.volley:volley:1.2.1'
 
-    // hkhttp para ver las respuestas interceptadas
-    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.9.0'
-    implementation group: 'com.squareup.okhttp3', name: 'logging-interceptor', version: '4.9.0'
-
     // Navbar animada (provisional)
     implementation 'nl.joery.animatedbottombar:library:1.1.0'
 
@@ -81,4 +77,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
     implementation 'androidx.fragment:fragment-ktx:1.4.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
+    // Paypal
+    implementation 'com.paypal.sdk:paypal-android-sdk:2.14.2'
 }

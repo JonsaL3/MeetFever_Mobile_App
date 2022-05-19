@@ -133,7 +133,7 @@
                 </FrameLayout>
 
 
-                <com.google.android.material.imageview.ShapeableImageView
+                <ImageView
                     android:id="@+id/profilePicture"
                     android:layout_width="171dp"
                     android:layout_height="167dp"
@@ -144,35 +144,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="1.0"
                     tools:background="@tools:sample/avatars"
-                    app:shapeAppearance="@style/circular"
                     />
-
-                <ImageView
-                    android:id="@+id/bluredEdge"
-                    android:layout_width="167dp"
-                    android:layout_height="167dp"
-                    android:layout_marginBottom="80dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="1.0"
-                    tools:background="@drawable/ic_blured_edges" />
-
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/isFamousPeopleFramework"
-                    android:layout_width="167dp"
-                    android:layout_height="167dp"
-                    android:layout_marginBottom="80dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="1.0"
-                    tools:background="@drawable/ic_famous_edges"
-                    app:shapeAppearance="@style/circular"
-                    />
-
 
                 <TextView
                     android:id="@+id/tvNombre"
@@ -201,18 +173,34 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvNombre" />
 
-                <ImageView
-                    android:id="@+id/seguidor_seguido"
-                    android:layout_width="33dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/ic_follow"
-                    app:layout_constraintBottom_toTopOf="@+id/profilePicture"
+                <FrameLayout
+                    android:id="@+id/seguir_no_seguir"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.95"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/profilePicture"
+                    >
 
-                </ImageView>
+                    <ImageView
+                        android:id="@+id/seguir_boton"
+                        android:layout_width="33dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/ic_follow"
+                        android:visibility="gone"
+                        />
+
+                    <ImageView
+                        android:id="@+id/dejar_de_seguir_boton"
+                        android:layout_width="33dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/ic_unfollow"
+                        android:visibility="gone"
+                        />
+
+                </FrameLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
