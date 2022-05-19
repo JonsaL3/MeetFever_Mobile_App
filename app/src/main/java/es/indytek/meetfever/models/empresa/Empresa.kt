@@ -35,7 +35,6 @@ class Empresa(
     var dniPersona: String? = null,
 
     ) : Usuario(id, correo, contrasena, nick, fotoFondo, fotoPerfil, telefono, frase) {
-
     // constructor dado el correo, la contraseña y el nick
     constructor(correo: String, contrasena: String, nick: String) : this (
         0,
