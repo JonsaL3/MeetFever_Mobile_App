@@ -19,16 +19,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp">
+            android:layout_margin="10dp"
+            android:gravity="end">
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/botonIrARegistrarse"
+                android:id="@+id/botonSendFever"
                 android:layout_width="150dp"
                 android:layout_height="40dp"
                 android:background="@drawable/anim_button_pressed"
                 android:fontFamily="@font/montserrat_light"
                 android:text="@string/publicar_fever"
                 android:textAllCaps="false"
+
                 android:textColor="@color/white" />
 
         </LinearLayout>
@@ -106,31 +108,37 @@
             app:layout_constraintVertical_bias="0.8"
             tools:ignore="SmallSp" />
 
-        <FrameLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
 
-
             <com.airbnb.lottie.LottieAnimationView
-            android:layout_marginTop="50dp"
-            android:id="@+id/animationView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-                android:visibility="gone"
-            app:lottie_rawRes="@raw/loading_animation"
-            app:lottie_autoPlay="true"
-            app:lottie_loop="true"/>
+                android:id="@+id/animationView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/loading_animation" />
 
             <GridLayout
                 android:id="@+id/lechuga"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:columnCount="10"
-                android:padding="15dp">
+                android:padding="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
             </GridLayout>
-        </FrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/no_seleccionado"
