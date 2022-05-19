@@ -1,58 +1,49 @@
 package es.indytek.meetfever.ui.fragments.secondaryfragments.fever
 
-import android.content.Context
+import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Spannable
 import android.text.style.ForegroundColorSpan
+import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.ImageView
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
 import es.indytek.meetfever.R
 import es.indytek.meetfever.data.webservice.WebServiceEmoticono
 import es.indytek.meetfever.data.webservice.WebServiceEmpresa
 import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
 import es.indytek.meetfever.databinding.FragmentRedactarFeverBinding
+import es.indytek.meetfever.models.emoticono.Emoticono
 import es.indytek.meetfever.models.emoticono.EmoticonoWrapper
 import es.indytek.meetfever.models.empresa.Empresa
 import es.indytek.meetfever.models.usuario.Usuario
-import es.indytek.meetfever.ui.fragments.viewModels.RedactarFeverViewModel
-import es.indytek.meetfever.ui.recyclerviews.adapters.IconoRecyclerViewAdapter
-import es.indytek.meetfever.utils.Animations
 import es.indytek.meetfever.utils.Utils
 import kotlinx.coroutines.*
-import java.lang.Runnable
-import kotlin.coroutines.CoroutineContext
-import androidx.fragment.app.viewModels
 
 
 private const val ARG_PARAM1 = "currentUsuario"
 
-class RedactarFeverFragment : Fragment(), CoroutineScope {
-    //job para la coroutines
-    private var job: Job = Job()
-
-    //creando el contexto de la coroutines
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
-
-//    private val redactarFeverViewModel: RedactarFeverViewModel by viewModels()
+class RedactarFeverFragment : Fragment() {
 
     private lateinit var binding: FragmentRedactarFeverBinding
     private lateinit var currentUsuario: Usuario
+    private lateinit var emoticonos: ArrayList<Emoticono>
+    private lateinit var imageViews: ArrayList<ImageView>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             currentUsuario = it.getSerializable(ARG_PARAM1) as Usuario
         }
+
+        emoticonos = ArrayList()
+        imageViews = ArrayList()
     }
 
     override fun onCreateView(
@@ -69,11 +60,6 @@ class RedactarFeverFragment : Fragment(), CoroutineScope {
         procesadorDeTextoYCaracteres()
 
         return binding.root
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
     }
 
     // cuento que el usuario no supere los 250 caracteres
@@ -205,28 +191,31 @@ class RedactarFeverFragment : Fragment(), CoroutineScope {
     }
 
     // pinto todos los emoticonos que puede seleccionar y estén en la base de datos remota
-    @OptIn(DelicateCoroutinesApi::class)
     private fun pintarIconosSeleccionables() {
         WebServiceEmoticono.obtenerTodosLosEmoticonos(requireContext(), object: WebServiceGenericInterface {
             override fun callback(any: Any) {
 
-                //binding.animationView.visibility = View.GONE
+               // binding.animationView.visibility = View.GONE
 
                 if (any == 0) {
                     // TODO ERROR
                 } else {
 
-                    val emoticonos = any as EmoticonoWrapper
+                    val e = any as EmoticonoWrapper
 
-                    Animations.ocultarVistaSuavemente(binding.animationView, 500)
+                    //Animations.ocultarVistaSuavemente(binding.animationView, 500)
 
                     try {
-                        Animations.pintarGridRecyclerViewSuavemente(
-                            gridLayoutManager = GridLayoutManager(requireContext(), 11),
-                            recyclerView = binding.listaDeIconos,
-                            adapter = IconoRecyclerViewAdapter(emoticonos),
-                            duration = 200
-                        )
+//                        Animations.pintarGridRecyclerViewSuavemente(
+//                            gridLayoutManager = GridLayoutManager(requireContext(), 11),
+//                            recyclerView = binding.listaDeIconos,
+//                            adapter = IconoRecyclerViewAdapter(emoticonos),
+//                            duration = 200
+//                        )
+
+                        emoticonos.addAll(e)
+
+                        createEmoticonoImageViews()
 
                     } catch (e: Exception) {
                         Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
@@ -240,6 +229,57 @@ class RedactarFeverFragment : Fragment(), CoroutineScope {
         })
 
     }
+
+    fun createEmoticonoImageViews(){
+
+        val emoticonosViews = ArrayList<ImageView>()
+
+        for (emoticono in emoticonos){
+            val decodedString: ByteArray = Base64.decode(emoticono.emoji, Base64.DEFAULT)
+            val decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+
+            val imageView = ImageView(requireContext())
+            imageView.setImageBitmap(decodedByte)
+
+            imageViews.add(imageView)
+            imageView.setOnClickListener {
+                imageViews.forEach {
+                    it.clearColorFilter()
+                }
+
+                imageView.setColorFilter(requireContext().getColor(R.color.rosa_meet), PorterDuff.Mode.SRC_ATOP)
+
+                //TODO QUEDARME CON EL QUE SELECCIONE
+
+
+            }
+
+            emoticonosViews.add(imageView)
+
+        }
+
+        //creo el layoutparam
+
+//        val layout = binding.lechuga
+
+        //le asigno una posición
+        imageViews.forEach {
+
+//            layout.addView(it)
+
+            // le doy una altura de 100
+            it.layoutParams.height = 80
+            it.layoutParams.width = 80
+//            it.layoutParams.
+
+
+        }
+
+
+
+
+    }
+
 
     companion object {
         @JvmStatic
