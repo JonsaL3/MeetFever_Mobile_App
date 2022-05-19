@@ -34,10 +34,10 @@
         </LinearLayout>
 
         <LinearLayout
-            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp">
+            android:layout_marginHorizontal="10dp"
+            android:gravity="center">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/foto_perfil"
@@ -53,14 +53,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
-                android:maxHeight="100dp"
-                android:textSize="15sp"
                 android:fontFamily="@font/montserrat_light"
-                android:textColor="@color/gris_textos"
                 android:hint="Escriba aqui su opinión de una @empresa o #experiencia"
+                android:maxHeight="100dp"
+                android:textColor="@color/gris_textos"
                 android:textColorHint="@color/gris_hint"
-                />
-                />
+                android:textSize="15sp" />
+            />
 
         </LinearLayout>
 
@@ -72,6 +71,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginEnd="15dp"
             android:fontFamily="@font/montserrat_light"
+            android:text="@string/_0_250_caracteres"
             android:textColor="@color/gris_textos"
             android:textSize="10sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -80,8 +80,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.8"
-            tools:ignore="SmallSp"
-            android:text="@string/_0_250_caracteres" />
+            tools:ignore="SmallSp" />
 
         <View
             android:layout_width="match_parent"
@@ -111,21 +110,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+
+
             <com.airbnb.lottie.LottieAnimationView
             android:layout_marginTop="50dp"
             android:id="@+id/animationView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+                android:visibility="gone"
             app:lottie_rawRes="@raw/loading_animation"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/lista_de_iconos"
-                android:layout_width="wrap_content"
+            <GridLayout
+                android:id="@+id/lechuga"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp" />
+                android:columnCount="10"
+                android:padding="15dp">
+
+            </GridLayout>
         </FrameLayout>
 
         <TextView

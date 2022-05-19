@@ -60,7 +60,7 @@ object WebService {
 
                     val resGson: DefaultResult = Gson().fromJson(response.getJSONObject("data").toString(), DefaultResult::class.java)
 
-                    Log.w(":::PRUEBA", resGson.toString())
+                    //Log.w(":::PRUEBA", resGson.toString())
 
                     if (resGson.rETCODE == 0) {
                         resGson.jSONOUT?.let { callback.callback(it) }
