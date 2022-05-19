@@ -26,6 +26,7 @@ import es.indytek.meetfever.utils.Animations
 import es.indytek.meetfever.utils.Utils
 
 private const val ARG_PARAM1 = "usuarioGenerico"
+private const val ARG_PARAM2 = "usuario"
 
 class PerfilFragment : Fragment() {
 
@@ -34,11 +35,13 @@ class PerfilFragment : Fragment() {
 
     // datos que voy a necesitar en este fragmento
     private lateinit var usuario: Usuario
+    private lateinit var currentUsuario: Usuario
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             usuario = it.getSerializable(ARG_PARAM1) as Usuario
+            currentUsuario = it.getSerializable(ARG_PARAM2) as Usuario
         }
     }
 
@@ -103,7 +106,7 @@ class PerfilFragment : Fragment() {
 
     private fun pintarOpiniones() {
 
-        WebServiceOpinion.obtenerOpinionPorIdAutor(usuario, requireContext() ,object : WebServiceGenericInterface {
+        WebServiceOpinion.obtenerOpinionPorIdAutor(usuario, currentUsuario, requireContext() ,object : WebServiceGenericInterface {
             override fun callback(any: Any) {
 
                 if (any == 0) {
@@ -129,10 +132,11 @@ class PerfilFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(usuario: Usuario) =
+        fun newInstance(usuario: Usuario, currentUsuario: Usuario) =
             PerfilFragment().apply {
                 arguments = Bundle().apply {
                     putSerializable(ARG_PARAM1, usuario)
+                    putSerializable(ARG_PARAM2, currentUsuario)
                 }
             }
     }

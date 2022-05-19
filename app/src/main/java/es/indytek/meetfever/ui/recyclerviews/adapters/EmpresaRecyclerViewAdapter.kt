@@ -5,17 +5,19 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import es.indytek.meetfever.databinding.ViewholderEmpresaBinding
 import es.indytek.meetfever.models.empresa.Empresa
+import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.ui.recyclerviews.viewholders.EmpresaViewHolder
 
 class EmpresaRecyclerViewAdapter(
 
-    private val lista: List<Empresa>
+    private val lista: List<Empresa>,
+    private val currentUsuario: Usuario
 
 ) : RecyclerView.Adapter<EmpresaViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EmpresaViewHolder {
         val binding = ViewholderEmpresaBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return EmpresaViewHolder(binding.root, binding)
+        return EmpresaViewHolder(binding.root, binding, currentUsuario)
     }
 
     override fun onBindViewHolder(holder: EmpresaViewHolder, position: Int) {

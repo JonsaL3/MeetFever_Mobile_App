@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun cargarPerfil() {
-        val fragmento = PerfilFragment.newInstance(currentUsuario)
+        val fragmento = PerfilFragment.newInstance(currentUsuario, currentUsuario)
         supportFragmentManager.beginTransaction().replace(R.id.frame_layout,fragmento).commit()
     }
 

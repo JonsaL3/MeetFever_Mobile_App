@@ -96,7 +96,7 @@ class ExplorerFragment : Fragment() {
                                     Animations.pintarGridRecyclerViewSuavemente(
                                         gridLayoutManager = GridLayoutManager(requireContext(), 3),
                                         recyclerView = binding.localesEncontradosRecycler,
-                                        adapter = EmpresaRecyclerViewAdapter(empresas),
+                                        adapter = EmpresaRecyclerViewAdapter(empresas, currentUsuario),
                                     )
                                 } catch (e: IllegalStateException) {
                                     Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
@@ -241,7 +241,7 @@ class ExplorerFragment : Fragment() {
                         Animations.pintarLinearRecyclerViewSuavemente(
                             linearLayoutManager = LinearLayoutManager(requireContext()),
                             recyclerView = binding.localesTrendingRecycler,
-                            adapter = EmpresaRecyclerViewAdapter(empresas),
+                            adapter = EmpresaRecyclerViewAdapter(empresas, currentUsuario),
                             orientation = LinearLayoutManager.HORIZONTAL,
                         )
                     } catch (e: Exception) {

@@ -22,6 +22,13 @@ data class Opinion(
     @SerializedName("Id_Empresa")
     var idEmpresa: Int = 0,
     @SerializedName("Titulo")
-    var titulo: String = ""
+    var titulo: String = "",
+
+    // información calculada de los me gusta
+    @SerializedName("Numero_Likes")
+    var numeroLikes: Int = 0,
+
+    @SerializedName("Like")
+    var like: Boolean = false,
 
 ) : Serializable

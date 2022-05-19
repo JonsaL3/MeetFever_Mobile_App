@@ -54,14 +54,16 @@ object WebServiceOpinion {
     }
 
     // Obtener las 100 opiniones mas gustadas de las ultimas 24 horas
-    fun find100OpinionesMasGustadas24h(context: Context, callback : WebServiceGenericInterface) {
+    fun find100OpinionesMasGustadas24h(idUsuario: Int, context: Context, callback : WebServiceGenericInterface) {
 
         val url = "interface/api/meetfever/opinion/ObtenerOpinionesMasGustadas24Horas"
-        val jsonObject = JSONObject()
+        val jsonObject = JSONObject().apply {
+            put("Id_Usuario", idUsuario)
+        }
 
         try {
 
-            WebService.processRequestGet(context, url, jsonObject, object: WebServiceGenericInterface {
+            WebService.processRequestPost(context, url, jsonObject, object: WebServiceGenericInterface {
                 override fun callback(any: Any) {
 
                     if (any.toString().isNotEmpty()) {
@@ -86,10 +88,13 @@ object WebServiceOpinion {
     }
 
     // Obtener las 100 opiniones mas gustadas de las ultimas 24 horas
-    fun obtenerOpinionPorIdAutor(autor: Usuario, context: Context, callback : WebServiceGenericInterface) {
+    fun obtenerOpinionPorIdAutor(autor: Usuario, usuario: Usuario, context: Context, callback : WebServiceGenericInterface) {
 
         val url = "interface/api/meetfever/opinion/ObtenerOpinionPorIdAutor"
-        val jsonObject = JSONObject().put("Id_Autor", autor.id)
+        val jsonObject = JSONObject().apply {
+            put("Id_Autor", autor.id)
+            put("Id_Usuario", usuario.id)
+        }
 
         try {
 
