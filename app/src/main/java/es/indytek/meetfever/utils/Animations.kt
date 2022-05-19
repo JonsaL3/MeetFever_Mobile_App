@@ -65,4 +65,20 @@ object Animations {
 
     }
 
+    fun agrandarViewSuavemente(
+        view: View,
+        duration: Long = Constantes.TIEMPO_DE_ANIMACIONES/3) {
+
+        view.animate().scaleXBy(0.2f).setDuration(duration).start()
+        view.animate().scaleYBy(0.2f).setDuration(duration).start()
+    }
+
+    fun reducirViewSuavemente(
+        view: View,
+        duration: Long = Constantes.TIEMPO_DE_ANIMACIONES) {
+
+        view.animate().scaleXBy(-0.2f).setDuration(duration).start()
+        view.animate().scaleYBy(-0.2f).setDuration(duration).start()
+    }
+
 }
