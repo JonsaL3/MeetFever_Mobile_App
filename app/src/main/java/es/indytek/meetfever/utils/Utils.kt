@@ -158,10 +158,8 @@ object Utils {
 
     fun putResourceImageIntoImageViewWithoutCorners(imageView: ImageView, resourceImage: Int, context: Context) {
         var requestOptions = RequestOptions()
-        requestOptions = requestOptions.transform(CenterCrop())
         Glide.with(context)
             .load(resourceImage)
-            .apply(requestOptions)
             .into(imageView)
     }
 
