@@ -53,12 +53,7 @@ class OpinionViewHolder(
         }
 
         // planto la foto de perfil o su placeholder
-        val foto = objeto.autor.fotoPerfil
-        foto?.let {
-            Utils.putBase64ImageIntoImageViewWithPlaceholder(binding.imagenAutor, it, itemView.context, R.drawable.ic_default_user_image)
-        }?: kotlin.run {
-            Utils.putResourceImageIntoImageView(binding.imagenAutor, R.drawable.ic_default_experience, itemView.context)
-        }
+        Utils.pintarFotoDePerfil(objeto.autor, binding.imagenAutor, view.context)
 
         // planto el emoji de la opinion
         val emoji = objeto.eMOTICONO.emoji

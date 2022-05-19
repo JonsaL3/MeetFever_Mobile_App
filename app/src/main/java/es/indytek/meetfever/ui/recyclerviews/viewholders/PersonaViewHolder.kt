@@ -28,12 +28,7 @@ class PersonaViewHolder(
         binding.texto.text = objeto.nick.toString()
 
         // Si tiene foto de perfil, la pinto
-        val foto = objeto.fotoPerfil
-        foto?.let {
-            Utils.putBase64ImageIntoImageViewCircularWithPlaceholder(binding.imagen, it, itemView.context, R.drawable.ic_default_user_image)
-        }?: kotlin.run {
-            Utils.putResourceImageIntoImageViewCircular(binding.imagen, R.drawable.ic_default_experience, itemView.context)
-        }
+        Utils.pintarFotoDePerfil(objeto, binding.imagen, view.context)
 
         binding.viewholderPersona.setOnClickListener {
             onClick(objeto)

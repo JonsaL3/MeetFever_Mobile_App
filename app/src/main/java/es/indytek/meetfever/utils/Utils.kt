@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.media.Image
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.util.Base64
@@ -18,6 +19,9 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import es.indytek.meetfever.R
+import es.indytek.meetfever.models.empresa.Empresa
+import es.indytek.meetfever.models.persona.Persona
+import es.indytek.meetfever.models.usuario.Usuario
 import java.io.ByteArrayInputStream
 
 object Utils {
@@ -100,7 +104,7 @@ object Utils {
 
     fun putBase64ImageIntoImageViewCircularWithPlaceholder(imageView: ImageView, base64Image: String, context: Context, placeholder: Int) {
         var requestOptions = RequestOptions()
-        requestOptions = requestOptions.transform(CenterCrop(), RoundedCorners(55))
+        requestOptions = requestOptions.transform(CenterCrop(), RoundedCorners(500))
 
         Glide.with(context)
             .load(Base64.decode(base64Image, Base64.DEFAULT))
@@ -175,5 +179,29 @@ object Utils {
         textView.setTextColor(ContextCompat.getColor(context, color))
     }
 
+    fun pintarFotoDePerfil(usuario: Usuario, imageView: ImageView, context: Context) {
+
+        val foto = usuario.fotoPerfil
+
+        foto?.let { // puede existir la foto pero no ser correcta
+
+            if (usuario is Empresa) {
+                putBase64ImageIntoImageViewWithPlaceholder(imageView, it, context, R.drawable.ic_default_enterprise_black_and_white)
+            } else {
+                // por ejemplo en las opiniones no se si es una empresa o una persona, asique por defecto que la pinte circular ahi siempre
+                putBase64ImageIntoImageViewCircularWithPlaceholder(imageView, it, context, R.drawable.ic_default_user_image)
+            }
+
+        }?: kotlin.run { // si no tiene foto porque es null...
+
+            if (usuario is Empresa) {
+                putResourceImageIntoImageViewWithoutCorners(imageView, R.drawable.ic_default_enterprise_black_and_white, context)
+            } else {
+                putResourceImageIntoImageViewCircular(imageView, R.drawable.ic_default_user_image, context)
+            }
+
+        }
+
+    }
 
 }

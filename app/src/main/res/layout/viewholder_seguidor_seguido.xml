@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="160dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginHorizontal="10dp"
+    android:id="@+id/viewholder_seguidor_seguido"
+    android:background="@drawable/ic_background_gradient_shape_followed_following"
+    >
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/foto_perfil"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_gravity="center_vertical"
+        android:src="@color/design_default_color_primary"
+        app:shapeAppearance="@style/circular"
+        android:layout_marginStart="30dp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical"
+        >
+
+        <TextView
+            android:id="@+id/nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_light"
+            tools:text="Auron Sasel"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:layout_marginLeft="15dp"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="10dp"
+            android:background="@color/gris_textos"
+            />
+
+        <TextView
+            android:id="@+id/frase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_light"
+            tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod t adipiscing elit, sed do eiusmod  "
+            android:textColor="@color/white"
+            android:layout_marginStart="15dp"
+            android:textSize="14sp"
+            android:layout_marginEnd="10dp"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

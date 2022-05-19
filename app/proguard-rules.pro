@@ -19,3 +19,8 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# presunta solución a error de paypal.
+-keepclassmembers class * implements javax.net.ssl.SSLSocketFactory {
+         private javax.net.ssl.SSLSocketFactory delegate;
+    }

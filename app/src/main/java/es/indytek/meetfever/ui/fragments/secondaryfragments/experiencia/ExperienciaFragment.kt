@@ -1,23 +1,30 @@
 package es.indytek.meetfever.ui.fragments.secondaryfragments.experiencia
 
+import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import com.paypal.android.sdk.payments.PayPalConfiguration
+import com.paypal.android.sdk.payments.PayPalPayment
+import com.paypal.android.sdk.payments.PayPalService
+import com.paypal.android.sdk.payments.PaymentActivity
 import es.indytek.meetfever.R
 import es.indytek.meetfever.databinding.FragmentExperienciaBinding
 import es.indytek.meetfever.models.experiencia.Experiencia
 import es.indytek.meetfever.models.usuario.Usuario
-import es.indytek.meetfever.utils.Animations
+import es.indytek.meetfever.ui.fragments.secondaryfragments.perfil.PerfilFragment
 import es.indytek.meetfever.utils.Constantes
 import es.indytek.meetfever.utils.Utils
+import java.math.BigDecimal
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
-import kotlin.math.roundToLong
+
 
 private const val ARG_PARAM1 = "usuario"
 private const val ARG_PARAM2 = "experiencia"
@@ -30,6 +37,16 @@ class ExperienciaFragment : Fragment() {
     // datos que necesito
     private lateinit var usuario: Usuario
     private lateinit var experiencia: Experiencia
+
+
+    // Datos relacionados con paypal
+    val clientKey: String = "AQkdu2M1YNJLU-M13rYdku9FcWHdam7ELImmxDyAJBVUCFUzYbB-bHcW7izS_RfNrv-ZW49uvOPNrR9F"
+    val PAYPAL_REQUEST_CODE = 123
+
+    // Paypal Configuration Object
+    private val config = PayPalConfiguration()
+        .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX) // on below line we are passing a client id.
+        .clientId(clientKey)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,10 +65,29 @@ class ExperienciaFragment : Fragment() {
         // pinto todos los elementos que necesito en pantalla
         pintar()
 
+        // arranco los listeners
+        arrancarListeners()
+
         return binding.root
     }
 
-    // funcion que se encarga de pintar todo
+    // arranco los listeners
+    private fun arrancarListeners() {
+        binding.botonVerEmpresaTexto.setOnClickListener {
+            val fragmento = PerfilFragment.newInstance (
+                usuario = experiencia.empresa,
+                currentUsuario = usuario
+            )
+            requireActivity().supportFragmentManager.beginTransaction().replace(R.id.frame_layout,fragmento).commit()
+        }
+
+        binding.botonPagar.setOnClickListener {
+            obtenerPago()
+        }
+
+    }
+
+    // funcion que se encarga de pintar to-do
     private fun pintar() {
         pintarNombreDelUsuarioQueInicioSesion()
         pintarExperiencia()
@@ -62,7 +98,7 @@ class ExperienciaFragment : Fragment() {
         // pinto los textos de la experiencia
         binding.tituloExperiencia.text = experiencia.titulo
         binding.descripcionExperiencia.text = experiencia.descripcion
-        binding.fechaExperiencia.text = experiencia.fechaCelebracion.format("dd:MM:yyyy a las HH:mm").toString()
+        binding.fechaExperiencia.text = experiencia.fechaCelebracion.format(DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm")).toString()
 
         // calculo el precio mas el iba mas la comisión
         ((experiencia.precio * Constantes.COMISION_MEET_FEVER * Constantes.IVA).roundToInt().toString() + "€").also { binding.precioCifra.text = it }
@@ -77,18 +113,30 @@ class ExperienciaFragment : Fragment() {
         }
 
         // pinto la imagen de la empresa que organiza la experiencia
-        val fotoEmpresa = experiencia.empresa.fotoPerfil
-        fotoEmpresa?.let {
-            Utils.putBase64ImageIntoImageViewWithPlaceholder(binding.imagenEmpresaExperiencia, it, requireContext(), R.drawable.ic_default_enterprise_black_and_white)
-            binding.degradadoEmpresaExperiencia.setColorFilter(Utils.getDominantColorInImageFromBase64(it), PorterDuff.Mode.SRC_ATOP)
+        Utils.pintarFotoDePerfil(experiencia.empresa, binding.imagenEmpresaExperiencia, requireContext())
+
+        // pinto el degradado de la imagen en consecuencia
+        experiencia.empresa.fotoPerfil?.let {
+
+            val color = Utils.getDominantColorInImageFromBase64(it)
+            binding.degradadoEmpresaExperiencia.backgroundTintList = ColorStateList.valueOf(color)
         }?: kotlin.run {
-            binding.imagenEmpresaExperiencia.setImageResource(R.drawable.ic_default_enterprise_black_and_white)
+            binding.degradadoEmpresaExperiencia.backgroundTintList = ColorStateList.valueOf(Color.BLACK)
+        }
+
+        // lo mismo con el degradado de la experiencia
+        experiencia.foto?.let {
+            val color = Utils.getDominantColorInImageFromBase64(it)
+            binding.degradadoExperiencia.backgroundTintList = ColorStateList.valueOf(color)
+        }?: kotlin.run {
+            binding.degradadoExperiencia.backgroundTintList = ColorStateList.valueOf(Color.BLACK)
         }
 
         // pinto el nombre de la empresa que organiza la experiencia
         binding.botonVerEmpresaTexto.text = experiencia.empresa.nombreEmpresa
 
     }
+
 
     // pinta los datos del tio que inició sesión
     private fun pintarNombreDelUsuarioQueInicioSesion() {
@@ -107,6 +155,39 @@ class ExperienciaFragment : Fragment() {
             }
         }
 
+    }
+
+    private fun obtenerPago() {
+
+        // Creating a paypal payment on below line.
+
+        // Creating a paypal payment on below line.
+        val payment = PayPalPayment(
+            BigDecimal(10), "USD", "Course Fees",
+            PayPalPayment.PAYMENT_INTENT_SALE
+        )
+
+        // Creating Paypal Payment activity intent
+
+        // Creating Paypal Payment activity intent
+        val intent = Intent(requireContext(), PaymentActivity::class.java)
+
+        //putting the paypal configuration to the intent
+
+        //putting the paypal configuration to the intent
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config)
+
+        // Putting paypal payment to the intent
+
+        // Putting paypal payment to the intent
+        intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payment)
+
+        // Starting the intent activity for result
+        // the request code will be used on the method onActivityResult
+
+        // Starting the intent activity for result
+        // the request code will be used on the method onActivityResult
+        startActivityForResult(intent, PAYPAL_REQUEST_CODE)
     }
 
     companion object {

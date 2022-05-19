@@ -177,16 +177,7 @@ class RedactarFeverFragment : Fragment() {
 
     // pinto los datos del usuario (em este caso la foto)
     private fun pintarDatosUsuario() {
-
-        val fotoPorDefecto = if (currentUsuario is Empresa) R.drawable.ic_default_enterprise_black_and_white else R.drawable.ic_default_user_image
-        val fotoPerfil = currentUsuario.fotoPerfil
-
-        fotoPerfil?.let {
-            Utils.putBase64ImageIntoImageViewCircularWithPlaceholder(binding.fotoPerfil, fotoPerfil, requireContext(), fotoPorDefecto)
-        }?: kotlin.run {
-            Utils.putResourceImageIntoImageView(binding.fotoPerfil, fotoPorDefecto, requireContext())
-        }
-
+        Utils.pintarFotoDePerfil(currentUsuario, binding.fotoPerfil, requireContext())
     }
 
     // pinto todos los emoticonos que puede seleccionar y estén en la base de datos remota

@@ -1,5 +1,7 @@
 package es.indytek.meetfever.ui.recyclerviews.viewholders
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.graphics.PorterDuff
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -28,13 +30,15 @@ class EmpresaViewHolder(
         binding.texto.text = objeto.nombreEmpresa.toString()
 
         // Si tiene foto de perfil, la pinto
-        val foto = objeto.fotoPerfil
+        Utils.pintarFotoDePerfil(objeto, binding.imagen, view.context)
 
-        foto?.let {
-            Utils.putBase64ImageIntoImageViewWithPlaceholder(binding.imagen, it, itemView.context, R.drawable.ic_default_enterprise_black_and_white)
-            binding.degradado.setColorFilter(Utils.getDominantColorInImageFromBase64(foto), PorterDuff.Mode.SRC_ATOP)
-        }?: kotlin.run {
-            binding.imagen.setImageResource(R.drawable.ic_default_enterprise_black_and_white)
+        // pinto el degradado del color que corresponda
+        val foto = objeto.fotoPerfil
+        foto?.let { // si tengo foto obtengo su color predominante
+            val color = Utils.getDominantColorInImageFromBase64(it)
+            binding.degradado.backgroundTintList = ColorStateList.valueOf(color)
+        }?: kotlin.run { // si no tiene foto lo pongo de blanco
+            binding.degradado.backgroundTintList = ColorStateList.valueOf(Color.BLACK)
         }
 
         // en caso de click cargo el perfil
