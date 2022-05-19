@@ -18,7 +18,8 @@ import es.indytek.meetfever.utils.Utils
 class PersonaViewHolder(
 
     private val view: View,
-    private val binding: ViewholderPersonaBinding
+    private val binding: ViewholderPersonaBinding,
+    private val currentUsuario: Usuario
 
 ) : RecyclerView.ViewHolder(view) {
 
@@ -43,7 +44,7 @@ class PersonaViewHolder(
     // al hacer click necesito la lista de opiniones para pintarla
     private fun onClick(persona: Persona) {
         val activity = view.context as AppCompatActivity
-        val fragmento = PerfilFragment.newInstance(persona)
+        val fragmento = PerfilFragment.newInstance(persona, currentUsuario)
         activity.supportFragmentManager.beginTransaction().replace(R.id.frame_layout,fragmento).commit()
     }
 

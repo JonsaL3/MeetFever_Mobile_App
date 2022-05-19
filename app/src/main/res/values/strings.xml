@@ -20,7 +20,6 @@
     <string name="meet_fever_trendings">Meet Fever! Trendings</string>
     <string name="meet_fever_people">Meet Fever! People</string>
     <string name="seguidores">Seguidores</string>
-    <string name="_0">0</string>
     <string name="seguidos">Seguidos</string>
     <string name="nombre">nombre</string>
     <string name="frase">frase</string>
@@ -61,5 +60,6 @@
     <string name="cuenta_de_empresa">Cuenta de empresa:</string>
     <string name="experiencias_encontradas">Experiencias encontradas</string>
     <string name="locales_encontrados">Locales encontrados</string>
+    <string name="_0">0</string>
 
 </resources>

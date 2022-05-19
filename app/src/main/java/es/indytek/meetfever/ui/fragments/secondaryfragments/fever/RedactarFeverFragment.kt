@@ -26,7 +26,6 @@ import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.utils.Utils
 import kotlinx.coroutines.*
 
-
 private const val ARG_PARAM1 = "currentUsuario"
 
 class RedactarFeverFragment : Fragment() {
@@ -250,8 +249,6 @@ class RedactarFeverFragment : Fragment() {
                 imageView.setColorFilter(requireContext().getColor(R.color.rosa_meet), PorterDuff.Mode.SRC_ATOP)
 
                 //TODO QUEDARME CON EL QUE SELECCIONE
-
-
             }
 
             emoticonosViews.add(imageView)
@@ -260,12 +257,12 @@ class RedactarFeverFragment : Fragment() {
 
         //creo el layoutparam
 
-//        val layout = binding.lechuga
+        val layout = binding.lechuga
 
         //le asigno una posición
         imageViews.forEach {
 
-//            layout.addView(it)
+            layout.addView(it)
 
             // le doy una altura de 100
             it.layoutParams.height = 80

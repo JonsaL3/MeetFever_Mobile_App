@@ -5,17 +5,19 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import es.indytek.meetfever.databinding.ViewholderPersonaBinding
 import es.indytek.meetfever.models.persona.Persona
+import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.ui.recyclerviews.viewholders.PersonaViewHolder
 
 class PersonaRecyclerViewAdapter (
 
-    private val lista: List<Persona>
+    private val lista: List<Persona>,
+    private val currentUsuario: Usuario
 
 ) : RecyclerView.Adapter<PersonaViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonaViewHolder {
         val binding = ViewholderPersonaBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return PersonaViewHolder(binding.root, binding)
+        return PersonaViewHolder(binding.root, binding, currentUsuario)
     }
 
     override fun onBindViewHolder(holder: PersonaViewHolder, position: Int) {

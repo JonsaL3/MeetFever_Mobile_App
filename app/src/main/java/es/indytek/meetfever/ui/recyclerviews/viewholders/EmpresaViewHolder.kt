@@ -10,13 +10,15 @@ import es.indytek.meetfever.data.webservice.WebServiceOpinion
 import es.indytek.meetfever.databinding.ViewholderEmpresaBinding
 import es.indytek.meetfever.models.empresa.Empresa
 import es.indytek.meetfever.models.opinion.OpinionWrapper
+import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.ui.fragments.secondaryfragments.perfil.PerfilFragment
 import es.indytek.meetfever.utils.Utils
 
 class EmpresaViewHolder(
 
     private val view: View,
-    private val binding: ViewholderEmpresaBinding
+    private val binding: ViewholderEmpresaBinding,
+    private val currentUsuario: Usuario
 
 ) : RecyclerView.ViewHolder(view) {
 
@@ -48,7 +50,7 @@ class EmpresaViewHolder(
         var opiniones: OpinionWrapper
 
         // pido la opinion
-        WebServiceOpinion.obtenerOpinionPorIdAutor(empresa, itemView.context, object: WebServiceGenericInterface {
+        WebServiceOpinion.obtenerOpinionPorIdAutor(empresa, currentUsuario, itemView.context, object: WebServiceGenericInterface {
             override fun callback(any: Any) {
 
                 if (any == 0) {
@@ -57,7 +59,7 @@ class EmpresaViewHolder(
                     opiniones = any as OpinionWrapper
                 }
 
-                val fragmento = PerfilFragment.newInstance(empresa)
+                val fragmento = PerfilFragment.newInstance(empresa, currentUsuario)
                 activity.supportFragmentManager.beginTransaction().replace(R.id.frame_layout,fragmento).commit()
             }
         })
