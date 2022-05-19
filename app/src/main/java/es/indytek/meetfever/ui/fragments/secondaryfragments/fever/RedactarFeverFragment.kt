@@ -26,7 +26,6 @@ import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.utils.Utils
 import kotlinx.coroutines.*
 
-
 private const val ARG_PARAM1 = "currentUsuario"
 
 class RedactarFeverFragment : Fragment() {

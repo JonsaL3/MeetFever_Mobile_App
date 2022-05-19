@@ -24,8 +24,13 @@ object WebServiceMeGusta {
 
             WebService.processRequestPost(context, url, jsonObject, object: WebServiceGenericInterface {
                 override fun callback(any: Any) {
-                    Log.d(":::JSON", jsonObject.toString())
-                    callback.callback("Petición de dar like o eliminarlo realizada correctamente.")
+
+                    if (any.toString().isNotEmpty()) {
+                        callback.callback(any)
+                    } else {
+                        callback.callback(0)
+                    }
+
                 }
             })
 
