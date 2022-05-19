@@ -31,7 +31,8 @@
             android:id="@+id/degradado"
             android:layout_width="115dp"
             android:layout_height="115dp"
-            android:src="@drawable/ic_degradado_explorer"
+            android:tintMode="multiply"
+            android:background="@drawable/ic_degradado_explorer"
             />
 
     </FrameLayout>
