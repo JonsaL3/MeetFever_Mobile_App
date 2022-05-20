@@ -35,35 +35,40 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:gravity="center">
-
-            <ImageView
-                android:id="@+id/foto_perfil"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                app:shapeAppearanceOverlay="@style/circular"
-                tools:background="@tools:sample/avatars" />
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/opinion_container"
+            android:layout_gravity="center">
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
-                android:fontFamily="@font/montserrat_light"
-                android:hint="Escriba aqui su opinión de una @empresa o #experiencia"
-                android:maxHeight="100dp"
-                android:textColor="@color/gris_textos"
-                android:textColorHint="@color/gris_hint"
-                android:textSize="15sp" />
-            />
+                android:gravity="center">
 
-        </LinearLayout>
+                <ImageView
+                    android:id="@+id/foto_perfil"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    app:shapeAppearanceOverlay="@style/circular"
+                    tools:background="@tools:sample/avatars" />
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/opinion_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:fontFamily="@font/montserrat_light"
+                    android:hint="Escriba aqui su opinión de una @empresa o #experiencia"
+                    android:maxHeight="100dp"
+                    android:textColor="@color/gris_textos"
+                    android:textColorHint="@color/gris_hint"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+
+        </FrameLayout>
 
         <TextView
             android:id="@+id/numeroCaracteresOpinion"
@@ -166,6 +171,84 @@
             android:layout_marginBottom="30dp"
             android:background="@color/gris_textos" />
 
+        <LinearLayout
+            android:id="@+id/experienciasLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center">
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/no_seleccionado_experiencia_preview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="15dp"
+                android:fontFamily="@font/montserrat_light"
+                android:text="@string/no_ha_seleccionado_ninguna_experiencia_opcional"
+                android:textColor="@color/gris_textos"
+                android:textSize="25sp"
+                android:layout_gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/profilePicture"
+                app:layout_constraintHorizontal_bias="0.571"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.8"
+                android:gravity="center"
+                tools:ignore="SmallSp"
+                android:visibility="visible"
+                />
+
+
+            <ImageView
+                android:id="@+id/experiencia_preview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:background="@tools:sample/avatars"
+                android:visibility="gone"/>
+            <ImageView
+                android:id="@+id/experiencia_preview_degradado"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:background="@drawable/ic_degradado_experiencia_redactar"
+                android:visibility="gone"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_marginTop="20dp">
+                <TextView
+                    android:id="@+id/experiencia_nombre"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="CACA"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"
+                    android:visibility="gone"/>
+                <TextView
+                    android:id="@+id/experiencia_descripcion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="CACA"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="5dp"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+        </FrameLayout>
+
     </LinearLayout>
 
     <FrameLayout
@@ -211,7 +294,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="15dp"
                 android:fontFamily="@font/montserrat_light"
-                android:text="No ha seleccionado ningún local aún"
+                android:text="@string/no_ha_seleccionado_ning_n_local_aun"
                 android:textColor="@color/gris_textos"
                 android:textSize="25sp"
                 android:layout_gravity="center"

@@ -83,7 +83,7 @@
     <!-- boton de me gusta-->
 
     <ImageView
-        android:id="@+id/boton_me_gusta"
+        android:id="@+id/btnMeGusta"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:src="@drawable/ic_likebutton"

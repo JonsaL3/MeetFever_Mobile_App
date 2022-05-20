@@ -3,10 +3,12 @@ package es.indytek.meetfever.ui.recyclerviews.viewholders
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.PorterDuff
 import android.os.Build
 import android.util.Log
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import android.widget.LinearLayout
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import es.indytek.meetfever.R
@@ -17,6 +19,7 @@ import es.indytek.meetfever.models.opinion.Opinion
 import es.indytek.meetfever.ui.fragments.mainfragments.TrendingsFragment
 import es.indytek.meetfever.ui.fragments.secondaryfragments.perfil.PerfilFragment
 import es.indytek.meetfever.utils.Utils
+
 
 class OpinionViewHolder(
 
@@ -70,15 +73,17 @@ class OpinionViewHolder(
 
         // pinto el me gusta en caso de que el usuario le haya dado like
         if (objeto.like) {
-            Utils.putResourceImageIntoImageViewWithoutCorners(binding.botonMeGusta, R.drawable.ic_likedbutton, itemView.context)
+
+            Utils.putResourceImageIntoImageViewWithoutCorners(binding.btnMeGusta, R.drawable.ic_likedbutton, itemView.context)
         } else {
-            Utils.putResourceImageIntoImageViewWithoutCorners(binding.botonMeGusta, R.drawable.ic_likebutton, itemView.context)
+
+            Utils.putResourceImageIntoImageViewWithoutCorners(binding.btnMeGusta, R.drawable.ic_likebutton, itemView.context)
         }
 
         // TODO pinto el numero de megustas de la opinion
 
         // Creo un listener que me permita darle a me gusta a una opinion
-        binding.botonMeGusta.setOnClickListener {
+        binding.btnMeGusta.setOnClickListener {
 
             Log.d(":::", "AUTOR -> ${objeto.autor.id}")
             Log.d(":::", "OPINION -> ${objeto.id}")
@@ -93,16 +98,20 @@ class OpinionViewHolder(
                     } else {
 
                         if (!objeto.like) {
+
                             objeto.numeroLikes += 1
                             objeto.like = true
-                            Utils.putResourceImageIntoImageViewWithoutCorners(binding.botonMeGusta, R.drawable.ic_likedbutton, itemView.context)
+                            Utils.putResourceImageIntoImageViewWithoutCorners(binding.btnMeGusta, R.drawable.ic_likedbutton, itemView.context)
                             binding.numeroMeGusta.text = objeto.numeroLikes.toString()
 
+
                         } else {
+
                             objeto.numeroLikes -= 1
                             objeto.like = false
-                            Utils.putResourceImageIntoImageViewWithoutCorners(binding.botonMeGusta, R.drawable.ic_likebutton, itemView.context)
+                            Utils.putResourceImageIntoImageViewWithoutCorners(binding.btnMeGusta, R.drawable.ic_likebutton, itemView.context)
                             binding.numeroMeGusta.text = objeto.numeroLikes.toString()
+
 
                         }
 
