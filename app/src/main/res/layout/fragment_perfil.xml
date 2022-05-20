@@ -35,66 +35,79 @@
                 tools:layout_editor_absoluteY="-21dp">
 
 
-                <TextView
-                    android:id="@+id/tvSeguidores"
+                <LinearLayout
+                    android:visibility="gone"
+                    android:id="@+id/seguidores_layout"
+                    android:orientation="vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_light"
-                    android:text="@string/seguidores"
-                    android:textColor="#FFFFFF"
-                    android:textSize="15sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/profilePicture"
                     app:layout_constraintHorizontal_bias="0.571"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.8" />
+                    app:layout_constraintVertical_bias="0.8"
+                    >
 
-                <TextView
-                    android:id="@+id/tvNSeguidores"
+                    <TextView
+                        android:id="@+id/tvSeguidores"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_light"
+                        android:text="@string/seguidores"
+                        android:textColor="#FFFFFF"
+                        android:textSize="15sp"
+                        />
+
+                    <TextView
+                        android:id="@+id/tvNSeguidores"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:fontFamily="@font/montserrat_light"
+                        android:text="@string/_0"
+                        android:textColor="#FFFFFF"
+                        android:textSize="15sp"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:visibility="gone"
+                    android:id="@+id/seguidos_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:fontFamily="@font/montserrat_light"
-                    tools:text="0"
-                    android:textColor="#FFFFFF"
-                    android:textSize="15sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/profilePicture"
-                    app:layout_constraintHorizontal_bias="0.25"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.714" />
-
-                <TextView
-                    android:id="@+id/tvSeguidos"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_light"
-                    android:text="@string/seguidos"
-                    android:textColor="#FFFFFF"
-                    android:textSize="15sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.95"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.797" />
-
-                <TextView
-                    android:id="@+id/tvNSeguidos"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_light"
-                    tools:text="0"
-                    android:textColor="#FFFFFF"
-                    android:textSize="15sp"
+                    android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.884"
+                    app:layout_constraintHorizontal_bias="0.92"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.714" />
+                    app:layout_constraintVertical_bias="0.8">
+
+                    <TextView
+                        android:id="@+id/tvSeguidos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_light"
+                        android:text="@string/seguidos"
+                        android:textColor="#FFFFFF"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/tvNseguidos"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center_horizontal"
+                        android:fontFamily="@font/montserrat_light"
+                        android:gravity="center"
+                        android:textColor="#FFFFFF"
+                        android:textSize="15sp"
+                        android:text="@string/_0"
+                        />
+
+                </LinearLayout>
 
                 <FrameLayout
                     android:id="@+id/frameLayout"

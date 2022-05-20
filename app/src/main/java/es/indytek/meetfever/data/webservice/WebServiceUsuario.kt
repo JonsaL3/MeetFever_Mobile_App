@@ -8,6 +8,7 @@ import es.indytek.meetfever.models.mesigue.MeSigue
 import es.indytek.meetfever.models.persona.Persona
 import es.indytek.meetfever.models.typeAdapters.LocalDateTimeTypeAdapter
 import es.indytek.meetfever.models.usuario.Usuario
+import es.indytek.meetfever.models.usuario.UsuarioWrapper
 import org.json.JSONObject
 import java.lang.Exception
 import java.lang.IllegalArgumentException
@@ -158,6 +159,70 @@ object WebServiceUsuario {
             }
         })
 
+    }
+
+    // Obtengo los seguidores y los seguidos
+    fun obtenerSeguidores(idUsuario: Int, context: Context, callback : WebServiceGenericInterface) {
+
+        val url = "interface/api/meetfever/usuario/ObtenerSeguidores"
+        val jsonObject = JSONObject()
+
+        try {
+            // Preparo el request
+            jsonObject.put("Id", idUsuario)
+
+            WebService.processRequestPost(context, url, jsonObject, object: WebServiceGenericInterface {
+                override fun callback(any: Any) {
+
+                    if (any.toString().isNotEmpty()) {
+                        // Obtengo el response
+                        val seguidores = GsonBuilder()
+                            .create()
+                            .fromJson(any.toString(), UsuarioWrapper::class.java)
+
+                        callback.callback(seguidores)
+
+                    } else
+                        callback.callback(0)
+
+                }
+            })
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
+
+    fun obtenerSeguidos(idUsuario: Int, context: Context, callback : WebServiceGenericInterface) {
+
+        val url = "interface/api/meetfever/usuario/ObtenerSeguidos"
+        val jsonObject = JSONObject()
+
+        try {
+            // Preparo el request
+            jsonObject.put("Id", idUsuario)
+
+            WebService.processRequestPost(context, url, jsonObject, object: WebServiceGenericInterface {
+                override fun callback(any: Any) {
+
+                    if (any.toString().isNotEmpty()) {
+                        // Obtengo el response
+                        val seguidos = GsonBuilder()
+                            .create()
+                            .fromJson(any.toString(), UsuarioWrapper::class.java)
+
+                        callback.callback(seguidos)
+
+                    } else
+                        callback.callback(0)
+
+                }
+            })
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
 }

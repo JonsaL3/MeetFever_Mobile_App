@@ -120,6 +120,14 @@
                 android:textColorHint="@color/gris_textos"
                 />
 
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/spinner_sexo"
+                android:layout_width="200dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
+                />
+
             <LinearLayout
                 android:layout_marginTop="20dp"
                 android:layout_gravity="center"
@@ -154,7 +162,7 @@
                 android:layout_height="40dp"
                 android:text="@string/registrarse"
                 android:textColor="@color/white"
-                android:background="@drawable/ic_custom_boton"
+                android:background="@drawable/anim_button_pressed"
                 android:fontFamily="@font/montserrat_light"
                 android:layout_marginTop="20dp"
                 android:textAllCaps="false"
@@ -205,11 +213,11 @@
                 android:layout_height="40dp"
                 android:text="@string/volver_atr_s"
                 android:textColor="@color/white"
-                android:background="@drawable/ic_custom_boton"
+                android:background="@drawable/anim_button_pressed"
                 android:fontFamily="@font/montserrat_light"
                 android:layout_marginTop="15dp"
                 android:textAllCaps="false"
-                android:layout_marginBottom="35sp"
+                android:layout_marginBottom="55sp"
                 />
 
         </LinearLayout>

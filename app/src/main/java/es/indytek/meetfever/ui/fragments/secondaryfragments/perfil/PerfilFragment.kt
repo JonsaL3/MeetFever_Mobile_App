@@ -20,7 +20,9 @@ import es.indytek.meetfever.models.empresa.Empresa
 import es.indytek.meetfever.models.mesigue.MeSigue
 import es.indytek.meetfever.models.opinion.OpinionWrapper
 import es.indytek.meetfever.models.usuario.Usuario
+import es.indytek.meetfever.models.usuario.UsuarioWrapper
 import es.indytek.meetfever.ui.fragments.mainfragments.TrendingsFragment
+import es.indytek.meetfever.ui.fragments.secondaryfragments.follow.FollowedFollowingFragment
 import es.indytek.meetfever.ui.recyclerviews.adapters.EmpresaRecyclerViewAdapter
 import es.indytek.meetfever.ui.recyclerviews.adapters.OpinionRecyclerViewAdapter
 import es.indytek.meetfever.utils.Animations
@@ -61,6 +63,9 @@ class PerfilFragment : Fragment() {
         // arranco los listeners
         arrancarListeners()
 
+        // precargo los seguidores y los seguidos
+        precargarSeguidoresYSeguidos()
+
         return binding.root
     }
 
@@ -72,23 +77,49 @@ class PerfilFragment : Fragment() {
 
     }
 
-    // Esta función me pinta to.do lo que necesito en este fragmento
-    private fun pintarBotonSeguir() {
+    private fun precargarSeguidoresYSeguidos() {
 
-        WebServiceUsuario.isSeguidoPorUser(currentUsuario.id, usuario.id, requireContext(), object: WebServiceGenericInterface {
+        WebServiceUsuario.obtenerSeguidores(usuario.id, requireContext(), object: WebServiceGenericInterface {
             override fun callback(any: Any) {
 
                 if (any == 0) {
-                    // todo error
+                    // TODO ERROR
                 } else {
-                    meSigue = any as MeSigue
-                    if (meSigue.mesigue) {
-                        Log.d(":::", "LO SIGO -> ${meSigue}")
-                        Animations.mostrarVistaSuavemente(binding.dejarDeSeguirBoton)
-                    } else {
-                        Log.d(":::", "NO LO SIGO ${meSigue}")
-                        Animations.mostrarVistaSuavemente(binding.seguirBoton)
+                    val seguidores = any as UsuarioWrapper
+                    binding.tvNSeguidores.text = seguidores.size.toString()
+                    Animations.mostrarVistaSuavemente(binding.seguidoresLayout)
+
+                    binding.seguidoresLayout.setOnClickListener {
+                        val fragment = FollowedFollowingFragment.newInstance(usuario, currentUsuario, seguidores,false)
+                        requireActivity().supportFragmentManager
+                            .beginTransaction()
+                            .replace(R.id.frame_layout,fragment)
+                            .commit()
                     }
+
+                }
+
+            }
+        })
+
+        WebServiceUsuario.obtenerSeguidos(usuario.id, requireContext(), object: WebServiceGenericInterface {
+            override fun callback(any: Any) {
+
+                if (any == 0) {
+                    // TODO ERROR
+                } else {
+                    val seguidos = any as UsuarioWrapper
+                    binding.tvNseguidos.text = seguidos.size.toString()
+                    Animations.mostrarVistaSuavemente(binding.seguidosLayout)
+
+                    binding.seguidosLayout.setOnClickListener {
+                        val fragment = FollowedFollowingFragment.newInstance(usuario, currentUsuario, seguidos,true)
+                        requireActivity().supportFragmentManager
+                            .beginTransaction()
+                            .replace(R.id.frame_layout,fragment)
+                            .commit()
+                    }
+
                 }
 
             }
@@ -96,9 +127,37 @@ class PerfilFragment : Fragment() {
 
     }
 
+    // Esta función me pinta to.do lo que necesito en este fragmento
+    private fun pintarBotonSeguir() {
+
+        if (currentUsuario != usuario) {
+
+            WebServiceUsuario.isSeguidoPorUser(currentUsuario.id, usuario.id, requireContext(), object: WebServiceGenericInterface {
+                override fun callback(any: Any) {
+
+                    if (any == 0) {
+                        // todo error
+                    } else {
+                        meSigue = any as MeSigue
+                        if (meSigue.mesigue) {
+                            Log.d(":::", "LO SIGO -> ${meSigue}")
+                            Animations.mostrarVistaSuavemente(binding.dejarDeSeguirBoton)
+                        } else {
+                            Log.d(":::", "NO LO SIGO ${meSigue}")
+                            Animations.mostrarVistaSuavemente(binding.seguirBoton)
+                        }
+                    }
+
+                }
+            })
+
+        }
+
+    }
+
     private fun seguirODejarDeSeguir() {
 
-        WebServiceUsuario.seguirDejarDeSeguir(currentUsuario.id, usuario.id, requireContext(), object: WebServiceGenericInterface{
+        WebServiceUsuario.seguirDejarDeSeguir(currentUsuario.id, usuario.id, requireContext(), object: WebServiceGenericInterface {
             override fun callback(any: Any) {
 
                 if (any == 0) {
@@ -108,9 +167,11 @@ class PerfilFragment : Fragment() {
                     if (meSigue.mesigue) {
                         meSigue.mesigue = false
                         Animations.mostrarVistaSuavemente(binding.seguirBoton)
+                        Animations.ocultarVistaSuavemente(binding.dejarDeSeguirBoton)
                     } else {
                         meSigue.mesigue = true
                         Animations.mostrarVistaSuavemente(binding.dejarDeSeguirBoton)
+                        Animations.ocultarVistaSuavemente(binding.seguirBoton)
                     }
 
                 }

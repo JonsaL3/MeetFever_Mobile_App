@@ -35,7 +35,7 @@ class Persona(
     ) : Usuario(id, correo, contrasena, nick, fotoFondo, fotoPerfil, telefono, frase) {
 
     // constructor dado el correo, la contraseña y el nick y el resto a null
-    constructor(correo: String, contrasena: String, nick: String) : this (
+    constructor(correo: String, contrasena: String, nick: String, sexo: Sexo) : this (
         0,
         correo,
         contrasena,
@@ -47,15 +47,15 @@ class Persona(
         null,
         null,
         null,
-        null,
+        sexo,
         null)
 
     override fun toJsonObject(): JSONObject = super.toJsonObject().apply {
         put("Nombre", nombre)
         put("Apellido1", apellido1)
         put("Apellido2", apellido2)
-        put("Sexo", sexo.toString())
-        put("Fecha_Nacimiento", fechaNacimiento.toString())
+        put("Sexo", sexo?.toJsonObject())
+        put("Fecha_Nacimiento", fechaNacimiento)
         put("dni", dni)
     }
 
