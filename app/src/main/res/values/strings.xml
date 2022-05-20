@@ -61,5 +61,7 @@
     <string name="experiencias_encontradas">Experiencias encontradas</string>
     <string name="locales_encontrados">Locales encontrados</string>
     <string name="_0">0</string>
+    <string name="no_ha_seleccionado_ninguna_experiencia_opcional">No ha seleccionado ninguna experiencia (opcional)</string>
+    <string name="no_ha_seleccionado_ning_n_local_aun">No ha seleccionado ningún local aún</string>
 
 </resources>
