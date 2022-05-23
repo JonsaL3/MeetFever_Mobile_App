@@ -11,6 +11,7 @@ import es.indytek.meetfever.ui.fragments.mainfragments.PeopleFragment
 import es.indytek.meetfever.ui.fragments.mainfragments.TrendingsFragment
 import es.indytek.meetfever.ui.fragments.secondaryfragments.fever.RedactarFeverFragment
 import es.indytek.meetfever.ui.fragments.secondaryfragments.perfil.PerfilFragment
+import es.indytek.meetfever.ui.fragments.secondaryfragments.usersettings.UserSettingsFragment
 import es.indytek.meetfever.utils.Animations
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter
 import nl.joery.animatedbottombar.AnimatedBottomBar
@@ -42,9 +43,19 @@ class MainActivity : AppCompatActivity() {
         // por defecto cargo el explorer fragment
         cargarExplorerFragment()
 
+        // cargo los listeners
+        cargarListeners()
+
         // quito la pantalla de carga
         //Animations.ocultarVistaSuavemente(binding.pantallaDeCarga, 1000)
 
+    }
+
+    private fun cargarListeners() {
+        binding.irAAjustes.setOnClickListener {
+            val fragmento = UserSettingsFragment.newInstance(currentUsuario)
+            supportFragmentManager.beginTransaction().replace(R.id.frame_layout,fragmento).commit()
+        }
     }
 
     // Muestro un fragmento u otro en función de lo que seleccione en la bottombar

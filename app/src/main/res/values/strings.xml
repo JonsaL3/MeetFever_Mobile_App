@@ -22,7 +22,7 @@
     <string name="seguidores">Seguidores</string>
     <string name="seguidos">Seguidos</string>
     <string name="nombre">nombre</string>
-    <string name="frase">frase</string>
+    <string name="frase">Frase</string>
     <string name="experiencias_destacadas">Experiencias Destacadas</string>
     <string name="personas_que_quiz_s_nconozcas">Personas que quizás\nconozcas</string>
     <string name="correoo_electr_nico">Correoo electrónico</string>
@@ -61,5 +61,27 @@
     <string name="experiencias_encontradas">Experiencias encontradas</string>
     <string name="locales_encontrados">Locales encontrados</string>
     <string name="_0">0</string>
+    <string name="ajustes_del_usuario">Ajustes del usuario</string>
+    <string name="seleccionar_im_genes">Seleccionar imágenes:</string>
+    <string name="informaci_n_de_la_empresa">Información de la empresa:</string>
+    <string name="nombre_empresa">Nombre empresa</string>
+    <string name="tel_fono">Teléfono</string>
+    <string name="direcci_n_de_facturaci_n">Dirección de facturación</string>
+    <string name="direcci_n_fiscal">Dirección fiscal</string>
+    <string name="nombre_de_la_persona_f_sica">Nombre de la persona física</string>
+    <string name="apellido_1_persona_f_sica">Apellido 1 persona física</string>
+    <string name="apellido_2_persona_f_sica">Apellido 2 persona física</string>
+    <string name="dni_de_la_persona_f_sica">DNI de la persona física</string>
+    <string name="informaci_n_de_la_persona">Información de la persona:</string>
+    <string name="nombre_persona">Nombre persona</string>
+    <string name="apellido_1">Apellido 1</string>
+    <string name="apellido_2">Apellido 2</string>
+    <string name="dni_de_la_persona">DNI de la persona</string>
+    <string name="fecha_de_nacimiento">Fecha de nacimiento</string>
+    <string name="buscar">Buscar</string>
+    <string name="hacer_foto">Hacer foto</string>
+    <string name="informaci_n_del_usuario">Información del usuario:</string>
+    <string name="confirmar_cambios">Confirmar cambios</string>
+    <string name="direcci_n_fiscal">Dirección fiscal</string>
 
 </resources>

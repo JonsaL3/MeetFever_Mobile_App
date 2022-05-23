@@ -14,7 +14,7 @@ data class Experiencia(
     @SerializedName("Descripcion")
     var descripcion: String? = "",
     @SerializedName("Empresa")
-    var empresa: Empresa = Empresa(),
+    var empresa: Empresa = Empresa("","",""),
     @SerializedName("Fecha_Celebracion")
     var fechaCelebracion: LocalDateTime = LocalDateTime.now(),
     @SerializedName("Foto")
