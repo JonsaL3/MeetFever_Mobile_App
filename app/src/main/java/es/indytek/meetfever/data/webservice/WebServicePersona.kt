@@ -14,9 +14,9 @@ object WebServicePersona {
     // busco una persona por cualquiera de sus campos
     fun buscarPersonas(busqueda: String, context: Context, callback : WebServiceGenericInterface) {
 
-        val url = "interface/api/meetfever/persona/BUSQUEDAPERSONA" // TODO URL DE ALBERTO
+        val url = "interface/api/meetfever/persona/ObtenerPersonaGeneral"
         val jsonObject = JSONObject().apply {
-            put("busqueda", busqueda)
+            put("Palabra", busqueda)
         }
 
         try {

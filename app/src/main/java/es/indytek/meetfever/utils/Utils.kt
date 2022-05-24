@@ -211,6 +211,17 @@ object Utils {
 
     }
 
+    fun pintarFotoDePerfilDirectamente(usuario: Usuario, nuevaFoto: String, imageView: ImageView, context: Context) {
+
+        if (usuario is Empresa) {
+            putBase64ImageIntoImageViewWithPlaceholder(imageView, nuevaFoto, context, R.drawable.ic_default_enterprise_black_and_white)
+        } else {
+            // por ejemplo en las opiniones no se si es una empresa o una persona, asique por defecto que la pinte circular ahi siempre
+            putBase64ImageIntoImageViewCircularWithPlaceholder(imageView, nuevaFoto, context, R.drawable.ic_default_user_image)
+        }
+
+    }
+
     fun cambiarDeFragmentoGuardandoElAnterior(
         fragmentManager: FragmentManager,
         fragment: Fragment,
