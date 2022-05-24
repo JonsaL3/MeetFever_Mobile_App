@@ -33,6 +33,7 @@ class SeguidorSeguidoViewHolder(
         currentUsuario.fotoPerfil?.let {
             val color = Utils.getDominantColorInImageFromBase64(it)
             binding.viewholderSeguidorSeguido.backgroundTintList = ColorStateList.valueOf(color)
+
         }?: kotlin.run {
             binding.viewholderSeguidorSeguido.backgroundTintList = ColorStateList.valueOf(Color.WHITE)
         }

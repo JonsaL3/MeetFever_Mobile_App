@@ -3,8 +3,6 @@ package es.indytek.meetfever.ui.fragments.secondaryfragments.perfil
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -16,17 +14,15 @@ import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
 import es.indytek.meetfever.data.webservice.WebServiceOpinion
 import es.indytek.meetfever.data.webservice.WebServiceUsuario
 import es.indytek.meetfever.databinding.FragmentPerfilBinding
-import es.indytek.meetfever.models.empresa.Empresa
 import es.indytek.meetfever.models.mesigue.MeSigue
 import es.indytek.meetfever.models.opinion.OpinionWrapper
 import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.models.usuario.UsuarioWrapper
-import es.indytek.meetfever.ui.fragments.mainfragments.TrendingsFragment
 import es.indytek.meetfever.ui.fragments.secondaryfragments.follow.FollowedFollowingFragment
-import es.indytek.meetfever.ui.recyclerviews.adapters.EmpresaRecyclerViewAdapter
 import es.indytek.meetfever.ui.recyclerviews.adapters.OpinionRecyclerViewAdapter
 import es.indytek.meetfever.utils.Animations
 import es.indytek.meetfever.utils.Utils
+import nl.joery.animatedbottombar.AnimatedBottomBar
 
 private const val ARG_PARAM1 = "usuarioGenerico"
 private const val ARG_PARAM2 = "usuario"
@@ -90,11 +86,8 @@ class PerfilFragment : Fragment() {
                     Animations.mostrarVistaSuavemente(binding.seguidoresLayout)
 
                     binding.seguidoresLayout.setOnClickListener {
-                        val fragment = FollowedFollowingFragment.newInstance(usuario, currentUsuario, seguidores,false)
-                        requireActivity().supportFragmentManager
-                            .beginTransaction()
-                            .replace(R.id.frame_layout,fragment)
-                            .commit()
+                        val fragmento = FollowedFollowingFragment.newInstance(usuario, currentUsuario, seguidores,true)
+                        Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager,fragmento, "", R.id.frame_layout)
                     }
 
                 }
@@ -113,11 +106,8 @@ class PerfilFragment : Fragment() {
                     Animations.mostrarVistaSuavemente(binding.seguidosLayout)
 
                     binding.seguidosLayout.setOnClickListener {
-                        val fragment = FollowedFollowingFragment.newInstance(usuario, currentUsuario, seguidos,true)
-                        requireActivity().supportFragmentManager
-                            .beginTransaction()
-                            .replace(R.id.frame_layout,fragment)
-                            .commit()
+                        val fragmento = FollowedFollowingFragment.newInstance(usuario, currentUsuario, seguidos,false)
+                        Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager,fragmento, "", R.id.frame_layout)
                     }
 
                 }
@@ -140,10 +130,10 @@ class PerfilFragment : Fragment() {
                     } else {
                         meSigue = any as MeSigue
                         if (meSigue.mesigue) {
-                            Log.d(":::", "LO SIGO -> ${meSigue}")
+                            Log.d(":::", "LO SIGO -> $meSigue")
                             Animations.mostrarVistaSuavemente(binding.dejarDeSeguirBoton)
                         } else {
-                            Log.d(":::", "NO LO SIGO ${meSigue}")
+                            Log.d(":::", "NO LO SIGO $meSigue")
                             Animations.mostrarVistaSuavemente(binding.seguirBoton)
                         }
                     }
@@ -168,10 +158,14 @@ class PerfilFragment : Fragment() {
                         meSigue.mesigue = false
                         Animations.mostrarVistaSuavemente(binding.seguirBoton)
                         Animations.ocultarVistaSuavemente(binding.dejarDeSeguirBoton)
+                        binding.tvNSeguidores.text =
+                            ((binding.tvNSeguidores.text.toString().toInt()) - 1).toString()
                     } else {
                         meSigue.mesigue = true
                         Animations.mostrarVistaSuavemente(binding.dejarDeSeguirBoton)
                         Animations.ocultarVistaSuavemente(binding.seguirBoton)
+                        ((binding.tvNSeguidores.text.toString().toInt()) + 1).toString()
+                            .also { binding.tvNSeguidores.text = it }
                     }
 
                 }
@@ -236,7 +230,7 @@ class PerfilFragment : Fragment() {
                         Animations.pintarLinearRecyclerViewSuavemente(
                             linearLayoutManager = LinearLayoutManager(requireContext()),
                             recyclerView = binding.opinionesUsuarioRecycler,
-                            adapter = OpinionRecyclerViewAdapter(opiniones, PerfilFragment::class.java),
+                            adapter = OpinionRecyclerViewAdapter(opiniones, PerfilFragment::class.java, currentUsuario),
                             orientation = LinearLayoutManager.VERTICAL,
                         )
                     } catch (e: IllegalStateException) {
@@ -247,6 +241,11 @@ class PerfilFragment : Fragment() {
             }
         })
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Utils.ocultarBottomBar(requireActivity())
     }
 
     companion object {

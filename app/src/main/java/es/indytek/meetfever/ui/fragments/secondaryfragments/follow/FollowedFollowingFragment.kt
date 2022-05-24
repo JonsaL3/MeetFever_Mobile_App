@@ -91,6 +91,11 @@ class FollowedFollowingFragment : Fragment() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        Utils.ocultarBottomBar(requireActivity())
+    }
+
     companion object {
         @JvmStatic
         fun newInstance(usuario: Usuario, currentUsuario: Usuario, listaUsuarios: UsuarioWrapper, following: Boolean) =

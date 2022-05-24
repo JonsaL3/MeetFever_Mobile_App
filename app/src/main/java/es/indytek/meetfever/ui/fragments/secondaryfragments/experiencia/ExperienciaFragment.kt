@@ -78,7 +78,7 @@ class ExperienciaFragment : Fragment() {
                 usuario = experiencia.empresa,
                 currentUsuario = usuario
             )
-            requireActivity().supportFragmentManager.beginTransaction().replace(R.id.frame_layout,fragmento).commit()
+            Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager,fragmento, "", R.id.frame_layout)
         }
 
         binding.botonPagar.setOnClickListener {
@@ -188,6 +188,11 @@ class ExperienciaFragment : Fragment() {
         // Starting the intent activity for result
         // the request code will be used on the method onActivityResult
         startActivityForResult(intent, PAYPAL_REQUEST_CODE)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Utils.ocultarBottomBar(requireActivity())
     }
 
     companion object {

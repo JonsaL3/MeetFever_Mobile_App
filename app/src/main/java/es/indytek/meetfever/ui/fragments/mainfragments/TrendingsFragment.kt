@@ -21,6 +21,8 @@ import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.ui.recyclerviews.adapters.OpinionRecyclerViewAdapter
 import es.indytek.meetfever.ui.recyclerviews.adapters.PersonaRecyclerViewAdapter
 import es.indytek.meetfever.utils.Animations
+import es.indytek.meetfever.utils.Utils
+import nl.joery.animatedbottombar.AnimatedBottomBar
 import java.time.LocalTime
 
 private const val ARG_PARAM1 = "usuario"
@@ -82,7 +84,7 @@ class TrendingsFragment : Fragment() {
                                     Animations.pintarLinearRecyclerViewSuavemente(
                                         linearLayoutManager = LinearLayoutManager(requireContext()),
                                         recyclerView = binding.busquedaOpinionesRecyclerView,
-                                        adapter = OpinionRecyclerViewAdapter(opiniones, TrendingsFragment::class.java),
+                                        adapter = OpinionRecyclerViewAdapter(opiniones, TrendingsFragment::class.java, currentUsuario),
                                         orientation = LinearLayoutManager.VERTICAL
                                     )
                                 } catch (e: IllegalStateException) {
@@ -156,11 +158,14 @@ class TrendingsFragment : Fragment() {
                     // TODO ERROR
                 } else {
                     val top100OpinionesMasGustadas24H = any as OpinionWrapper
+                    top100OpinionesMasGustadas24H.forEach {
+                        Log.d(":::", it.numeroLikes.toString() + " " + it.like)
+                    }
                     try {
                         Animations.pintarLinearRecyclerViewSuavemente(
                             linearLayoutManager = LinearLayoutManager(requireContext()),
                             recyclerView = binding.topOpinionesRecycler,
-                            adapter = OpinionRecyclerViewAdapter(top100OpinionesMasGustadas24H, TrendingsFragment::class.java),
+                            adapter = OpinionRecyclerViewAdapter(top100OpinionesMasGustadas24H, TrendingsFragment::class.java, currentUsuario),
                             orientation = LinearLayoutManager.VERTICAL,
                         )
                     } catch (e: IllegalStateException) {
@@ -171,6 +176,18 @@ class TrendingsFragment : Fragment() {
             }
         })
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setBottomBarColorAndPosition()
+    }
+
+    private fun setBottomBarColorAndPosition() {
+        val bottomBar = requireActivity().findViewById<AnimatedBottomBar>(R.id.bottom_bar)
+        Utils.mostrarBottomBar(requireActivity())
+        bottomBar.indicatorColorRes = R.color.amarillo_meet
+        bottomBar.selectTabAt(2, true)
     }
 
     companion object {
