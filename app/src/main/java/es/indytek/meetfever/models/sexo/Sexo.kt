@@ -1,6 +1,7 @@
 package es.indytek.meetfever.models.sexo
 
 import com.google.gson.annotations.SerializedName
+import org.json.JSONObject
 import java.io.Serializable
 
 data class Sexo(
@@ -10,4 +11,15 @@ data class Sexo(
     @SerializedName("Sexo")
     val nombre: String
 
-) : Serializable
+) : Serializable {
+
+    override fun toString(): String {
+        return nombre
+    }
+
+    fun toJsonObject(): JSONObject = JSONObject().apply {
+        put("Id", id)
+        put("Sexo", nombre)
+    }
+
+}

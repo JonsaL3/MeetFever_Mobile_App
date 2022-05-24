@@ -9,13 +9,14 @@ import es.indytek.meetfever.ui.recyclerviews.viewholders.SeguidorSeguidoViewHold
 
 class SeguidorSeguidoRecyclerViewAdapter (
 
-    private val lista: List<Usuario>
+    private val lista: List<Usuario>,
+    private val currentUsuario: Usuario
 
 ) : RecyclerView.Adapter<SeguidorSeguidoViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SeguidorSeguidoViewHolder {
         val binding = ViewholderSeguidorSeguidoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return SeguidorSeguidoViewHolder(binding.root, binding)
+        return SeguidorSeguidoViewHolder(binding.root, binding, currentUsuario)
     }
 
     override fun onBindViewHolder(holder: SeguidorSeguidoViewHolder, position: Int) {

@@ -152,86 +152,99 @@ class RedactarFeverFragment : Fragment() {
                     Log.d(":::", "ME ACTUALIZO")
 
                     // obtengo las palabras que empiezan por @
-                    val empresas = text.toString().split(" ").filter {
+                    val split =  text.toString().split(" ")
+                    val empresas = split.filter {
                         it.startsWith("@")
                     }
 
-                    val empresa = empresas[0]
+                    try {
+                        var empresa = empresas[0]
 
-                    // si una palabra empieza por @...
-                    val empresaCortada = empresa.substring(1, empresa.length)
+                        // si una palabra empieza por @...
+                        val empresaCortada = empresa.substring(1, empresa.length)
 
-                    Log.d(":::", "EMPRESA ENCONTRADA -> $empresaEncontrada")
-                    Log.d(":::", "EMPRESA CORTADA -> $empresaCortada")
+                        Log.d(":::", "EMPRESA ENCONTRADA -> $empresaEncontrada")
+                        Log.d(":::", "EMPRESA CORTADA -> $empresaCortada")
 
-                    if (!empresaEncontrada) {
+                        if (!empresaEncontrada) {
 
-                        WebServiceEmpresa.findEmpresaByNickname(empresaCortada, requireContext(), object: WebServiceGenericInterface {
-                            override fun callback(any: Any) {
+                            WebServiceEmpresa.findEmpresaByNickname(empresaCortada, requireContext(), object: WebServiceGenericInterface {
+                                override fun callback(any: Any) {
 
-                                if (any == 0) {
-                                    // TODO ERROR
-                                } else {
-                                    empresaEncontrada = true
-                                    val empresaDescargada = any as Empresa
+                                    if (any == 0) {
+                                        // TODO ERROR
+                                    } else {
+                                        empresaEncontrada = true
+                                        val empresaDescargada = any as Empresa
 
-                                    // pongo la foto en la preview
-                                    val foto = empresaDescargada.fotoPerfil
-                                    this@RedactarFeverFragment.idEmpresa = empresaDescargada.id
+                                        // pongo la foto en la preview
+                                        val foto = empresaDescargada.fotoPerfil
+                                        this@RedactarFeverFragment.idEmpresa = empresaDescargada.id
 
-                                    foto?.let {
-                                        Utils.putBase64ImageIntoImageViewWithPlaceholder(binding.previewEnterprise, foto, requireContext(), R.drawable.ic_default_enterprise_black_and_white)
-                                    } ?: run {
-                                        Utils.putResourceImageIntoImageView(binding.previewEnterprise, R.drawable.ic_default_enterprise_black_and_white, requireContext())
+                                        foto?.let {
+                                            Utils.putBase64ImageIntoImageViewWithPlaceholder(binding.previewEnterprise, foto, requireContext(), R.drawable.ic_default_enterprise_black_and_white)
+                                        } ?: run {
+                                            Utils.putResourceImageIntoImageView(binding.previewEnterprise, R.drawable.ic_default_enterprise_black_and_white, requireContext())
+                                        }
+
+                                        // oculto los mensajes de que no se encontró ninguna empresa
+                                        binding.noSeleccionadoPreview.visibility = View.GONE
+                                        binding.elLocalQueSeleccione.visibility = View.GONE
+
+                                        // muestro el nombre de la empresa y su frase
+                                        binding.nombreEmpresa.visibility = View.VISIBLE
+                                        binding.nombreEmpresa.text = empresaDescargada.nick
+
+                                        binding.descripcionEmpresa.visibility = View.VISIBLE
+                                        binding.descripcionEmpresa.text = empresaDescargada.frase
+
+                                        binding.degradado.visibility = View.VISIBLE
+                                        binding.previewEnterprise.visibility = View.VISIBLE
+
+                                        // marco esa palabra en el edit text de otro color
+                                        val start = text.indexOf(empresa)
+                                        val end = start + empresa.length
+                                        binding.opinionContainer.text?.setSpan(ForegroundColorSpan(requireContext().getColor(R.color.rosa_meet)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
                                     }
 
-                                    // oculto los mensajes de que no se encontró ninguna empresa
-                                    binding.noSeleccionadoPreview.visibility = View.GONE
-
-                                    // muestro el nombre de la empresa y su frase
-                                    binding.nombreEmpresa.visibility = View.VISIBLE
-                                    binding.nombreEmpresa.text = empresaDescargada.nick
-
-                                    binding.descripcionEmpresa.visibility = View.VISIBLE
-                                    binding.descripcionEmpresa.text = empresaDescargada.frase
-
-                                    binding.degradado.visibility = View.VISIBLE
-                                    binding.previewEnterprise.visibility = View.VISIBLE
-
-                                    // marco esa palabra en el edit text de otro color
-                                    val start = text.indexOf(empresa)
-                                    val end = start + empresa.length
-                                    binding.opinionContainer.text?.setSpan(ForegroundColorSpan(requireContext().getColor(R.color.rosa_meet)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
                                 }
+                            })
 
-                            }
-                        })
+                        } else if (empresaCortada != binding.nombreEmpresa.text.toString()) {
 
-                    } else if (empresaCortada != binding.nombreEmpresa.text.toString()) {
+                            empresaEncontrada = false
 
-                        empresaEncontrada = false
+                            // oculto la foto etc
+                            binding.nombreEmpresa.visibility = View.GONE
+                            binding.descripcionEmpresa.visibility = View.GONE
+                            binding.previewEnterprise.visibility = View.GONE
+                            binding.degradado.visibility = View.GONE
+                            binding.previewEnterprise.setImageDrawable(null)
 
-                        // oculto la foto etc
-                        binding.nombreEmpresa.visibility = View.GONE
-                        binding.descripcionEmpresa.visibility = View.GONE
-                        binding.previewEnterprise.visibility = View.GONE
-                        binding.degradado.visibility = View.GONE
-                        binding.previewEnterprise.setImageDrawable(null)
+                            // Vuelvo a mostrar lo de por defecto
+                            binding.noSeleccionadoPreview.visibility = View.VISIBLE
+                            binding.elLocalQueSeleccione.visibility = View.VISIBLE
+
+
+                            // vuelvo a poner el color en su sitio
+                            val start = text.indexOf(empresa)
+                            val end = start + empresa.length
+                            binding.opinionContainer.text?.setSpan(ForegroundColorSpan(requireContext().getColor(R.color.gris_textos)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
                         // Vuelvo a mostrar lo de por defecto
                         binding.noSeleccionadoPreview.visibility = View.VISIBLE
 
-                        // vuelvo a poner el color en su sitio
-                        val start = text.indexOf(empresa)
-                        val end = start + empresa.length
-                        binding.opinionContainer.text?.setSpan(ForegroundColorSpan(requireContext().getColor(R.color.gris_textos)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                            binding.opinionContainer.setTextColor(requireContext().getColor(R.color.gris_textos))
+                        }
 
-                        binding.opinionContainer.setTextColor(requireContext().getColor(R.color.gris_textos))
+                    } catch(e: Exception) {
+                        Log.e(":::", "No se puede buscar una empresa vacia")
                     }
 
                     //si el texto contiene ese patron, hará la busqueda.
                 }else if(text.matches(Regex("#.* "))) {
+
                     // obtengo las palabras que empiezan por #
                     val experiencias = text.toString().split(" ").filter {
                         it.startsWith("#")
@@ -290,7 +303,8 @@ class RedactarFeverFragment : Fragment() {
                     }
 
 
-                }else{
+                } else {
+
                     empresaEncontrada = false
 
                     binding.opinionContainer.text?.setSpan(ForegroundColorSpan(requireContext().getColor(R.color.gris_textos)), 0, text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -304,6 +318,8 @@ class RedactarFeverFragment : Fragment() {
 
                     // Vuelvo a mostrar lo de por defecto
                     binding.noSeleccionadoPreview.visibility = View.VISIBLE
+                    binding.elLocalQueSeleccione.visibility = View.VISIBLE
+
                 }
 
             }

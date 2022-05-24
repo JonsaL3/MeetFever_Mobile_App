@@ -6,14 +6,18 @@ import android.os.Bundle
 import android.os.PatternMatcher
 import android.util.Log
 import android.util.Patterns
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import es.indytek.meetfever.R
 import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
+import es.indytek.meetfever.data.webservice.WebServiceSexo
 import es.indytek.meetfever.data.webservice.WebServiceUsuario
 import es.indytek.meetfever.databinding.ActivityLoginBinding
 import es.indytek.meetfever.databinding.ActivityRegistroBinding
 import es.indytek.meetfever.models.empresa.Empresa
 import es.indytek.meetfever.models.persona.Persona
+import es.indytek.meetfever.models.sexo.Sexo
+import es.indytek.meetfever.models.sexo.SexoWrapper
 import es.indytek.meetfever.models.usuario.Usuario
 
 class RegistroActivity : AppCompatActivity() {
@@ -30,6 +34,9 @@ class RegistroActivity : AppCompatActivity() {
         // arranco los listeners de los botones
         arrancarListeners()
 
+        // cargo los sexos de la base de datos
+        cargarSpinnerSexos()
+
     }
 
     private fun arrancarListeners() {
@@ -42,6 +49,44 @@ class RegistroActivity : AppCompatActivity() {
             irAInicioDeSesion()
         }
 
+        binding.checkEmpresa.setOnCheckedChangeListener { compoundButton, isChecked ->
+
+            if (isChecked) {
+                binding.spinnerSexo.visibility = android.view.View.GONE
+                binding.spinnerSexo.isEnabled = false
+            } else {
+                binding.spinnerSexo.visibility = android.view.View.VISIBLE
+                binding.spinnerSexo.isEnabled = true
+            }
+
+        }
+
+    }
+
+    private fun cargarSpinnerSexos() {
+
+        WebServiceSexo.getAllSexos(this, object: WebServiceGenericInterface {
+            override fun callback(any: Any) {
+
+                if (any == 0) {
+                    // todo error
+                } else {
+
+                    Log.d("::::", "sexos: $any")
+
+                    val sexos = any as SexoWrapper
+                    // creo un array adapter para el spinner
+                    val adapter = ArrayAdapter(this@RegistroActivity, android.R.layout.simple_spinner_item, sexos)
+                    // seteo el layout para el spinner
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    // seteo el adapter al spinner
+                    binding.spinnerSexo.adapter = adapter
+
+                }
+
+            }
+        })
+
     }
 
     private fun registrarse() {
@@ -52,6 +97,7 @@ class RegistroActivity : AppCompatActivity() {
         val contrasena = binding.inputContrasenaRegistro.text.toString()
         val contrasena2 = binding.inputContrasena2Registro.text.toString()
         val isEmpresa = binding.checkEmpresa.isChecked
+        val sexo: Sexo? = binding.spinnerSexo.selectedItem as Sexo?
 
         if (correo.isEmpty() || nickname.isEmpty() || contrasena.isEmpty() || contrasena2.isEmpty()) {
             Toast.makeText(this, "Rellena todos los campos.", Toast.LENGTH_SHORT).show()
@@ -68,10 +114,15 @@ class RegistroActivity : AppCompatActivity() {
             return
         }
 
+        if (!isEmpresa && sexo == null) {
+            Toast.makeText(this, "Selecciona un sexo.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         cuenta = if (isEmpresa) {
             Empresa(correo, contrasena, nickname)
         } else {
-            Persona(correo, contrasena, nickname)
+            Persona(correo, contrasena, nickname, sexo!!)
         }
 
         Log.d(":::","cuenta: $cuenta")
