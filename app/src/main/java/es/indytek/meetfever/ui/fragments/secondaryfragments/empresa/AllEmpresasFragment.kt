@@ -16,7 +16,9 @@ import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
 import es.indytek.meetfever.databinding.FragmentAllEmpresasBinding
 import es.indytek.meetfever.models.empresa.EmpresaWrapper
 import es.indytek.meetfever.models.usuario.Usuario
+import es.indytek.meetfever.ui.fragments.mainfragments.TrendingsFragment
 import es.indytek.meetfever.ui.recyclerviews.adapters.EmpresaRecyclerViewAdapter
+import es.indytek.meetfever.ui.recyclerviews.adapters.OpinionRecyclerViewAdapter
 import es.indytek.meetfever.ui.recyclerviews.adapters.PersonaRecyclerViewAdapter
 import es.indytek.meetfever.utils.Animations
 import es.indytek.meetfever.utils.Utils
@@ -66,11 +68,20 @@ class AllEmpresasFragment : Fragment() {
                 } else {
                     val empresas = any as EmpresaWrapper
                     try {
-                        Animations.pintarGridRecyclerViewSuavemente(
-                            gridLayoutManager = GridLayoutManager(requireContext(), 3),
-                            recyclerView = binding.recyclerAllEmpresas,
-                            adapter = EmpresaRecyclerViewAdapter(empresas, usuario),
-                        )
+                        Animations.ocultarVistaSuavemente(binding.loadingAnimation, 500)
+
+                        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+
+                            binding.loadingAnimation.visibility = View.GONE
+
+
+                            Animations.pintarGridRecyclerViewSuavemente(
+                                gridLayoutManager = GridLayoutManager(requireContext(), 3),
+                                recyclerView = binding.recyclerAllEmpresas,
+                                adapter = EmpresaRecyclerViewAdapter(empresas, usuario),
+                            )
+                        },500)
+
                     } catch (e: IllegalStateException) {
                         Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
                     }

@@ -1,6 +1,8 @@
 package es.indytek.meetfever.ui.fragments.mainfragments
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -18,6 +20,7 @@ import es.indytek.meetfever.databinding.FragmentTrendingsBinding
 import es.indytek.meetfever.models.opinion.OpinionWrapper
 import es.indytek.meetfever.models.persona.PersonaWrapper
 import es.indytek.meetfever.models.usuario.Usuario
+import es.indytek.meetfever.ui.recyclerviews.adapters.EmpresaRecyclerViewAdapter
 import es.indytek.meetfever.ui.recyclerviews.adapters.OpinionRecyclerViewAdapter
 import es.indytek.meetfever.ui.recyclerviews.adapters.PersonaRecyclerViewAdapter
 import es.indytek.meetfever.utils.Animations
@@ -81,6 +84,7 @@ class TrendingsFragment : Fragment() {
                                 val opiniones = any as OpinionWrapper
                                 //ocultarContenido()
                                 try {
+
                                     Animations.pintarLinearRecyclerViewSuavemente(
                                         linearLayoutManager = LinearLayoutManager(requireContext()),
                                         recyclerView = binding.busquedaOpinionesRecyclerView,
@@ -156,18 +160,34 @@ class TrendingsFragment : Fragment() {
 
                 if (any == 0) {
                     // TODO ERROR
+
+                    Animations.ocultarVistaSuavemente(binding.loadingAnimationOpiniones, 500)
+                    Handler(Looper.getMainLooper()).postDelayed(Runnable {
+                        binding.opinionesNone.visibility = View.VISIBLE
+                        Animations.mostrarVistaSuavemente(binding.opinionesNone,500)
+                    },500)
+
                 } else {
                     val top100OpinionesMasGustadas24H = any as OpinionWrapper
                     top100OpinionesMasGustadas24H.forEach {
                         Log.d(":::", it.numeroLikes.toString() + " " + it.like)
                     }
                     try {
-                        Animations.pintarLinearRecyclerViewSuavemente(
-                            linearLayoutManager = LinearLayoutManager(requireContext()),
-                            recyclerView = binding.topOpinionesRecycler,
-                            adapter = OpinionRecyclerViewAdapter(top100OpinionesMasGustadas24H, TrendingsFragment::class.java, currentUsuario),
-                            orientation = LinearLayoutManager.VERTICAL,
-                        )
+
+                        Animations.ocultarVistaSuavemente(binding.loadingAnimationOpiniones, 500)
+
+                        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+
+                            binding.loadingAnimationOpiniones.visibility = View.GONE
+
+                            Animations.pintarLinearRecyclerViewSuavemente(
+                                linearLayoutManager = LinearLayoutManager(requireContext()),
+                                recyclerView = binding.topOpinionesRecycler,
+                                adapter = OpinionRecyclerViewAdapter(top100OpinionesMasGustadas24H, TrendingsFragment::class.java, currentUsuario),
+                                orientation = LinearLayoutManager.VERTICAL,
+                            )
+                        },500)
+
                     } catch (e: IllegalStateException) {
                         Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
                     }

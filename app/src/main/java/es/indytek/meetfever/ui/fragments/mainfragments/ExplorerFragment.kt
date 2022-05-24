@@ -2,12 +2,15 @@
 package es.indytek.meetfever.ui.fragments.mainfragments
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -207,16 +210,29 @@ class ExplorerFragment : Fragment() {
 
                 if (any == 0) {
                     // TODO ERROR
+                    Animations.ocultarVistaSuavemente(binding.loadingAnimationExperienciasDestacadas, 500)
+                    Handler(Looper.getMainLooper()).postDelayed(Runnable {
+                        binding.experienciasDestacadasTextoNone.visibility = View.VISIBLE
+                        Animations.mostrarVistaSuavemente(binding.experienciasDestacadasTextoNone,500)
+                    },500)
                 }
                 else {
                     // Una vez encontradas las pinto suavemente
                     val experiencias = any as ExperienciaWrapper
                     try {
-                        Animations.pintarGridRecyclerViewSuavemente(
-                            gridLayoutManager = GridLayoutManager(requireContext(), 2),
-                            recyclerView = binding.experienciaDestacadasRecyclerView,
-                            adapter = ExperienciaRecyclerViewAdapter(experiencias, currentUsuario),
-                        )
+                        Animations.ocultarVistaSuavemente(binding.loadingAnimationExperienciasDestacadas, 500)
+
+                        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+
+                            binding.loadingAnimationExperienciasDestacadas.visibility = GONE
+
+                            Animations.pintarGridRecyclerViewSuavemente(
+                                gridLayoutManager = GridLayoutManager(requireContext(), 2),
+                                recyclerView = binding.experienciaDestacadasRecyclerView,
+                                adapter = ExperienciaRecyclerViewAdapter(experiencias, currentUsuario),
+                            )
+                        },500)
+
                     } catch (e: IllegalStateException) {
                         Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
                     }
@@ -235,17 +251,32 @@ class ExplorerFragment : Fragment() {
             override fun callback(any: Any) {
                 if (any == 0) {
                     // TODO ERROR
+                    Animations.ocultarVistaSuavemente(binding.loadingAnimationTopLocales, 500)
+                    Handler(Looper.getMainLooper()).postDelayed(Runnable {
+                        binding.localesTrendingTextoNone.visibility = View.VISIBLE
+                        Animations.mostrarVistaSuavemente(binding.localesTrendingTextoNone,500)
+                    },500)
                 }
                 else {
                     // Una vez encontradas las pinto suavemente
                     val empresas = any as EmpresaWrapper
                     try {
-                        Animations.pintarLinearRecyclerViewSuavemente(
-                            linearLayoutManager = LinearLayoutManager(requireContext()),
-                            recyclerView = binding.localesTrendingRecycler,
-                            adapter = EmpresaRecyclerViewAdapter(empresas, currentUsuario),
-                            orientation = LinearLayoutManager.HORIZONTAL,
-                        )
+
+                        Animations.ocultarVistaSuavemente(binding.loadingAnimationTopLocales, 500)
+
+                        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+
+                            binding.loadingAnimationTopLocales.visibility = GONE
+
+                            Animations.pintarLinearRecyclerViewSuavemente(
+                                linearLayoutManager = LinearLayoutManager(requireContext()),
+                                recyclerView = binding.localesTrendingRecycler,
+                                adapter = EmpresaRecyclerViewAdapter(empresas, currentUsuario),
+                                orientation = LinearLayoutManager.HORIZONTAL,
+                            )
+                        },500)
+
+
                     } catch (e: Exception) {
                         Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
                     }

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/ic_background_gradient_shape_people"
     >
 
@@ -99,23 +100,67 @@
                 android:layout_marginTop="-10dp"
                 />
 
+            <TextView
+                android:id="@+id/topInfluencersNone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/montserrat_light"
+                android:text="@string/top_influencers_none"
+                android:textColor="@color/gris_textos"
+                android:textSize="15sp"
+                android:visibility="gone"
+                />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/loadingAnimationTopInfluencers"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                app:lottie_rawRes="@raw/loading_animation_thin"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"/>
+
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/top_personas_recycler_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 />
 
+
             <TextView
-                android:id="@+id/personas_que_quizas_conozcas_texto"
+            android:id="@+id/personasQueQuizasConozcasTexto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="@font/montserrat_light"
+            android:text="@string/personas_que_quiz_s_conozcas"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:layout_marginVertical="10dp"
+            />
+
+            <TextView
+                android:id="@+id/personasQueNone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:fontFamily="@font/montserrat_light"
-                android:text="@string/personas_que_quiz_s_conozcas"
-                android:textColor="@color/white"
-                android:textSize="22sp"
-                android:layout_marginVertical="10dp"
+                android:text="@string/top_influencers_none"
+                android:textColor="@color/gris_textos"
+                android:textSize="15sp"
+                android:visibility="gone"
                 />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/loadingAnimationPersonasQueQuizasConoczcas"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                app:lottie_rawRes="@raw/loading_animation_thin"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/personas_que_quizas_conozcas_recycler_view"

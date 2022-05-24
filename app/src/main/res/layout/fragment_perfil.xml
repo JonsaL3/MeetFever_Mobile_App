@@ -214,6 +214,27 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <TextView
+                android:id="@+id/feversByUserNone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/montserrat_light"
+                android:text="@string/feevers_by_user_none"
+                android:textColor="@color/gris_textos"
+                android:textSize="15sp"
+                android:visibility="gone"
+                />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/loadingAnimationOpinionesPerfil"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                app:lottie_rawRes="@raw/loading_animation_thin"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"/>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/opiniones_usuario_recycler"
                 android:layout_gravity="center"

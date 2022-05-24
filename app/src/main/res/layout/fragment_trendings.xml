@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
     android:background="@drawable/ic_background_gradient_shape_trendings"
     >
@@ -95,6 +96,28 @@
                 android:layout_marginTop="-10dp"
                 android:layout_marginBottom="5dp"
                 />
+
+            <TextView
+                android:id="@+id/opinionesNone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/montserrat_light"
+                android:text="@string/feevers_mas_valorados_del_dia_none"
+                android:textColor="@color/gris_textos"
+                android:textSize="15sp"
+                android:visibility="gone"
+                />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/loadingAnimationOpiniones"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                app:lottie_rawRes="@raw/loading_animation_thin"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"/>
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/top_opiniones_recycler"
