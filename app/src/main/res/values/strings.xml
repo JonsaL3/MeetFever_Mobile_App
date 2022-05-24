@@ -83,5 +83,7 @@
     <string name="informaci_n_del_usuario">Información del usuario:</string>
     <string name="confirmar_cambios">Confirmar cambios</string>
     <string name="direcci_n_fiscal">Dirección fiscal</string>
+    <string name="no_ha_seleccionado_ninguna_experiencia_opcional">No ha seleccionado ninguna experiencia (opcional)</string>
+    <string name="no_ha_seleccionado_ning_n_local_aun">No ha seleccionado ningún local aún</string>
 
 </resources>
