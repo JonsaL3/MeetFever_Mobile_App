@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <item
+        android:id="@+id/atras_alternative_bottom_bar"
+        android:title="@string/atr_s"
+        android:icon="@drawable/ic_back_svgrepo_com"
+        />
+
+</menu>

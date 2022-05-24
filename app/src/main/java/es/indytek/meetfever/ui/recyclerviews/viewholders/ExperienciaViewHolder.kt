@@ -40,7 +40,7 @@ class ExperienciaViewHolder(
     private fun onClick(objeto: Experiencia) {
         val activity = itemView.context as AppCompatActivity
         val fragmento = ExperienciaFragment.newInstance(usuario, objeto)
-        activity.supportFragmentManager.beginTransaction().replace(R.id.frame_layout,fragmento).commit()
+        Utils.cambiarDeFragmentoGuardandoElAnterior(activity.supportFragmentManager,fragmento, "", R.id.frame_layout)
     }
 
 }

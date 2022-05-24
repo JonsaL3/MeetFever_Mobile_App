@@ -40,7 +40,7 @@ class PersonaViewHolder(
     private fun onClick(persona: Persona) {
         val activity = view.context as AppCompatActivity
         val fragmento = PerfilFragment.newInstance(persona, currentUsuario)
-        activity.supportFragmentManager.beginTransaction().replace(R.id.frame_layout,fragmento).commit()
+        Utils.cambiarDeFragmentoGuardandoElAnterior(activity.supportFragmentManager,fragmento, "", R.id.frame_layout)
     }
 
 }

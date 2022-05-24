@@ -1,13 +1,12 @@
 package es.indytek.meetfever.utils
 
-import android.content.Context
+import android.animation.ValueAnimator
 import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import es.indytek.meetfever.models.experiencia.ExperienciaWrapper
-import es.indytek.meetfever.ui.recyclerviews.adapters.ExperienciaRecyclerViewAdapter
-import java.util.stream.Collectors
+
 
 object Animations {
 
@@ -65,20 +64,42 @@ object Animations {
 
     }
 
-    fun agrandarViewSuavemente(
+    fun setLayoutHeight(
         view: View,
-        duration: Long = Constantes.TIEMPO_DE_ANIMACIONES/3) {
-
-        view.animate().scaleXBy(0.2f).setDuration(duration).start()
-        view.animate().scaleYBy(0.2f).setDuration(duration).start()
-    }
-
-    fun reducirViewSuavemente(
-        view: View,
+        height: Int,
         duration: Long = Constantes.TIEMPO_DE_ANIMACIONES) {
 
-        view.animate().scaleXBy(-0.2f).setDuration(duration).start()
-        view.animate().scaleYBy(-0.2f).setDuration(duration).start()
+        val anim = ValueAnimator.ofInt(view.measuredHeight, height)
+
+        anim.addUpdateListener { valueAnimator ->
+            val animVal = valueAnimator.animatedValue as Int
+            val layoutParams = view.layoutParams
+            layoutParams.height = animVal
+            view.layoutParams = layoutParams
+        }
+
+        anim.duration = duration
+        anim.start()
+    }
+
+    fun setLayoutHeightWithTopMargin(
+        view: View,
+        height: Int,
+        topMargin: Int,
+        duration: Long = Constantes.TIEMPO_DE_ANIMACIONES) {
+
+        val anim = ValueAnimator.ofInt(view.measuredHeight, height)
+
+        anim.addUpdateListener { valueAnimator ->
+            val animVal = valueAnimator.animatedValue as Int
+            val layoutParams = view.layoutParams
+            layoutParams.height = animVal
+            (layoutParams as ViewGroup.MarginLayoutParams).topMargin = topMargin
+            view.layoutParams = layoutParams
+        }
+
+        anim.duration = duration
+        anim.start()
     }
 
 }

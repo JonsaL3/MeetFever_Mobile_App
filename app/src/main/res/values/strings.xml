@@ -67,7 +67,6 @@
     <string name="nombre_empresa">Nombre empresa</string>
     <string name="tel_fono">Teléfono</string>
     <string name="direcci_n_de_facturaci_n">Dirección de facturación</string>
-    <string name="direcci_n_fiscal">Dirección fiscal</string>
     <string name="nombre_de_la_persona_f_sica">Nombre de la persona física</string>
     <string name="apellido_1_persona_f_sica">Apellido 1 persona física</string>
     <string name="apellido_2_persona_f_sica">Apellido 2 persona física</string>
@@ -85,5 +84,6 @@
     <string name="direcci_n_fiscal">Dirección fiscal</string>
     <string name="no_ha_seleccionado_ninguna_experiencia_opcional">No ha seleccionado ninguna experiencia (opcional)</string>
     <string name="no_ha_seleccionado_ning_n_local_aun">No ha seleccionado ningún local aún</string>
+    <string name="atr_s">Atrás</string>
 
 </resources>
