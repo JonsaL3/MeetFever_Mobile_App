@@ -25,6 +25,8 @@ object WebServiceMeGusta {
             WebService.processRequestPost(context, url, jsonObject, object: WebServiceGenericInterface {
                 override fun callback(any: Any) {
 
+                    Log.d(":::", any.toString())
+
                     if (any.toString().isNotEmpty()) {
                         callback.callback(any)
                     } else {

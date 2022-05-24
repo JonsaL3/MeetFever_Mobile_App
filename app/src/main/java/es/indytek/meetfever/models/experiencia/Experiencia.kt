@@ -13,8 +13,8 @@ data class Experiencia(
     var aforo: Int = 0,
     @SerializedName("Descripcion")
     var descripcion: String? = "",
-    @SerializedName("Empresa")
-    var empresa: Empresa = Empresa("","",""),
+    @SerializedName("Empresa"
+    var empresa: Empresa = Empresa("", "",""),
     @SerializedName("Fecha_Celebracion")
     var fechaCelebracion: LocalDateTime = LocalDateTime.now(),
     @SerializedName("Foto")

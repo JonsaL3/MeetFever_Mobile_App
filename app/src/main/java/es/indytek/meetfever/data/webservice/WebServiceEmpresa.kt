@@ -51,7 +51,7 @@ object WebServiceEmpresa {
 
     }
 
-    // Encontrar empresa por id
+    // Encontrar empresa por nick
     fun findEmpresaByNickname(nickname: String, context: Context, callback : WebServiceGenericInterface) {
 
         val url = "interface/api/meetfever/empresa/ObtenerEmpresaPorNick"

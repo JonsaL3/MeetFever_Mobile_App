@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.PorterDuff
-import android.icu.number.Scale.none
 import android.os.Bundle
 import android.text.Spannable
 import android.text.style.ForegroundColorSpan
@@ -15,28 +14,41 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
-import androidx.core.view.ViewCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import es.indytek.meetfever.R
 import es.indytek.meetfever.data.webservice.WebServiceEmoticono
 import es.indytek.meetfever.data.webservice.WebServiceEmpresa
+import es.indytek.meetfever.data.webservice.WebServiceExperiencia
 import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
 import es.indytek.meetfever.databinding.FragmentRedactarFeverBinding
 import es.indytek.meetfever.models.emoticono.Emoticono
 import es.indytek.meetfever.models.emoticono.EmoticonoWrapper
 import es.indytek.meetfever.models.empresa.Empresa
 import es.indytek.meetfever.models.experiencia.Experiencia
+import es.indytek.meetfever.models.experiencia.ExperienciaWrapper
 import es.indytek.meetfever.models.opinion.Opinion
 import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.utils.Animations
-import es.indytek.meetfever.utils.Animations.agrandarViewSuavemente
-import es.indytek.meetfever.utils.Animations.reducirViewSuavemente
 import es.indytek.meetfever.utils.Utils
-import kotlinx.coroutines.*
-import java.lang.IndexOutOfBoundsException
-import java.security.KeyStore
+import java.lang.String
+import java.util.*
+import kotlin.Any
+import kotlin.Boolean
+import kotlin.ByteArray
+import kotlin.CharArray
+import kotlin.Exception
+import kotlin.Int
+import kotlin.also
+import kotlin.apply
+import kotlin.collections.ArrayList
+import kotlin.collections.LinkedHashMap
+import kotlin.let
+import kotlin.run
+import kotlin.toString
 
 private const val ARG_PARAM1 = "currentUsuario"
 
@@ -48,6 +60,10 @@ class RedactarFeverFragment : Fragment() {
     private lateinit var imageViews: LinkedHashMap<ImageView, Boolean>
     private var idEmpresa: Int = 0
     private var idExperiencia: Int = 0
+
+    /*private var atCount: Int = 0
+    private var padCount: Int = 0*/
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,6 +102,32 @@ class RedactarFeverFragment : Fragment() {
         binding.botonSendFever.setOnClickListener { sendFeverToServer() }
     }
 
+    fun removeDuplicate(str: CharArray, length: Int): kotlin.String {
+        //Creating index variable to use it as index in the modified string
+        var index = 0
+
+        // Traversing character array
+        for (i in 0 until length) {
+
+            // Check whether str[i] is present before or not
+            var j: Int = 0
+            while (j < i) {
+                if (str[i] == str[j] && str[i] == '@') {
+                    break
+                }
+                j++
+            }
+
+            // If the character is not present before, add it to resulting string
+            if (j == i) {
+                str[index++] = str[i]
+            }
+        }
+        println(String.valueOf(Arrays.copyOf(str, index)))
+        return String.valueOf(Arrays.copyOf(str, index))
+    }
+
+
     // cuento que el usuario no supere los 250 caracteres
     private fun procesadorDeTextoYCaracteres() {
 
@@ -106,6 +148,8 @@ class RedactarFeverFragment : Fragment() {
             text?.let {
 
                 if (text.contains("@")) {
+
+                    Log.d(":::", "ME ACTUALIZO")
 
                     // obtengo las palabras que empiezan por @
                     val split =  text.toString().split(" ")
@@ -182,10 +226,14 @@ class RedactarFeverFragment : Fragment() {
                             binding.noSeleccionadoPreview.visibility = View.VISIBLE
                             binding.elLocalQueSeleccione.visibility = View.VISIBLE
 
+
                             // vuelvo a poner el color en su sitio
                             val start = text.indexOf(empresa)
                             val end = start + empresa.length
                             binding.opinionContainer.text?.setSpan(ForegroundColorSpan(requireContext().getColor(R.color.gris_textos)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+                        // Vuelvo a mostrar lo de por defecto
+                        binding.noSeleccionadoPreview.visibility = View.VISIBLE
 
                             binding.opinionContainer.setTextColor(requireContext().getColor(R.color.gris_textos))
                         }
@@ -194,7 +242,9 @@ class RedactarFeverFragment : Fragment() {
                         Log.e(":::", "No se puede buscar una empresa vacia")
                     }
 
-                } else if(text.contains("#")) {
+                    //si el texto contiene ese patron, hará la busqueda.
+                }else if(text.matches(Regex("#.* "))) {
+
                     // obtengo las palabras que empiezan por #
                     val experiencias = text.toString().split(" ").filter {
                         it.startsWith("#")
@@ -204,10 +254,53 @@ class RedactarFeverFragment : Fragment() {
 
                     val experienciaCortada = experiencia.substring(1, experiencia.length)
 
-                    Log.d(":::", "EMPRESA ENCONTRADA -> $experienciaEncontrada")
-                    Log.d(":::", "EMPRESA CORTADA -> $experienciaCortada")
+                    Log.d(":::", "EXPERIENCIA ENCONTRADA -> $experienciaEncontrada")
+                    Log.d(":::", "EXPERIENCIA CORTADA -> $experienciaCortada")
 
+                    if (!experienciaEncontrada) {
 
+                        WebServiceExperiencia.findExperienciaByTitulo(experienciaCortada, requireContext(), object: WebServiceGenericInterface {
+                            override fun callback(any: Any) {
+
+                                if (any == 0) {
+                                    // TODO ERROR
+                                } else {
+                                    experienciaEncontrada = true
+                                    val experienciasDescargadas = any as ExperienciaWrapper
+
+                                    selectExperience(experienciasDescargadas)
+
+                                    // marco esa palabra en el edit text de otro color
+                                    val start = text.indexOf(experiencia)
+                                    val end = start + experiencia.length
+                                    binding.opinionContainer.text?.setSpan(ForegroundColorSpan(requireContext().getColor(R.color.rosa_meet)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+                                }
+
+                            }
+                        })
+
+                    } else if (experienciaCortada != binding.nombreEmpresa.text.toString()) {
+
+                        experienciaEncontrada = false
+
+                        // oculto la foto etc
+                        binding.experienciaNombre.visibility = View.GONE
+                        binding.experienciaDescripcion.visibility = View.GONE
+                        binding.experienciaPreview.visibility = View.GONE
+                        binding.experienciaPreviewDegradado.visibility = View.GONE
+                        binding.experienciaPreview.setImageDrawable(null)
+
+                        // Vuelvo a mostrar lo de por defecto
+                        binding.noSeleccionadoExperienciaPreview.visibility = View.VISIBLE
+
+                        // vuelvo a poner el color en su sitio
+                        val start = text.indexOf(experiencia)
+                        val end = start + experiencia.length
+                        binding.opinionContainer.text?.setSpan(ForegroundColorSpan(requireContext().getColor(R.color.gris_textos)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+                        binding.opinionContainer.setTextColor(requireContext().getColor(R.color.gris_textos))
+                    }
 
 
                 } else {
@@ -233,6 +326,93 @@ class RedactarFeverFragment : Fragment() {
 
         }
 
+    }
+
+    private fun selectExperience(experiencias: ExperienciaWrapper){
+
+        experiencias.forEach {
+            //creo la caja de experiencia
+            val linearLayout = LinearLayout(requireContext())
+            linearLayout.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            linearLayout.orientation = LinearLayout.HORIZONTAL
+
+            //creo sufoto
+            val imageView = ImageView(requireContext())
+            imageView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+
+            it.foto?.let {foto ->
+                Utils.putBase64ImageIntoImageViewWithPlaceholder(binding.previewEnterprise, foto, requireContext(), R.drawable.ic_default_enterprise_black_and_white)
+            } ?: run {
+                Utils.putResourceImageIntoImageView(binding.previewEnterprise, R.drawable.ic_default_enterprise_black_and_white, requireContext())
+            }
+
+            //anado la foto al linear layout
+            linearLayout.addView(imageView)
+
+            //creo el linearlayout que contiene a la descripcion y el titulo
+            val linearLayout2 = LinearLayout(requireContext())
+            linearLayout2.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            linearLayout2.orientation = LinearLayout.VERTICAL
+
+            //creo el titulo
+            val textView = TextView(requireContext())
+            textView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            textView.text = it.titulo
+
+            //creo la descripcion
+            val textView2 = TextView(requireContext())
+            textView2.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            textView2.text = it.descripcion
+
+            //por ultimo lo aniado al papa
+            binding.experienciasLayout.addView(linearLayout)
+
+            //creo un imageview
+            val view = View(requireContext())
+            view.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1)
+
+            //le asigno un color
+            view.setBackgroundColor(requireContext().getColor(R.color.gris_textos))
+
+            //le asigno un padding
+            view.setPadding(10, 0, 10, 0)
+
+            //lo aniado a su papa
+            binding.experienciasLayout.addView(view)
+
+        }
+
+    }
+
+    private fun loadExperienceOnUI(experiencia: Experiencia){
+        // pongo la foto en la preview
+        val foto = experiencia.foto
+        this@RedactarFeverFragment.idExperiencia = experiencia.id
+
+
+        foto?.let {
+            Utils.putBase64ImageIntoImageViewWithPlaceholder(binding.experienciaPreview, foto, requireContext(), R.drawable.ic_default_enterprise_black_and_white)
+        } ?: run {
+            Utils.putResourceImageIntoImageView(binding.experienciaPreview, R.drawable.ic_default_enterprise_black_and_white, requireContext())
+        }
+
+        // oculto los mensajes de que no se encontró ninguna empresa
+        binding.noSeleccionadoPreview.visibility = View.GONE
+
+        // muestro el nombre de la empresa y su frase
+        binding.experienciaNombre.visibility = View.VISIBLE
+        binding.experienciaNombre.text = experiencia.titulo
+
+        binding.experienciaDescripcion.visibility = View.VISIBLE
+        val wordsDescription = experiencia.descripcion?.split(" ")
+        binding.experienciaDescripcion.text =
+            wordsDescription?.get(0) ?: " " +
+                    wordsDescription?.get(1) ?: " " +
+                    wordsDescription?.get(2) ?: " " +
+                    wordsDescription?.get(3) ?: "" + "..."
+
+        binding.experienciaPreviewDegradado.visibility = View.VISIBLE
+        binding.experienciaPreview.visibility = View.VISIBLE
     }
 
     // pintar todzxo
@@ -281,9 +461,8 @@ class RedactarFeverFragment : Fragment() {
 
     }
 
-
     @SuppressLint("UseCompatLoadingForDrawables")
-    fun createEmoticonoImageViews(){
+    private fun createEmoticonoImageViews(){
 
         val emoticonosViews = ArrayList<ImageView>()
 
@@ -356,6 +535,8 @@ class RedactarFeverFragment : Fragment() {
 
         Log.d(":::", opinion.toString())
 
+        binding.opinionContainer.setText(removeDuplicate(binding.opinionContainer.text.toString().toCharArray(), binding.opinionContainer.text.toString().length))
+        Toast.makeText(requireContext(), binding.opinionContainer.text.toString(), Toast.LENGTH_SHORT).show()
 
     }
 
