@@ -13,6 +13,7 @@ import es.indytek.meetfever.ui.fragments.secondaryfragments.fever.RedactarFeverF
 import es.indytek.meetfever.ui.fragments.secondaryfragments.perfil.PerfilFragment
 import es.indytek.meetfever.ui.fragments.secondaryfragments.usersettings.UserSettingsFragment
 import es.indytek.meetfever.utils.Animations
+import es.indytek.meetfever.utils.Utils
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter
 import nl.joery.animatedbottombar.AnimatedBottomBar
 
@@ -40,8 +41,9 @@ class MainActivity : AppCompatActivity() {
         // por último, cargo los botones suplementarios
         cargarBotonesSuplementarios()
 
-        // por defecto cargo el explorer fragment
-        cargarExplorerFragment()
+        // por defecto cargo el explorer fragment, sin añadirlo a la pila de fragmentos para que no llegue a ocultarse nunca
+        val fragmento = ExplorerFragment.newInstance(currentUsuario)
+        supportFragmentManager.beginTransaction().replace(R.id.frame_layout, fragmento).commit()
 
         // cargo los listeners
         cargarListeners()
@@ -54,7 +56,7 @@ class MainActivity : AppCompatActivity() {
     private fun cargarListeners() {
         binding.irAAjustes.setOnClickListener {
             val fragmento = UserSettingsFragment.newInstance(currentUsuario)
-            supportFragmentManager.beginTransaction().replace(R.id.frame_layout,fragmento).commit()
+            Utils.cambiarDeFragmentoGuardandoElAnterior(supportFragmentManager,fragmento, "", R.id.frame_layout)
         }
     }
 
@@ -72,15 +74,12 @@ class MainActivity : AppCompatActivity() {
             ) {
                  when (newIndex) {
                     2 -> {
-                        binding.bottomBar.indicatorColorRes = R.color.amarillo_meet
                         cargarTrendingsFragment()
                     }
                     0 -> {
-                        binding.bottomBar.indicatorColorRes = R.color.azul_meet
                         cargarPeopleFragment()
                     }
                     else -> {
-                        binding.bottomBar.indicatorColorRes = R.color.rosa_meet
                         cargarExplorerFragment()
                     }
                 }
@@ -125,27 +124,27 @@ class MainActivity : AppCompatActivity() {
     // Funciones de carga de fragmentos ############################################################
     private fun cargarExplorerFragment() {
         val fragmento = ExplorerFragment.newInstance(currentUsuario)
-        supportFragmentManager.beginTransaction().replace(R.id.frame_layout,fragmento).commit()
+        Utils.cambiarDeFragmentoGuardandoElAnterior(supportFragmentManager,fragmento, "", R.id.frame_layout)
     }
 
     private fun cargarPeopleFragment() {
         val fragmento = PeopleFragment.newInstance(currentUsuario)
-        supportFragmentManager.beginTransaction().replace(R.id.frame_layout,fragmento).commit()
+        Utils.cambiarDeFragmentoGuardandoElAnterior(supportFragmentManager,fragmento, "", R.id.frame_layout)
     }
 
     private fun cargarTrendingsFragment() {
         val fragmento = TrendingsFragment.newInstance(currentUsuario)
-        supportFragmentManager.beginTransaction().replace(R.id.frame_layout,fragmento).commit()
+        Utils.cambiarDeFragmentoGuardandoElAnterior(supportFragmentManager,fragmento, "", R.id.frame_layout)
     }
 
     private fun cargarPerfil() {
         val fragmento = PerfilFragment.newInstance(currentUsuario, currentUsuario)
-        supportFragmentManager.beginTransaction().replace(R.id.frame_layout,fragmento).commit()
+        Utils.cambiarDeFragmentoGuardandoElAnterior(supportFragmentManager,fragmento, "", R.id.frame_layout)
     }
 
     private fun redactarFever() {
         val fragmento = RedactarFeverFragment.newInstance(currentUsuario)
-        supportFragmentManager.beginTransaction().replace(R.id.frame_layout,fragmento).commit()
+        Utils.cambiarDeFragmentoGuardandoElAnterior(supportFragmentManager,fragmento, "", R.id.frame_layout)
     }
 
 }

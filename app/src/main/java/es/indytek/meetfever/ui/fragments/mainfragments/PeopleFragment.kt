@@ -20,6 +20,8 @@ import es.indytek.meetfever.ui.fragments.secondaryfragments.persona.AllPeopleFra
 import es.indytek.meetfever.ui.fragments.secondaryfragments.persona.AllRelatedPeopleFragment
 import es.indytek.meetfever.ui.recyclerviews.adapters.PersonaRecyclerViewAdapter
 import es.indytek.meetfever.utils.Animations
+import es.indytek.meetfever.utils.Utils
+import nl.joery.animatedbottombar.AnimatedBottomBar
 import java.time.LocalTime
 
 private const val ARG_PARAM1 = "usuario"
@@ -143,13 +145,13 @@ class PeopleFragment : Fragment() {
     // pregunto al webservice por todas las personas
     private fun mostrarTodasLasPersonas() {
         val fragmento = AllPeopleFragment.newInstance(currentUsuario)
-        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_layout,fragmento)?.commit()
+        Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager,fragmento, "", R.id.frame_layout)
     }
 
     // private fun pregunto al web service por todas las personas relacionadas
     private fun obtenerTodasLasPersonasRelacionadas() {
         val fragmento = AllRelatedPeopleFragment.newInstance(currentUsuario)
-        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_layout,fragmento)?.commit()
+        Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager,fragmento, "", R.id.frame_layout)
     }
 
     // pinta los datos del tio que inició sesión
@@ -232,6 +234,18 @@ class PeopleFragment : Fragment() {
         pintarNombreDelUsuarioQueInicioSesion()
         pintarTopPersonas()
         pintarPersonasQueQuizasConozca()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setBottomBarColorAndPosition()
+    }
+
+    private fun setBottomBarColorAndPosition() {
+        val bottomBar = requireActivity().findViewById<AnimatedBottomBar>(R.id.bottom_bar)
+        Utils.mostrarBottomBar(requireActivity())
+        bottomBar.indicatorColorRes = R.color.azul_meet
+        bottomBar.selectTabAt(0, true)
     }
 
     companion object {

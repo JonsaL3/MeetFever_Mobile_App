@@ -190,28 +190,25 @@
                     android:id="@+id/seguir_no_seguir"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.95"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toTopOf="@+id/profilePicture"
-                    >
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.07"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
                         android:id="@+id/seguir_boton"
                         android:layout_width="33dp"
                         android:layout_height="30dp"
                         android:background="@drawable/ic_follow"
-                        android:visibility="gone"
-                        />
+                        android:visibility="gone" />
 
                     <ImageView
                         android:id="@+id/dejar_de_seguir_boton"
                         android:layout_width="33dp"
                         android:layout_height="30dp"
                         android:background="@drawable/ic_unfollow"
-                        android:visibility="gone"
-                        />
+                        android:visibility="gone" />
 
                 </FrameLayout>
 

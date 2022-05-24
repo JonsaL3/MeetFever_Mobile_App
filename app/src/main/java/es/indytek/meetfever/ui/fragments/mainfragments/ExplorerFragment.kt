@@ -27,6 +27,8 @@ import es.indytek.meetfever.ui.recyclerviews.adapters.EmpresaRecyclerViewAdapter
 import es.indytek.meetfever.ui.recyclerviews.adapters.ExperienciaRecyclerViewAdapter
 import es.indytek.meetfever.ui.recyclerviews.adapters.OpinionRecyclerViewAdapter
 import es.indytek.meetfever.utils.Animations
+import es.indytek.meetfever.utils.Utils
+import nl.joery.animatedbottombar.AnimatedBottomBar
 import java.time.LocalTime
 import java.util.stream.Collectors
 import kotlin.math.E
@@ -168,12 +170,12 @@ class ExplorerFragment : Fragment() {
     // muestro todas las empresas en otro fragmento
     private fun mostrarTodasLasEmpresas() {
         val fragmento = AllEmpresasFragment.newInstance(currentUsuario)
-        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_layout,fragmento)?.commit()
+        Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager,fragmento, "", R.id.frame_layout)
     }
 
     private fun mostrarTodasLasExperiencias() {
         val fragmento = AllExperiencesFragment.newInstance(currentUsuario)
-        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_layout,fragmento)?.commit()
+        Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager,fragmento, "", R.id.frame_layout)
     }
 
     // pinta los datos del tio que inició sesión
@@ -258,6 +260,18 @@ class ExplorerFragment : Fragment() {
         pintarNombreDelUsuarioQueInicioSesion()
         pintarExperienciasDestacadas()
         pintarTopEmpresas()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setBottomBarColorAndPosition()
+    }
+
+    private fun setBottomBarColorAndPosition() {
+        val bottomBar = requireActivity().findViewById<AnimatedBottomBar>(R.id.bottom_bar)
+        Utils.mostrarBottomBar(requireActivity())
+        bottomBar.indicatorColorRes = R.color.rosa_meet
+        bottomBar.selectTabAt(1, true)
     }
 
     // Crear una instancia de este fragmento

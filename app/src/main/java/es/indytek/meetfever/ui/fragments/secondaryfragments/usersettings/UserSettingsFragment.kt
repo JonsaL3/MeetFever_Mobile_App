@@ -5,10 +5,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import es.indytek.meetfever.R
+import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
+import es.indytek.meetfever.data.webservice.WebServiceSexo
 import es.indytek.meetfever.databinding.FragmentUserSettingsBinding
 import es.indytek.meetfever.models.empresa.Empresa
 import es.indytek.meetfever.models.persona.Persona
+import es.indytek.meetfever.models.sexo.SexoWrapper
 import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.utils.Animations
 import es.indytek.meetfever.utils.Utils
@@ -60,7 +64,7 @@ class UserSettingsFragment : Fragment() {
 
         // foto de fondo
         currentUsuario.fotoFondo?.let {
-            Utils.putBase64ImageIntoImageView(binding.fotoPerfil, it, requireContext())
+            Utils.putBase64ImageIntoImageView(binding.fotoFondo, it, requireContext())
         }
 
         binding.correo.setText(currentUsuario.correo)
@@ -95,7 +99,41 @@ class UserSettingsFragment : Fragment() {
     }
 
     private fun pintarDatosPersona() {
+
+        val persona = currentUsuario as Persona
+
+        binding.nombrePersonaPersona.setText(persona.nombre)
+
+        binding.apellidoPersonaPersona.setText(persona.apellido1)
+
+        binding.apellido2PersonaPersona.setText(persona.apellido2)
+
+        WebServiceSexo.getAllSexos(requireContext(), object: WebServiceGenericInterface {
+            override fun callback(any: Any) {
+
+                if (any == 0) {
+                    // TODO ERRROR
+                } else {
+                    val sexos = any as SexoWrapper
+                    val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, sexos)
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    binding.spinnerSexoPersona.adapter = adapter
+                    binding.spinnerSexoPersona.setSelection(sexos.indexOf(persona.sexo))
+                }
+
+            }
+        })
+
+        binding.fechaNacimientoPersona.setText(persona.fechaNacimiento.toString())
+
+        binding.dniPersonaPersona.setText(persona.dni)
+
         Animations.mostrarVistaSuavemente(binding.datosPersona)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Utils.ocultarBottomBar(requireActivity())
     }
 
     companion object {

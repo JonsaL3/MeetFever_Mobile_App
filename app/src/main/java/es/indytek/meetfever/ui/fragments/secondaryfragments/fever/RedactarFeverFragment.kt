@@ -540,6 +540,10 @@ class RedactarFeverFragment : Fragment() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        Utils.ocultarBottomBar(requireActivity())
+    }
 
     companion object {
         @JvmStatic

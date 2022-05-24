@@ -64,7 +64,7 @@ class EmpresaViewHolder(
                 }
 
                 val fragmento = PerfilFragment.newInstance(empresa, currentUsuario)
-                activity.supportFragmentManager.beginTransaction().replace(R.id.frame_layout,fragmento).commit()
+                Utils.cambiarDeFragmentoGuardandoElAnterior(activity.supportFragmentManager,fragmento, "", R.id.frame_layout)
             }
         })
 

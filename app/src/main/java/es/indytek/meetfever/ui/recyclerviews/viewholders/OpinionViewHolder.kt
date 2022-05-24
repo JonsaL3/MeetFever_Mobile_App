@@ -16,6 +16,7 @@ import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
 import es.indytek.meetfever.data.webservice.WebServiceMeGusta
 import es.indytek.meetfever.databinding.ViewholderOpinionBinding
 import es.indytek.meetfever.models.opinion.Opinion
+import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.ui.fragments.mainfragments.TrendingsFragment
 import es.indytek.meetfever.ui.fragments.secondaryfragments.perfil.PerfilFragment
 import es.indytek.meetfever.utils.Utils
@@ -26,6 +27,7 @@ class OpinionViewHolder(
     private val view: View,
     private val binding: ViewholderOpinionBinding,
     private val claseOrigen: Class<*>,
+    private val currentUsuario: Usuario
 
 ) : RecyclerView.ViewHolder(view) {
 
@@ -85,10 +87,7 @@ class OpinionViewHolder(
         // Creo un listener que me permita darle a me gusta a una opinion
         binding.btnMeGusta.setOnClickListener {
 
-            Log.d(":::", "AUTOR -> ${objeto.autor.id}")
-            Log.d(":::", "OPINION -> ${objeto.id}")
-
-            WebServiceMeGusta.darMeGustaOQuitarlo(objeto.id, objeto.autor.id, view.context, object: WebServiceGenericInterface {
+            WebServiceMeGusta.darMeGustaOQuitarlo(objeto.id, currentUsuario.id, view.context, object: WebServiceGenericInterface {
 
                 @RequiresApi(Build.VERSION_CODES.Q)
                 override fun callback(any: Any) {
@@ -98,21 +97,15 @@ class OpinionViewHolder(
                     } else {
 
                         if (!objeto.like) {
-
                             objeto.numeroLikes += 1
                             objeto.like = true
                             Utils.putResourceImageIntoImageViewWithoutCorners(binding.btnMeGusta, R.drawable.ic_likedbutton, itemView.context)
                             binding.numeroMeGusta.text = objeto.numeroLikes.toString()
-
-
                         } else {
-
                             objeto.numeroLikes -= 1
                             objeto.like = false
                             Utils.putResourceImageIntoImageViewWithoutCorners(binding.btnMeGusta, R.drawable.ic_likebutton, itemView.context)
                             binding.numeroMeGusta.text = objeto.numeroLikes.toString()
-
-
                         }
 
                     }

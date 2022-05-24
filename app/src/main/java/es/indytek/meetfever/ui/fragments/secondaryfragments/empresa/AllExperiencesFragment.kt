@@ -17,6 +17,7 @@ import es.indytek.meetfever.models.experiencia.ExperienciaWrapper
 import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.ui.recyclerviews.adapters.ExperienciaRecyclerViewAdapter
 import es.indytek.meetfever.utils.Animations
+import es.indytek.meetfever.utils.Utils
 
 private const val ARG_PARAM1 = "usuario"
 
@@ -76,6 +77,11 @@ class AllExperiencesFragment : Fragment() {
 
             }
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Utils.ocultarBottomBar(requireActivity())
     }
 
     companion object {
