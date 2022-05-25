@@ -25,11 +25,13 @@ class Persona(
     var apellido1: String? = null,
     @SerializedName("Apellido2")
     var apellido2: String? = null,
+
     @SerializedName("Sexo")
-    var sexo: Sexo? = null,
+    var sexo: Sexo = Sexo(-1, "No definido"),
+
     @SerializedName("Fecha_Nacimiento")
     var fechaNacimiento: LocalDate? = null,
-    @SerializedName("dni")
+    @SerializedName("Dni")
     var dni: String? = null,
 
     ) : Usuario(id, correo, contrasena, nick, fotoFondo, fotoPerfil, telefono, frase) {
@@ -54,9 +56,9 @@ class Persona(
         put("Nombre", nombre)
         put("Apellido1", apellido1)
         put("Apellido2", apellido2)
-        put("Sexo", sexo?.toJsonObject())
+        put("Sexo", sexo.toJsonObject())
         put("Fecha_Nacimiento", fechaNacimiento)
-        put("dni", dni)
+        put("Dni", dni)
     }
 
     override fun toString(): String {

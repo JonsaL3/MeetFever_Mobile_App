@@ -89,12 +89,13 @@
                         />
 
                     <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/buscar_foto_perfil"
                         android:layout_width="150dp"
                         android:layout_gravity="center"
                         android:layout_height="40dp"
                         android:text="@string/buscar"
                         android:textColor="@color/white"
-                        android:background="@drawable/ic_custom_boton"
+                        android:background="@drawable/anim_button_pressed"
                         android:fontFamily="@font/montserrat_light"
                         android:textAllCaps="false"
                         android:layout_marginTop="15dp"
@@ -107,7 +108,7 @@
                         android:layout_height="40dp"
                         android:text="@string/hacer_foto"
                         android:textColor="@color/white"
-                        android:background="@drawable/ic_custom_boton"
+                        android:background="@drawable/anim_button_pressed"
                         android:fontFamily="@font/montserrat_light"
                         android:textAllCaps="false"
                         android:layout_marginTop="15dp"
@@ -130,12 +131,13 @@
                         />
 
                     <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/buscar_foto_fondo"
                         android:layout_width="150dp"
                         android:layout_gravity="center"
                         android:layout_height="40dp"
                         android:text="@string/buscar"
                         android:textColor="@color/white"
-                        android:background="@drawable/ic_custom_boton"
+                        android:background="@drawable/anim_button_pressed"
                         android:fontFamily="@font/montserrat_light"
                         android:textAllCaps="false"
                         android:layout_marginTop="15dp"
@@ -148,7 +150,7 @@
                         android:layout_height="40dp"
                         android:text="@string/hacer_foto"
                         android:textColor="@color/white"
-                        android:background="@drawable/ic_custom_boton"
+                        android:background="@drawable/anim_button_pressed"
                         android:fontFamily="@font/montserrat_light"
                         android:textAllCaps="false"
                         android:layout_marginTop="15dp"
@@ -247,7 +249,7 @@
 
             <LinearLayout
                 android:id="@+id/datos_empresa"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -524,7 +526,6 @@
                     android:layout_marginTop="40dp"
                     android:textColor="@color/gris_textos"
                     android:textColorHint="@color/gris_textos"
-                    android:enabled="false"
                     />
 
             </LinearLayout>
@@ -536,7 +537,7 @@
                 android:layout_height="40dp"
                 android:text="@string/confirmar_cambios"
                 android:textColor="@color/white"
-                android:background="@drawable/ic_custom_boton"
+                android:background="@drawable/anim_button_pressed"
                 android:fontFamily="@font/montserrat_light"
                 android:textAllCaps="false"
                 android:layout_marginTop="25dp"

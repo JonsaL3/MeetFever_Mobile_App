@@ -6,12 +6,15 @@ import com.google.gson.GsonBuilder
 import es.indytek.meetfever.models.empresa.Empresa
 import es.indytek.meetfever.models.mesigue.MeSigue
 import es.indytek.meetfever.models.persona.Persona
+import es.indytek.meetfever.models.sexo.Sexo
 import es.indytek.meetfever.models.typeAdapters.LocalDateTimeTypeAdapter
+import es.indytek.meetfever.models.typeAdapters.LocalDateTypeAdapter
 import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.models.usuario.UsuarioWrapper
 import org.json.JSONObject
 import java.lang.Exception
 import java.lang.IllegalArgumentException
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 object WebServiceUsuario {
@@ -93,6 +96,8 @@ object WebServiceUsuario {
             WebService.processRequestPost(context, url, jsonObject, object: WebServiceGenericInterface {
                 override fun callback(any: Any) {
 
+                    Log.d(":::", any.toString())
+
                     if (any.toString().isNotEmpty()) {
                         // Obtengo el response
                         when {
@@ -108,6 +113,7 @@ object WebServiceUsuario {
                             any.toString().contains(""""Tipo":"PERSONA"""") -> {
 
                                 val persona = GsonBuilder()
+                                    .registerTypeAdapter(LocalDate::class.java, LocalDateTypeAdapter())
                                     .create()
                                     .fromJson(any.toString(), Persona::class.java)
 
@@ -134,18 +140,20 @@ object WebServiceUsuario {
 //        val jsonObject = usuario.toJsonObject()
         val jsonObject = usuario.toJsonObject()
 
-        if (usuario is Empresa) {
-            "interface/api/meetfever/empresa/InsertarEmpresa".let {
-                url = it
-            }
-        } else if (usuario is Persona) {
-            "interface/api/meetfever/persona/InsertarPersona".let {
-                url = it
-            }
-        } else throw IllegalArgumentException("El usuario no es de tipo Empresa o Persona")
+        when (usuario) {
 
-        Log.d(":::", "REGISTRANDO -> ${usuario.toJsonObject()}")
-
+            is Empresa -> {
+                "interface/api/meetfever/empresa/InsertarEmpresa".let {
+                    url = it
+                }
+            }
+            is Persona -> {
+                "interface/api/meetfever/persona/InsertarPersona".let {
+                    url = it
+                }
+            }
+            else -> throw IllegalArgumentException("El usuario no es de tipo Empresa o Persona")
+        }
 
         WebService.processRequestPost(context, url, jsonObject, object: WebServiceGenericInterface {
             override fun callback(any: Any) {

@@ -5,7 +5,6 @@ import android.util.Log
 import com.google.gson.GsonBuilder
 import es.indytek.meetfever.models.empresa.Empresa
 import es.indytek.meetfever.models.empresa.EmpresaWrapper
-import es.indytek.meetfever.models.experiencia.ExperienciaWrapper
 import es.indytek.meetfever.models.typeAdapters.LocalDateTimeTypeAdapter
 import es.indytek.meetfever.models.typeAdapters.LocalDateTypeAdapter
 import org.json.JSONObject

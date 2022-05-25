@@ -1,7 +1,9 @@
 package es.indytek.meetfever.data.webservice
 
 import android.content.Context
+import android.util.Log
 import com.google.gson.GsonBuilder
+import es.indytek.meetfever.models.persona.Persona
 import es.indytek.meetfever.models.persona.PersonaWrapper
 import es.indytek.meetfever.models.typeAdapters.LocalDateTypeAdapter
 import es.indytek.meetfever.models.usuario.Usuario
@@ -172,6 +174,32 @@ object WebServicePersona {
                     } else {
                         callback.callback(0)
                     }
+
+                }
+            })
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    // actualizar el usuario
+    fun actualizarPersona(persona: Persona, context: Context, callback : WebServiceGenericInterface) {
+
+        val url = "interface/api/meetfever/persona/ActualizarPersona"
+        val jsonObject = persona.toJsonObject()
+
+        Log.d(":::PERSONAACTUALIZAR -> ", persona.sexo.toJsonObject().toString())
+
+        try {
+
+            WebService.processRequestPut(context, url, jsonObject, object: WebServiceGenericInterface {
+                override fun callback(any: Any) {
+
+                    if (any.toString().isNotEmpty()) {
+                        callback.callback(any)
+                    } else
+                        callback.callback(0)
 
                 }
             })
