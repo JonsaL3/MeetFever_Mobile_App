@@ -6,6 +6,8 @@
     tools:context=".ui.fragments.secondaryfragments.empresa.AllEmpresasFragment"
     android:background="@drawable/ic_rectangulo_meet"
     android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
     >
 
     <LinearLayout
@@ -25,7 +27,14 @@
             android:textSize="23sp"
             android:layout_marginTop="10dp"
             />
-
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/loadingAnimation"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            app:lottie_rawRes="@raw/loading_animation_thin"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"/>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerAllEmpresas"
             android:layout_marginTop="10dp"

@@ -51,15 +51,17 @@ class LoginActivity : AppCompatActivity() {
 
         if (!correo.isNotEmpty() || !contrasena.isNotEmpty()) { // TODO QUITAR EXCLAMACIONES
 
+            Animations.mostrarVistaSuavemente(binding.prePantallaDeCarga, 500)
+
             // Hago una petición para obtener el usuario
             WebServiceUsuario.inciarSesion("indytek@indytek.indytek", "12345", this, object: WebServiceGenericInterface {
                 override fun callback(any: Any) {
 
                     if (any == 0) { // en caso de que vaya mal muestro un popup
-
+                        //TODO mostrar popup de error
+                        Animations.ocultarVistaSuavemente(binding.prePantallaDeCarga, 500)
                     } else { // en caso de que vaya bien me voy a la main activity
 
-                        Animations.mostrarVistaSuavemente(binding.prePantallaDeCarga, 700)
                         Handler(Looper.getMainLooper()).postDelayed(Runnable {
                             irAMainActivity(any as Usuario)
                         },2000)

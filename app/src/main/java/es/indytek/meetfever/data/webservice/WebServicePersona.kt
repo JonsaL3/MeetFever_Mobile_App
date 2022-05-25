@@ -101,6 +101,8 @@ object WebServicePersona {
                             callback.callback(personas)
                         else
                             callback.callback(0)
+                    } else {
+                        callback.callback(0)
                     }
 
                 }

@@ -159,13 +159,18 @@
         android:id="@+id/prePantallaDeCarga"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/background_gradient_default_colors_no_radius"
         android:orientation="vertical"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:background="@drawable/ic_background_gradient_shape"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="9dp"
+        android:layout_marginBottom="9dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -181,6 +186,7 @@
                 android:id="@+id/imageView4"
                 android:layout_width="wrap_content"
                 android:layout_height="200dp"
+                android:layout_marginTop="20dp"
                 android:layout_gravity="center_horizontal"
                 android:src="@drawable/ic_logo_meet_login" />
 
@@ -211,7 +217,7 @@
                 android:id="@+id/animationView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:lottie_rawRes="@raw/loading_animation"
+                app:lottie_rawRes="@raw/loading_animation_thin"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"/>
         </LinearLayout>
