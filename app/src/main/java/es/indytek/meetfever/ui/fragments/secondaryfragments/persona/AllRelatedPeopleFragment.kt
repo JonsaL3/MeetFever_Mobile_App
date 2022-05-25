@@ -48,6 +48,11 @@ class AllRelatedPeopleFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Utils.ocultarElementosUI(requireActivity())
+    }
+
     // lo pinto tosdo
     private fun pintar() {
         pintarPersonas()
@@ -61,14 +66,21 @@ class AllRelatedPeopleFragment : Fragment() {
 
                 if (any == 0) {
                     //TODO ERROR
+
+                    Utils.terminarCargaOnError(binding.loadingAnimation, binding.topInfluencersNone)
+
                 } else {
                     val personas = any as PersonaWrapper
                     try {
-                        Animations.pintarGridRecyclerViewSuavemente(
-                            gridLayoutManager = GridLayoutManager(requireContext(), 3),
-                            recyclerView = binding.recyclerAllInfluencers,
-                            adapter = PersonaRecyclerViewAdapter(personas, usuario),
-                        )
+
+                        Utils.terminarCarga(binding.loadingAnimation){
+                            Animations.pintarGridRecyclerViewSuavemente(
+                                gridLayoutManager = GridLayoutManager(requireContext(), 3),
+                                recyclerView = binding.recyclerAllInfluencers,
+                                adapter = PersonaRecyclerViewAdapter(personas, usuario),
+                            )
+                        }
+
                     } catch (e: IllegalStateException) {
                         Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
                     }

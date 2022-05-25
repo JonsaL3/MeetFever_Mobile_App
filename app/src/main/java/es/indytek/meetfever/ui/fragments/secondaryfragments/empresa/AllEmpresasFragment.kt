@@ -53,6 +53,11 @@ class AllEmpresasFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Utils.ocultarElementosUI(requireActivity())
+    }
+
     // pinto las distintas cosas que necesito
     private fun pintar() {
         pintarTodasLasEmpresas()
@@ -65,22 +70,20 @@ class AllEmpresasFragment : Fragment() {
 
                 if (any == 0) {
                     // TODO ERROR
+
+                    Utils.terminarCargaOnError(binding.loadingAnimation, binding.topLocalesNone)
+
                 } else {
                     val empresas = any as EmpresaWrapper
                     try {
-                        Animations.ocultarVistaSuavemente(binding.loadingAnimation, 500)
 
-                        Handler(Looper.getMainLooper()).postDelayed(Runnable {
-
-                            binding.loadingAnimation.visibility = View.GONE
-
-
+                        Utils.terminarCarga(binding.loadingAnimation){
                             Animations.pintarGridRecyclerViewSuavemente(
                                 gridLayoutManager = GridLayoutManager(requireContext(), 3),
                                 recyclerView = binding.recyclerAllEmpresas,
                                 adapter = EmpresaRecyclerViewAdapter(empresas, usuario),
                             )
-                        },500)
+                        }
 
                     } catch (e: IllegalStateException) {
                         Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")

@@ -30,6 +30,7 @@ import es.indytek.meetfever.ui.recyclerviews.adapters.EmpresaRecyclerViewAdapter
 import es.indytek.meetfever.ui.recyclerviews.adapters.ExperienciaRecyclerViewAdapter
 import es.indytek.meetfever.ui.recyclerviews.adapters.OpinionRecyclerViewAdapter
 import es.indytek.meetfever.utils.Animations
+import es.indytek.meetfever.utils.DialogMaker
 import es.indytek.meetfever.utils.Utils
 import nl.joery.animatedbottombar.AnimatedBottomBar
 import java.time.LocalTime
@@ -72,6 +73,11 @@ class ExplorerFragment : Fragment() {
         motorDeBusqueda()
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Utils.mostrarElementosUI(requireActivity())
     }
 
     // Preparo las busquedas
@@ -168,6 +174,7 @@ class ExplorerFragment : Fragment() {
         binding.localesTrendingTexto.setOnClickListener {
             mostrarTodasLasEmpresas()
         }
+
     }
 
     // muestro todas las empresas en otro fragmento
@@ -210,28 +217,22 @@ class ExplorerFragment : Fragment() {
 
                 if (any == 0) {
                     // TODO ERROR
-                    Animations.ocultarVistaSuavemente(binding.loadingAnimationExperienciasDestacadas, 500)
-                    Handler(Looper.getMainLooper()).postDelayed(Runnable {
-                        binding.experienciasDestacadasTextoNone.visibility = View.VISIBLE
-                        Animations.mostrarVistaSuavemente(binding.experienciasDestacadasTextoNone,500)
-                    },500)
+
+                        Utils.terminarCargaOnError(binding.loadingAnimationExperienciasDestacadas, binding.experienciasDestacadasTextoNone)
+
                 }
                 else {
                     // Una vez encontradas las pinto suavemente
                     val experiencias = any as ExperienciaWrapper
                     try {
-                        Animations.ocultarVistaSuavemente(binding.loadingAnimationExperienciasDestacadas, 500)
 
-                        Handler(Looper.getMainLooper()).postDelayed(Runnable {
-
-                            binding.loadingAnimationExperienciasDestacadas.visibility = GONE
-
+                        Utils.terminarCarga(binding.loadingAnimationExperienciasDestacadas){
                             Animations.pintarGridRecyclerViewSuavemente(
                                 gridLayoutManager = GridLayoutManager(requireContext(), 2),
                                 recyclerView = binding.experienciaDestacadasRecyclerView,
                                 adapter = ExperienciaRecyclerViewAdapter(experiencias, currentUsuario),
                             )
-                        },500)
+                        }
 
                     } catch (e: IllegalStateException) {
                         Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
@@ -251,30 +252,23 @@ class ExplorerFragment : Fragment() {
             override fun callback(any: Any) {
                 if (any == 0) {
                     // TODO ERROR
-                    Animations.ocultarVistaSuavemente(binding.loadingAnimationTopLocales, 500)
-                    Handler(Looper.getMainLooper()).postDelayed(Runnable {
-                        binding.localesTrendingTextoNone.visibility = View.VISIBLE
-                        Animations.mostrarVistaSuavemente(binding.localesTrendingTextoNone,500)
-                    },500)
+
+                        Utils.terminarCargaOnError(binding.loadingAnimationTopLocales, binding.localesTrendingTextoNone)
+
                 }
                 else {
                     // Una vez encontradas las pinto suavemente
                     val empresas = any as EmpresaWrapper
                     try {
 
-                        Animations.ocultarVistaSuavemente(binding.loadingAnimationTopLocales, 500)
-
-                        Handler(Looper.getMainLooper()).postDelayed(Runnable {
-
-                            binding.loadingAnimationTopLocales.visibility = GONE
-
+                        Utils.terminarCarga(binding.loadingAnimationTopLocales){
                             Animations.pintarLinearRecyclerViewSuavemente(
                                 linearLayoutManager = LinearLayoutManager(requireContext()),
                                 recyclerView = binding.localesTrendingRecycler,
                                 adapter = EmpresaRecyclerViewAdapter(empresas, currentUsuario),
                                 orientation = LinearLayoutManager.HORIZONTAL,
                             )
-                        },500)
+                        }
 
 
                     } catch (e: Exception) {

@@ -96,6 +96,8 @@ class RedactarFeverFragment : Fragment() {
         procesadorDeTextoYCaracteres()
 
         loadListeners()
+
+        Utils.ocultarElementosUI(requireActivity())
     }
 
     private fun loadListeners(){
