@@ -85,4 +85,42 @@ object WebService {
 
     }
 
+    fun processRequestPut(context: Context, url: String, json: JSONObject?, callback: WebServiceGenericInterface) {
+
+        val url = "https://meetfever.eu/$url"
+
+        try {
+            val jsonObjectRequest = JsonObjectRequest(
+                Request.Method.PUT, url, json,
+                { response ->
+
+                    val resGson: DefaultResult = Gson().fromJson(response.getJSONObject("data").toString(), DefaultResult::class.java)
+
+                    Log.w("prueba", resGson.toString())
+
+                    if (resGson.rETCODE == 0) {
+                        resGson.jSONOUT?.let {
+                            callback.callback(it)
+                        }
+                    } else {
+                        // TODO
+                        callback.callback("")
+                        Log.d(":::", "RETCODE DISTINTO DE 0 " + resGson.rETCODE + " " + resGson.mENSAJE + " " + resGson.jSONOUT)
+                    }
+                },
+                { error ->
+                    Log.w(":::, ", "Parece que Gonzalo no sabe programar POST -> $error")
+                    //TODO ERROR
+                }
+            )
+
+            val queue = Volley.newRequestQueue(context)
+            queue.add(jsonObjectRequest)
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
+
 }
