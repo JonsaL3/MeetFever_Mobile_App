@@ -1,31 +1,38 @@
 package es.indytek.meetfever.ui.fragments.secondaryfragments.usersettings
 
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
-import com.bumptech.glide.Glide
 import es.indytek.meetfever.R
 import es.indytek.meetfever.data.webservice.WebServiceEmpresa
 import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
+import es.indytek.meetfever.data.webservice.WebServicePersona
 import es.indytek.meetfever.data.webservice.WebServiceSexo
 import es.indytek.meetfever.databinding.FragmentUserSettingsBinding
 import es.indytek.meetfever.models.empresa.Empresa
 import es.indytek.meetfever.models.persona.Persona
+import es.indytek.meetfever.models.sexo.Sexo
 import es.indytek.meetfever.models.sexo.SexoWrapper
 import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.ui.fragments.utilityfragments.CameraFragment
 import es.indytek.meetfever.utils.Animations
+import es.indytek.meetfever.utils.Extensions.toBase64
 import es.indytek.meetfever.utils.Extensions.toBase64String
 import es.indytek.meetfever.utils.Utils
 import java.io.File
+
 
 private const val ARG_PARAM1 = "currentUsuario"
 
@@ -34,6 +41,11 @@ class UserSettingsFragment : Fragment() {
     private lateinit var binding: FragmentUserSettingsBinding
     private lateinit var currentUsuario: Usuario
     private var isFromProfilePic = false
+    private var fotoPerfil: String? = null
+    private var fotoFondo: String? = null
+
+    // para acceder a la galeria
+    private val REQUEST_GALLERY = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,6 +88,16 @@ class UserSettingsFragment : Fragment() {
             confirmarCambios()
         }
 
+        binding.buscarFotoFondo.setOnClickListener {
+            buscarImagenEnGaleria()
+            isFromProfilePic = false
+        }
+
+        binding.buscarFotoPerfil.setOnClickListener {
+            buscarImagenEnGaleria()
+            isFromProfilePic = true
+        }
+
         // respuestas de fragmentos
         setFragmentResultListener("FOTO") { _, bundle ->
 
@@ -89,10 +111,10 @@ class UserSettingsFragment : Fragment() {
                 val base64FromFile = bitmap.toBase64String()// lo pinto en el imageview
 
                 if (isFromProfilePic) {
-                    currentUsuario.fotoPerfil = base64FromFile
+                    fotoPerfil = base64FromFile
                     Utils.pintarFotoDePerfilDirectamente(currentUsuario, base64FromFile, binding.fotoPerfil, requireContext())
                 } else {
-                    currentUsuario.fotoFondo = base64FromFile
+                    fotoFondo = base64FromFile
                     Utils.putBase64ImageIntoImageView(binding.fotoFondo, base64FromFile, requireContext())
                 }
 
@@ -124,13 +146,31 @@ class UserSettingsFragment : Fragment() {
 
             val empresaActualizada = currentUsuario as Empresa
 
+            binding.correo.text.toString().let { empresaActualizada.correo = it }
+            binding.nickname.text.toString().let { empresaActualizada.nick = it }
+            binding.telefono.text.toString().let { empresaActualizada.telefono = it }
+            binding.frase.text.toString().let { empresaActualizada.frase = it }
+            binding.nombreEmpresa.text.toString().let { empresaActualizada.nombreEmpresa = it }
+            binding.cif.text.toString().let { empresaActualizada.cif = it }
+            binding.direccionFacturacion.text.toString().let { empresaActualizada.direccionFacturacion = it }
+            binding.direccionFiscal.text.toString().let { empresaActualizada.direccionFiscal = it }
+            binding.nombrePersonaFisica.text.toString().let { empresaActualizada.nombrePersona = it }
+            binding.apellido1Persona.text.toString().let { empresaActualizada.apellido1Persona = it }
+            binding.apellido2Persona.text.toString().let { empresaActualizada.apellido2Persona = it }
+            binding.dniPersona.text.toString().let { empresaActualizada.dniPersona = it }
+
+            fotoPerfil?.let { empresaActualizada.fotoPerfil = it }
+            fotoFondo?.let { empresaActualizada.fotoFondo = it }
+
             WebServiceEmpresa.actualizarEmpresa(empresaActualizada, requireContext(), object: WebServiceGenericInterface {
                 override fun callback(any: Any) {
 
                     if (any == 0) {
                         // TODO error
+                        Log.d(":::", "ERROR")
                     } else {
 
+                        currentUsuario = empresaActualizada
                         Log.d(":::, ", "EMPRESA ACTUALIZADA CORRECTAMENTE")
 
                     }
@@ -138,8 +178,43 @@ class UserSettingsFragment : Fragment() {
                 }
             })
 
-
         } else {
+
+            val personaAActualizar = currentUsuario as Persona
+
+            binding.correo.text.toString().let { personaAActualizar.correo = it }
+            binding.nickname.text.toString().let { personaAActualizar.nick = it }
+            binding.telefono.text.toString().let { personaAActualizar.telefono = it }
+            binding.frase.text.toString().let { personaAActualizar.frase = it }
+            binding.nombrePersonaPersona.text.toString().let { personaAActualizar.nombre = it }
+            binding.apellidoPersonaPersona.text.toString().let { personaAActualizar.apellido1 = it }
+            binding.apellido2PersonaPersona.text.toString().let { personaAActualizar.apellido2 = it }
+            binding.dniPersonaPersona.text.toString().let { personaAActualizar.dni = it }
+
+            val idSexo = binding.spinnerSexoPersona.selectedItemPosition // TODO LA ID PUEDE NO COINCIDIR CON LA POSICION
+            val nombreSexo = binding.spinnerSexoPersona.selectedItem.toString()
+            val sexo = Sexo(idSexo + 1, nombreSexo)
+            personaAActualizar.sexo = sexo
+
+            fotoPerfil?.let { personaAActualizar.fotoPerfil = it }
+            fotoFondo?.let { personaAActualizar.fotoFondo = it }
+
+            Log.d(":::", personaAActualizar.toJsonObject().toString())
+
+            WebServicePersona.actualizarPersona(personaAActualizar, requireContext(), object: WebServiceGenericInterface {
+                override fun callback(any: Any) {
+
+                    if (any == 0) {
+                        // TODO error
+                        Log.d(":::", "ERROR")
+                    } else {
+                        currentUsuario = personaAActualizar
+                        Log.d(":::, ", "USUARIO ACTUALIZADA CORRECTAMENTE")
+                        // TODO CUADRO DE CARGA Y DE EXITO DE ACTUALIZACION, Y QUE ME MUEVA A OTRA PANTALLA O ALGO
+                    }
+
+                }
+            })
 
         }
 
@@ -234,6 +309,47 @@ class UserSettingsFragment : Fragment() {
         binding.dniPersonaPersona.setText(persona.dni)
 
         Animations.mostrarVistaSuavemente(binding.datosPersona)
+    }
+
+    // Busco la imagen en la galeria
+    private fun buscarImagenEnGaleria() {
+        val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+        startActivityForResult(gallery, REQUEST_GALLERY)
+    }
+
+    // la recibo y la pinto a voluntad
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == RESULT_OK && requestCode == REQUEST_GALLERY){
+            val imageUri = data?.data
+
+            imageUri?.let {
+
+                try {
+
+                    // PEDAZO DE CHAPUZA
+                    if (isFromProfilePic) {
+                        binding.fotoPerfil.setImageURI(imageUri)
+                        fotoPerfil = binding.fotoPerfil.toBase64()
+                        Utils.pintarFotoDePerfilDirectamente(currentUsuario, fotoPerfil!!, binding.fotoPerfil, requireContext())
+                    } else {
+                        binding.fotoFondo.setImageURI(imageUri)
+                        fotoFondo = binding.fotoFondo.toBase64()
+                        Utils.putBase64ImageIntoImageView(binding.fotoFondo, fotoFondo!!, requireContext())
+                    }
+
+                } catch (e: RuntimeException) {
+                    // TODO USAR TARJETAS PRO DE JULIO
+                    Toast.makeText(requireContext(), "Error al cargar la imagen...", Toast.LENGTH_SHORT).show()
+                    Utils.pintarFotoDePerfil(currentUsuario, binding.fotoPerfil, requireContext())
+                }
+
+            }
+
+        }
+
     }
 
     override fun onResume() {
