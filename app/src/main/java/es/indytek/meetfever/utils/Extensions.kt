@@ -3,6 +3,8 @@ package es.indytek.meetfever.utils
 import android.graphics.Bitmap
 import android.util.Base64
 import android.util.Base64OutputStream
+import android.widget.ImageView
+import androidx.core.graphics.drawable.toBitmap
 import java.io.ByteArrayOutputStream
 import java.io.File
 
@@ -26,6 +28,11 @@ object Extensions {
             compress(Bitmap.CompressFormat.JPEG,5,this)
             return java.util.Base64.getEncoder().encodeToString(toByteArray())
         }
+    }
+
+    fun ImageView.toBase64(): String {
+        val bitmap = this.drawable.toBitmap()
+        return bitmap.toBase64String()
     }
 
 }
