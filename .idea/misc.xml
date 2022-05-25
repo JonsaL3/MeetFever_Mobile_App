@@ -70,13 +70,33 @@
         <entry key="..\:/Users/gonza/Desktop/MeetFever/app/src/main/res/menu-v26/tabs.xml" value="0.3734375" />
         <entry key="..\:/Users/gonza/Desktop/MeetFever/app/src/main/res/menu/menu_main.xml" value="0.346875" />
         <entry key="..\:/Users/gonza/Desktop/MeetFever/app/src/main/res/menu/tabs.xml" value="0.33" />
+        <entry key="..\:/Users/gonza/StudioProjects/MeetFever_Mobile_App/app/src/main/res/drawable/ic_background_gradient_shape_profile.xml" value="0.1345" />
+        <entry key="..\:/Users/gonza/StudioProjects/MeetFever_Mobile_App/app/src/main/res/drawable/ic_default_background_image.xml" value="0.1925" />
+        <entry key="..\:/Users/gonza/StudioProjects/MeetFever_Mobile_App/app/src/main/res/drawable/ic_default_user_image.xml" value="0.2535" />
+        <entry key="..\:/Users/gonza/StudioProjects/MeetFever_Mobile_App/app/src/main/res/drawable/ic_unfollow.xml" value="0.141" />
+        <entry key="..\:/Users/gonza/StudioProjects/MeetFever_Mobile_App/app/src/main/res/layout/fragment_experiencia.xml" value="0.33" />
+        <entry key="..\:/Users/gonza/StudioProjects/MeetFever_Mobile_App/app/src/main/res/layout/fragment_perfil.xml" value="0.33" />
+        <entry key="..\:/Users/gonza/StudioProjects/MeetFever_Mobile_App/app/src/main/res/layout/fragment_redactar_fever.xml" value="0.33" />
+        <entry key="..\:/Users/gonza/StudioProjects/MeetFever_Mobile_App/app/src/main/res/layout/viewholder_empresa.xml" value="0.16869300911854104" />
+        <entry key="..\:/Users/gonza/StudioProjects/MeetFever_Mobile_App/app/src/main/res/layout/viewholder_opinion.xml" value="0.5" />
+        <entry key="..\:/Users/gonza/StudioProjects/MeetFever_Mobile_App/app/src/main/res/layout/viewholder_seguidor_seguido.xml" value="0.23097826086956522" />
         <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/drawable/background_gradient_default_colors.xml" value="0.33" />
         <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/drawable/background_gradient_default_colors_no_radius.xml" value="0.306" />
         <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/drawable/ic_background_gradient_shape.xml" value="0.33" />
+        <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/drawable/ic_background_gradient_shape_people.xml" value="0.378" />
+        <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/drawable/ic_background_gradient_shape_profile.xml" value="0.378" />
+        <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/drawable/ic_degradado_empresa_redactar.xml" value="0.3585" />
+        <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/drawable/ic_degradado_experiencia_redactar.xml" value="0.305" />
+        <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/drawable/ic_likedbutton.xml" value="0.2045" />
+        <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/drawable/ic_solid_background_profile.xml" value="0.2985" />
+        <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/drawable/item_selected_enphasis_white.xml" value="0.2985" />
         <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/layout/activity_login.xml" value="0.33" />
-        <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/layout/fragment_explorer.xml" value="0.25" />
-        <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/layout/fragment_perfil.xml" value="0.35104166666666664" />
+        <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/layout/fragment_all_empresas.xml" value="0.30520833333333336" />
+        <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/layout/fragment_experiencia.xml" value="0.34791666666666665" />
+        <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/layout/fragment_explorer.xml" value="0.3512245961438249" />
+        <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/layout/fragment_people.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/layout/fragment_perfil.xml" value="0.25" />
         <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/layout/fragment_redactar_fever.xml" value="0.3026041666666667" />
         <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/layout/fragment_trendings.xml" value="0.19791666666666666" />
         <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/layout/viewholder_opinion.xml" value="0.33" />

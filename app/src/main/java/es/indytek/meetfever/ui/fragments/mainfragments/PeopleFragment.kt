@@ -1,6 +1,8 @@
 package es.indytek.meetfever.ui.fragments.mainfragments
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -18,6 +20,7 @@ import es.indytek.meetfever.models.persona.PersonaWrapper
 import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.ui.fragments.secondaryfragments.persona.AllPeopleFragment
 import es.indytek.meetfever.ui.fragments.secondaryfragments.persona.AllRelatedPeopleFragment
+import es.indytek.meetfever.ui.recyclerviews.adapters.OpinionRecyclerViewAdapter
 import es.indytek.meetfever.ui.recyclerviews.adapters.PersonaRecyclerViewAdapter
 import es.indytek.meetfever.utils.Animations
 import es.indytek.meetfever.utils.Utils
@@ -85,11 +88,20 @@ class PeopleFragment : Fragment() {
                                 val personas = any as PersonaWrapper
                                 //ocultarContenido()
                                 try {
-                                    Animations.pintarGridRecyclerViewSuavemente(
-                                        gridLayoutManager = GridLayoutManager(requireContext(), 3),
-                                        recyclerView = binding.busquedaPersonasRecyclerView,
-                                        adapter = PersonaRecyclerViewAdapter(personas, currentUsuario)
-                                    )
+
+                                    Animations.ocultarVistaSuavemente(binding.loadingAnimationPersonasQueQuizasConoczcas, 500)
+
+                                    Handler(Looper.getMainLooper()).postDelayed(Runnable {
+
+                                        binding.loadingAnimationPersonasQueQuizasConoczcas.visibility = View.GONE
+
+                                        Animations.pintarGridRecyclerViewSuavemente(
+                                            gridLayoutManager = GridLayoutManager(requireContext(), 3),
+                                            recyclerView = binding.busquedaPersonasRecyclerView,
+                                            adapter = PersonaRecyclerViewAdapter(personas, currentUsuario)
+                                        )
+                                    },500)
+
                                 } catch (e: IllegalStateException) {
                                     Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
                                 }
@@ -182,15 +194,29 @@ class PeopleFragment : Fragment() {
 
                 if (any == 0) {
                     // TODO ERROR
+
+                    Animations.ocultarVistaSuavemente(binding.loadingAnimationTopInfluencers, 500)
+                    Handler(Looper.getMainLooper()).postDelayed(Runnable {
+                        binding.topInfluencersNone.visibility = View.VISIBLE
+                        Animations.mostrarVistaSuavemente(binding.topInfluencersNone,500)
+                    },500)
                 } else {
                     val personas = any as PersonaWrapper
                     try {
-                        Animations.pintarLinearRecyclerViewSuavemente(
-                            linearLayoutManager = LinearLayoutManager(requireContext()),
-                            recyclerView = binding.topPersonasRecyclerView,
-                            adapter = PersonaRecyclerViewAdapter(personas, currentUsuario),
-                            orientation = LinearLayoutManager.HORIZONTAL,
-                        )
+                        Animations.ocultarVistaSuavemente(binding.loadingAnimationTopInfluencers, 500)
+
+                        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+
+                            binding.loadingAnimationTopInfluencers.visibility = View.GONE
+
+                            Animations.pintarLinearRecyclerViewSuavemente(
+                                linearLayoutManager = LinearLayoutManager(requireContext()),
+                                recyclerView = binding.topPersonasRecyclerView,
+                                adapter = PersonaRecyclerViewAdapter(personas, currentUsuario),
+                                orientation = LinearLayoutManager.HORIZONTAL,
+                            )
+                        },500)
+
                     } catch (e: IllegalStateException) {
                         Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
                     }
@@ -209,6 +235,13 @@ class PeopleFragment : Fragment() {
 
                 if (any == 0) {
                     // TODO ERROR
+
+                    Animations.ocultarVistaSuavemente(binding.loadingAnimationPersonasQueQuizasConoczcas, 500)
+                    Handler(Looper.getMainLooper()).postDelayed(Runnable {
+                        binding.personasQueNone.visibility = View.VISIBLE
+                        Animations.mostrarVistaSuavemente(binding.personasQueNone,500)
+                    },500)
+
                 }
                 else {
                     val personas = any as PersonaWrapper

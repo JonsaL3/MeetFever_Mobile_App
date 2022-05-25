@@ -9,6 +9,8 @@ import android.graphics.drawable.ColorDrawable
 import android.media.Image
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.os.Handler
+import android.os.Looper
 import android.util.Base64
 import android.util.Log
 import android.view.ViewGroup
@@ -236,7 +238,9 @@ object Utils {
 
     fun mostrarBottomBar(activity: Activity) {
         val bottomBar = activity.findViewById<AnimatedBottomBar>(R.id.bottom_bar)
-        Animations.setLayoutHeightWithTopMargin(bottomBar, 200, 0)
+        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+            Animations.setLayoutHeightWithTopMargin(bottomBar, 200, 0)
+        },300)
     }
 
     fun ocultarBottomBar(activity: Activity) {
