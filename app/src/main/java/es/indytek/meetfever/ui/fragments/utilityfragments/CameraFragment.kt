@@ -205,20 +205,6 @@ class CameraFragment : Fragment() {
 
     }
 
-    /*private fun returnImagenAlFragmentoAnterior(bitmap: Bitmap) {
-        // meto en el bundle el bitmap
-        val resultBundle = Bundle().apply {
-            putParcelable("FOTO", bitmap)
-        }
-        setFragmentResult("FOTO", resultBundle)
-        // vuelvo a poner las navbars en su sitio
-        val bottombar = activity?.findViewById(R.id.admin_bottom_bar) as AnimatedBottomBar
-        val atrasBottomBar = activity?.findViewById(R.id.atras_admin) as BottomNavigationView
-        RandomUtils.intecalarBottomBarsSinAnimacion(atrasBottomBar, bottombar)
-        // me vuelvo al fragmento que deje pausado antes
-        requireActivity().supportFragmentManager.popBackStackImmediate()
-    }*/
-
     private fun returnImagenAlFragmentoAnterior(ruta: String) {
 
         // meto en el bundle el bitmap
