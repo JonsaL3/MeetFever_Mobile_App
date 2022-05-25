@@ -149,4 +149,30 @@ object WebServiceEmpresa {
         }
     }
 
+    // Obtener todas las empresas
+    fun actualizarEmpresa(empresa: Empresa, context: Context, callback : WebServiceGenericInterface) {
+
+        val url = "interface/api/meetfever/empresa/ActualizarEmpresa"
+        val jsonObject = empresa.toJsonObject()
+
+        Log.d(":::EMPRESAACTUALIZAR -> ", jsonObject.toString())
+
+        try {
+
+            WebService.processRequestPut(context, url, jsonObject, object: WebServiceGenericInterface {
+                override fun callback(any: Any) {
+
+                    if (any.toString().isNotEmpty()) {
+                        callback.callback(any)
+                    } else
+                        callback.callback(0)
+
+                }
+            })
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
 }
