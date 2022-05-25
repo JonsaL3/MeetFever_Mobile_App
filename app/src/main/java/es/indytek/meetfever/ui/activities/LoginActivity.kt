@@ -52,7 +52,7 @@ class LoginActivity : AppCompatActivity() {
         if (!correo.isNotEmpty() || !contrasena.isNotEmpty()) { // TODO QUITAR EXCLAMACIONES
 
             // Hago una petición para obtener el usuario
-            WebServiceUsuario.inciarSesion("indytek@indytek.indytek", "12345", this, object: WebServiceGenericInterface {
+            WebServiceUsuario.inciarSesion("alberhp@gmail.com", "Clave_00", this, object: WebServiceGenericInterface {
                 override fun callback(any: Any) {
 
                     if (any == 0) { // en caso de que vaya mal muestro un popup
