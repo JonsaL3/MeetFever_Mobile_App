@@ -147,7 +147,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:fontFamily="@font/montserrat_light"
-                android:text="@string/top_influencers_none"
+                android:text="@string/personas_que_quiz_s_conozcas_none"
                 android:textColor="@color/gris_textos"
                 android:textSize="15sp"
                 android:visibility="gone"

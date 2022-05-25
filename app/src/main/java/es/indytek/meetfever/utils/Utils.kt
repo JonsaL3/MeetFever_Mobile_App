@@ -13,6 +13,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Base64
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -22,6 +23,7 @@ import androidx.core.view.marginTop
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.palette.graphics.Palette
+import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -30,6 +32,8 @@ import es.indytek.meetfever.R
 import es.indytek.meetfever.models.empresa.Empresa
 import es.indytek.meetfever.models.persona.Persona
 import es.indytek.meetfever.models.usuario.Usuario
+import es.indytek.meetfever.ui.recyclerviews.adapters.ExperienciaRecyclerViewAdapter
+import io.github.yavski.fabspeeddial.FabSpeedDial
 import nl.joery.animatedbottombar.AnimatedBottomBar
 import java.io.ByteArrayInputStream
 
@@ -225,6 +229,17 @@ object Utils {
         fragmentTransaction.commit()
     }
 
+    fun ocultarElementosUI(activity: Activity) {
+        ocultarBotonAjustes(activity)
+        ocultarBottomBar(activity)
+        ocultarFabSpeedDial(activity)
+    }
+    fun mostrarElementosUI(activity: Activity) {
+        mostrarBotonAjustes(activity)
+        mostrarBottomBar(activity)
+        mostrarFabSpeedDial(activity)
+    }
+
     fun mostrarBottomBar(activity: Activity) {
         val bottomBar = activity.findViewById<AnimatedBottomBar>(R.id.bottom_bar)
         Handler(Looper.getMainLooper()).postDelayed(Runnable {
@@ -235,6 +250,87 @@ object Utils {
     fun ocultarBottomBar(activity: Activity) {
         val bottomBar = activity.findViewById<AnimatedBottomBar>(R.id.bottom_bar)
         Animations.setLayoutHeightWithTopMargin(bottomBar, 0, 30)
+    }
+
+    fun mostrarFabSpeedDial(activity: Activity) {
+        val fabSpeedDial = activity.findViewById<FabSpeedDial>(R.id.menu_accion_rapida)
+
+        if(fabSpeedDial.visibility == View.GONE) {
+
+            Handler(Looper.getMainLooper()).postDelayed(Runnable {
+
+                fabSpeedDial.visibility = View.VISIBLE
+
+                Animations.mostrarVistaSuavemente(fabSpeedDial)
+
+            },500)
+
+        }
+    }
+
+    fun ocultarFabSpeedDial(activity: Activity) {
+        val fabSpeedDial = activity.findViewById<FabSpeedDial>(R.id.menu_accion_rapida)
+
+        if(fabSpeedDial.visibility == View.VISIBLE) {
+
+            Animations.ocultarVistaSuavemente(fabSpeedDial)
+
+            fabSpeedDial.visibility = View.GONE
+
+        }
+
+    }
+
+    fun mostrarBotonAjustes(activity: Activity) {
+        val imageView = activity.findViewById<ImageView>(R.id.ir_a_ajustes)
+
+        if(imageView.visibility == View.GONE) {
+
+            Handler(Looper.getMainLooper()).postDelayed(Runnable {
+
+                imageView.visibility = View.VISIBLE
+
+                Animations.mostrarVistaSuavemente(imageView)
+
+            },500)
+
+        }
+    }
+
+    fun ocultarBotonAjustes(activity: Activity) {
+        val imageView = activity.findViewById<ImageView>(R.id.ir_a_ajustes)
+
+        if(imageView.visibility == View.VISIBLE) {
+
+            Animations.ocultarVistaSuavemente(imageView)
+
+            imageView.visibility = View.GONE
+
+        }
+
+    }
+
+    fun terminarCarga(loadningAnimation: View, acction: () -> Unit) {
+
+        Animations.ocultarVistaSuavemente(loadningAnimation)
+
+        Handler(Looper.getMainLooper()).postDelayed( {
+
+            loadningAnimation.visibility = View.GONE
+
+            acction()
+
+        },500)
+    }
+
+    fun terminarCargaOnError(loadningAnimation: View, noDataFoundTextView: View) {
+
+        Animations.ocultarVistaSuavemente(loadningAnimation, 500)
+        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+            noDataFoundTextView.visibility = View.VISIBLE
+            Animations.mostrarVistaSuavemente(noDataFoundTextView,500)
+
+        },500)
     }
 
 }

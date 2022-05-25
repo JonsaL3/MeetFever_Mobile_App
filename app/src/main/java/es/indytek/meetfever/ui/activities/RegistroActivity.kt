@@ -19,6 +19,7 @@ import es.indytek.meetfever.models.persona.Persona
 import es.indytek.meetfever.models.sexo.Sexo
 import es.indytek.meetfever.models.sexo.SexoWrapper
 import es.indytek.meetfever.models.usuario.Usuario
+import es.indytek.meetfever.utils.CreateMD5
 
 class RegistroActivity : AppCompatActivity() {
 
@@ -124,6 +125,8 @@ class RegistroActivity : AppCompatActivity() {
         } else {
             Persona(correo, contrasena, nickname, sexo!!)
         }
+
+        cuenta.contrasena = CreateMD5().create(cuenta.contrasena)
 
         Log.d(":::","cuenta: $cuenta")
 

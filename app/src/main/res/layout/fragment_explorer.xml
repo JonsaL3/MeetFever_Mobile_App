@@ -87,7 +87,6 @@
                 android:layout_height="wrap_content">
 
                 <!-- Las 4 experiencias mas mencionadas o que se yo -->
-
                 <TextView
                     android:id="@+id/experienciasDestacadasTexto"
                     android:layout_width="wrap_content"

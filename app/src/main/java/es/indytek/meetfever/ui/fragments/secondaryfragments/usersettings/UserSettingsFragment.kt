@@ -43,6 +43,8 @@ class UserSettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         cargarDatosActualesDelUsuario()
+
+        Utils.ocultarElementosUI(requireActivity())
     }
 
     private fun cargarDatosActualesDelUsuario() {

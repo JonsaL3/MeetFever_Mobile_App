@@ -69,6 +69,11 @@ class PerfilFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Utils.ocultarElementosUI(requireActivity())
+    }
+
     private fun arrancarListeners() {
 
         binding.seguirNoSeguir.setOnClickListener {
@@ -229,27 +234,20 @@ class PerfilFragment : Fragment() {
                 if (any == 0) {
                     // TODO ERROR
 
-                    Animations.ocultarVistaSuavemente(binding.loadingAnimationOpinionesPerfil, 500)
-                    Handler(Looper.getMainLooper()).postDelayed(Runnable {
-                        binding.feversByUserNone.visibility = View.VISIBLE
-                        Animations.mostrarVistaSuavemente(binding.feversByUserNone,500)
-                    },500)
+                        Utils.terminarCargaOnError(binding.loadingAnimationOpinionesPerfil, binding.feversByUserNone)
+
                 } else {
                     val opiniones = any as OpinionWrapper
                     try {
-                        Animations.ocultarVistaSuavemente(binding.loadingAnimationOpinionesPerfil, 500)
 
-                        Handler(Looper.getMainLooper()).postDelayed(Runnable {
-
-                            binding.loadingAnimationOpinionesPerfil.visibility = View.GONE
-
+                        Utils.terminarCarga(binding.loadingAnimationOpinionesPerfil){
                             Animations.pintarLinearRecyclerViewSuavemente(
                                 linearLayoutManager = LinearLayoutManager(requireContext()),
                                 recyclerView = binding.opinionesUsuarioRecycler,
                                 adapter = OpinionRecyclerViewAdapter(opiniones, PerfilFragment::class.java, currentUsuario),
                                 orientation = LinearLayoutManager.VERTICAL,
                             )
-                        },500)
+                        }
 
                     } catch (e: IllegalStateException) {
                         Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")

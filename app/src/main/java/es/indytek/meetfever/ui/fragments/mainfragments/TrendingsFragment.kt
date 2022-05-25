@@ -60,6 +60,11 @@ class TrendingsFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Utils.mostrarElementosUI(requireActivity())
+    }
+
     // Preparo las busquedas
     private fun motorDeBusqueda() {
 
@@ -161,11 +166,7 @@ class TrendingsFragment : Fragment() {
                 if (any == 0) {
                     // TODO ERROR
 
-                    Animations.ocultarVistaSuavemente(binding.loadingAnimationOpiniones, 500)
-                    Handler(Looper.getMainLooper()).postDelayed(Runnable {
-                        binding.opinionesNone.visibility = View.VISIBLE
-                        Animations.mostrarVistaSuavemente(binding.opinionesNone,500)
-                    },500)
+                        Utils.terminarCargaOnError(binding.loadingAnimationOpiniones, binding.opinionesNone)
 
                 } else {
                     val top100OpinionesMasGustadas24H = any as OpinionWrapper
@@ -174,19 +175,14 @@ class TrendingsFragment : Fragment() {
                     }
                     try {
 
-                        Animations.ocultarVistaSuavemente(binding.loadingAnimationOpiniones, 500)
-
-                        Handler(Looper.getMainLooper()).postDelayed(Runnable {
-
-                            binding.loadingAnimationOpiniones.visibility = View.GONE
-
+                        Utils.terminarCarga(binding.loadingAnimationOpiniones){
                             Animations.pintarLinearRecyclerViewSuavemente(
                                 linearLayoutManager = LinearLayoutManager(requireContext()),
                                 recyclerView = binding.topOpinionesRecycler,
                                 adapter = OpinionRecyclerViewAdapter(top100OpinionesMasGustadas24H, TrendingsFragment::class.java, currentUsuario),
                                 orientation = LinearLayoutManager.VERTICAL,
                             )
-                        },500)
+                        }
 
                     } catch (e: IllegalStateException) {
                         Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")

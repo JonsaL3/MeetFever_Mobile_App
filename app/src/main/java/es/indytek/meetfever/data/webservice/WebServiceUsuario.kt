@@ -7,11 +7,13 @@ import es.indytek.meetfever.models.empresa.Empresa
 import es.indytek.meetfever.models.mesigue.MeSigue
 import es.indytek.meetfever.models.persona.Persona
 import es.indytek.meetfever.models.typeAdapters.LocalDateTimeTypeAdapter
+import es.indytek.meetfever.models.typeAdapters.LocalDateTypeAdapter
 import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.models.usuario.UsuarioWrapper
 import org.json.JSONObject
 import java.lang.Exception
 import java.lang.IllegalArgumentException
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 object WebServiceUsuario {
@@ -93,6 +95,7 @@ object WebServiceUsuario {
             WebService.processRequestPost(context, url, jsonObject, object: WebServiceGenericInterface {
                 override fun callback(any: Any) {
 
+                    Log.d("IniciarSesion", any.toString())
                     if (any.toString().isNotEmpty()) {
                         // Obtengo el response
                         when {
@@ -108,6 +111,7 @@ object WebServiceUsuario {
                             any.toString().contains(""""Tipo":"PERSONA"""") -> {
 
                                 val persona = GsonBuilder()
+                                    .registerTypeAdapter(LocalDate::class.java, LocalDateTypeAdapter())
                                     .create()
                                     .fromJson(any.toString(), Persona::class.java)
 
