@@ -71,6 +71,11 @@ class ExperienciaFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Utils.ocultarElementosUI(requireActivity())
+    }
+
     // arranco los listeners
     private fun arrancarListeners() {
         binding.botonVerEmpresaTexto.setOnClickListener {

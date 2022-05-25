@@ -10,6 +10,7 @@ import es.indytek.meetfever.data.webservice.WebServiceUsuario
 import es.indytek.meetfever.databinding.ActivityLoginBinding
 import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.utils.Animations
+import es.indytek.meetfever.utils.CreateMD5
 
 class LoginActivity : AppCompatActivity() {
 
@@ -47,7 +48,7 @@ class LoginActivity : AppCompatActivity() {
     private fun iniciarSesion() {
 
         val correo = binding.inputEmail.text.toString()
-        val contrasena = binding.inputContrasenaLogin.text.toString()
+        val contrasena = CreateMD5().create(binding.inputContrasenaLogin.text.toString())
 
         if (!correo.isNotEmpty() || !contrasena.isNotEmpty()) { // TODO QUITAR EXCLAMACIONES
 

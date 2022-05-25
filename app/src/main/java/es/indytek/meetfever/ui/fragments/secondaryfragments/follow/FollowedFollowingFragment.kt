@@ -55,6 +55,11 @@ class FollowedFollowingFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Utils.ocultarElementosUI(requireActivity())
+    }
+
     private fun pintar() {
         pintarColorDelFondo()
         pintarListaDeSeguidoresOSeguidos()

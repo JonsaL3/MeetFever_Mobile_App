@@ -6,6 +6,7 @@
     tools:context=".ui.fragments.secondaryfragments.persona.AllRelatedPeopleFragment"
     android:background="@drawable/ic_background_gradient_shape_people"
     android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
     <LinearLayout
@@ -26,6 +27,27 @@
             android:textSize="23sp"
             android:layout_marginTop="10dp"
             />
+
+        <TextView
+            android:id="@+id/topInfluencersNone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="@font/montserrat_light"
+            android:text="@string/personas_que_quiz_s_conozcas_none"
+            android:textColor="@color/gris_textos"
+            android:textSize="15sp"
+            android:visibility="gone"
+            />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/loadingAnimation"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            app:lottie_rawRes="@raw/loading_animation_thin"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerAllInfluencers"

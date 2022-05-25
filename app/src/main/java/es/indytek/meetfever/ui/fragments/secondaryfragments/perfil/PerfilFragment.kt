@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import es.indytek.meetfever.R
 import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
@@ -21,10 +22,11 @@ import es.indytek.meetfever.models.opinion.OpinionWrapper
 import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.models.usuario.UsuarioWrapper
 import es.indytek.meetfever.ui.fragments.secondaryfragments.follow.FollowedFollowingFragment
+import es.indytek.meetfever.ui.recyclerviews.adapters.ExperienciaRecyclerViewAdapter
 import es.indytek.meetfever.ui.recyclerviews.adapters.OpinionRecyclerViewAdapter
 import es.indytek.meetfever.utils.Animations
 import es.indytek.meetfever.utils.Utils
-import java.lang.IllegalStateException
+import nl.joery.animatedbottombar.AnimatedBottomBar
 
 private const val ARG_PARAM1 = "usuarioGenerico"
 private const val ARG_PARAM2 = "usuario"
@@ -67,6 +69,11 @@ class PerfilFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Utils.ocultarElementosUI(requireActivity())
+    }
+
     private fun arrancarListeners() {
 
         binding.seguirNoSeguir.setOnClickListener {
@@ -83,7 +90,6 @@ class PerfilFragment : Fragment() {
                 if (any == 0) {
                     // TODO ERROR
                 } else {
-
                     val seguidores = any as UsuarioWrapper
                     binding.tvNSeguidores.text = seguidores.size.toString()
                     Animations.mostrarVistaSuavemente(binding.seguidoresLayout)
@@ -227,29 +233,25 @@ class PerfilFragment : Fragment() {
 
                 if (any == 0) {
                     // TODO ERROR
-                    Animations.ocultarVistaSuavemente(binding.loadingAnimationOpinionesPerfil, 500)
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        binding.feversByUserNone.visibility = View.VISIBLE
-                        Animations.mostrarVistaSuavemente(binding.feversByUserNone,500)
-                    },500)
+
+                        Utils.terminarCargaOnError(binding.loadingAnimationOpinionesPerfil, binding.feversByUserNone)
+
                 } else {
-
                     val opiniones = any as OpinionWrapper
-                    Animations.ocultarVistaSuavemente(binding.loadingAnimationOpinionesPerfil, 500)
+                    try {
 
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        binding.loadingAnimationOpinionesPerfil.visibility = View.GONE
-                        try {
+                        Utils.terminarCarga(binding.loadingAnimationOpinionesPerfil){
                             Animations.pintarLinearRecyclerViewSuavemente(
                                 linearLayoutManager = LinearLayoutManager(requireContext()),
                                 recyclerView = binding.opinionesUsuarioRecycler,
                                 adapter = OpinionRecyclerViewAdapter(opiniones, PerfilFragment::class.java, currentUsuario),
                                 orientation = LinearLayoutManager.VERTICAL,
                             )
-                        } catch (e: IllegalStateException) {
-                            Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
                         }
-                    },500)
+
+                    } catch (e: IllegalStateException) {
+                        Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
+                    }
                 }
 
             }

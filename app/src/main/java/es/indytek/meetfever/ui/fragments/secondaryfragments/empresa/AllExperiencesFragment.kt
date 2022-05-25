@@ -48,6 +48,11 @@ class AllExperiencesFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Utils.ocultarElementosUI(requireActivity())
+    }
+
     // pinto todas las experiencias en este fragmento y lo que necesite
     private fun pintar() {
         pintarTodasLasExperiencias()
@@ -62,14 +67,20 @@ class AllExperiencesFragment : Fragment() {
 
                 if (any == 0) {
                     // TODO ERROR
+
+                    Utils.terminarCargaOnError(binding.loadingAnimation,binding.experiencesNone)
+
                 } else {
                     val experiencias = any as ExperienciaWrapper
                     try {
-                        Animations.pintarGridRecyclerViewSuavemente(
-                            gridLayoutManager = GridLayoutManager(requireContext(), 2),
-                            recyclerView = binding.recyclerAllExperiences,
-                            adapter = ExperienciaRecyclerViewAdapter(experiencias, usuario),
-                        )
+
+                        Utils.terminarCarga(binding.loadingAnimation){
+                            Animations.pintarGridRecyclerViewSuavemente(
+                                gridLayoutManager = GridLayoutManager(requireContext(), 2),
+                                recyclerView = binding.recyclerAllExperiences,
+                                adapter = ExperienciaRecyclerViewAdapter(experiencias, usuario),
+                            )
+                        }
                     } catch (e: IllegalStateException) {
                         Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
                     }
