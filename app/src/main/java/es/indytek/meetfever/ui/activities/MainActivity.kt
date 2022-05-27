@@ -1,8 +1,16 @@
 package es.indytek.meetfever.ui.activities
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.MenuItem
+import android.view.View
+import android.widget.TextView
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.view.GravityCompat
+import com.bumptech.glide.Glide
 import es.indytek.meetfever.R
 import es.indytek.meetfever.databinding.ActivityMainBinding
 import es.indytek.meetfever.models.usuario.Usuario
@@ -16,6 +24,7 @@ import es.indytek.meetfever.utils.Animations
 import es.indytek.meetfever.utils.Utils
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter
 import nl.joery.animatedbottombar.AnimatedBottomBar
+import java.time.LocalTime
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,6 +34,8 @@ class MainActivity : AppCompatActivity() {
     // datos que necesito en todos los fragmentos
     private lateinit var currentUsuario: Usuario
 
+    //toggle del drawer
+    private lateinit var toggle: ActionBarDrawerToggle
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -48,16 +59,39 @@ class MainActivity : AppCompatActivity() {
         // cargo los listeners
         cargarListeners()
 
-        // quito la pantalla de carga
-        //Animations.ocultarVistaSuavemente(binding.pantallaDeCarga, 1000)
+        loadDataToDrawer()
+
+        loadDataIntoUI()
 
     }
+
 
     private fun cargarListeners() {
         binding.irAAjustes.setOnClickListener {
             val fragmento = UserSettingsFragment.newInstance(currentUsuario)
             Utils.cambiarDeFragmentoGuardandoElAnterior(supportFragmentManager,fragmento, "", R.id.frame_layout)
         }
+
+        binding.openDrawer.setOnClickListener {
+            Log.d(":::","XD")
+            binding.drawerLayout.open()
+        }
+    }
+
+    private fun loadDataIntoUI(){
+
+        val hora = LocalTime.now()
+
+        if (hora.hour >= 18 || hora.hour <= 6) {
+            "¡${this.getString(R.string.buenas_noches)} ${currentUsuario.nick}!".also {
+                binding.textoBuenosDias.text = it
+            }
+        } else {
+            "¡${this.getString(R.string.buenos_dias)} ${currentUsuario.nick}!".also {
+                binding.textoBuenosDias.text = it
+            }
+        }
+
     }
 
     // Muestro un fragmento u otro en función de lo que seleccione en la bottombar
@@ -118,6 +152,89 @@ class MainActivity : AppCompatActivity() {
         val bundle = intent.extras
         if (bundle != null) {
             currentUsuario = bundle.getSerializable("usuario") as Usuario
+        }
+    }
+
+    private fun chargeDrawer(){
+
+        //cargo la barra indicandole: contexto, drawerlayout,
+        toggle = ActionBarDrawerToggle(this, binding.drawerLayout, R.string.open_drawer, R.string.close_drawer)
+
+        //le meto al drawerlayout un listener para abrir el menu
+        binding.drawerLayout.addDrawerListener(toggle)
+
+        //permite sincronizar el icono del menu y el panel de navegacion
+        toggle.syncState()
+
+        //enchufo el icono de navegacion
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = ""
+        supportActionBar?.setHomeButtonEnabled(true)
+
+        //le asigno color al boton.
+        toggle.drawerArrowDrawable.color = getColor(R.color.white)
+
+        //asigno a la actionbar un logo personalizado.
+        //pracambiarlo ir a layout action_bar
+        supportActionBar?.setDisplayShowCustomEnabled(true)
+        val inflater = this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+
+        //listeners en los items del nav y asignar los fragmentos a cda boton
+
+        binding.navView.setNavigationItemSelectedListener {
+            when(it.itemId){
+
+//                R.id.nav_invoice -> {
+//
+//
+//
+//                }
+//
+//                R.id.nav_support -> {
+//
+//                }
+//                R.id.nav_add_log_out -> {
+//
+//                }
+
+            }
+
+
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+
+            true
+        }
+    }
+
+    private fun loadDataToDrawer(){
+
+        val header : View = binding.navView.getHeaderView(0)
+
+        currentUsuario.fotoPerfil?.let {
+            Utils.putBase64ImageIntoImageViewWithoutCornersWithPlaceholder(
+                header.findViewById(R.id.imagen),
+                it,
+                this,
+                R.drawable.ic_default_background_image
+            )
+        }
+
+        currentUsuario.fotoFondo?.let {
+            Utils.putBase64ImageIntoImageViewWithoutCornersWithPlaceholder(
+                header.findViewById(R.id.backgroundProfile),
+                it,
+                this,
+                R.drawable.ic_default_background_image
+            )
+        }
+
+        header.findViewById<TextView>(R.id.nick).apply {
+            this.text = currentUsuario.nick
+        }
+
+        header.findViewById<TextView>(R.id.frase).apply {
+            this.text = currentUsuario.frase
         }
     }
 

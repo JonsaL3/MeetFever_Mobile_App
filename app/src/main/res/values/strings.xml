@@ -5,6 +5,9 @@
     <string name="registrarse">Registrarse</string>
     <string name="no_tienes_cuenta">¿No tienes cuenta?</string>
     <string name="iniciar_sesi_n">Iniciar sesión</string>
+    <string name="my_invoices">Mis facturas</string>
+    <string name="support">Soporte</string>
+    <string name="log_out">Cerrar sesión</string>
     <string name="contrase_a">Contraseña</string>
     <string name="meet_fever_inicia_sesi_n">MeetFever! Inicia sesión</string>
     <string name="nickname">Nickname</string>
@@ -30,9 +33,13 @@
     <string name="trendings">Trendings</string>
     <string name="explorer">Explorer</string>
     <string name="people">People</string>
-    <string name="buenos_dias_jonsa">¡Buenos dias Jonsa!</string>
+    <string name="buenos_dias_meetfever">¡Buenos dias MeetFever!</string>
     <string name="locales_trending">Locales Trending</string>
     <string name="top_locales">Top locales</string>
+
+    <!-- DRAWER -->
+    <string name="open_drawer">Open</string>
+    <string name="close_drawer">Close</string>
 
     <!--   DIOLGS   -->
     <string name="no_text_has_been_passed">Se ha proporcionado texto para mostrar.</string>
