@@ -36,6 +36,7 @@ import es.indytek.meetfever.ui.recyclerviews.adapters.ExperienciaRecyclerViewAda
 import io.github.yavski.fabspeeddial.FabSpeedDial
 import nl.joery.animatedbottombar.AnimatedBottomBar
 import java.io.ByteArrayInputStream
+import java.lang.IllegalStateException
 
 object Utils {
 
@@ -329,7 +330,11 @@ object Utils {
 
             loadningAnimation.visibility = View.GONE
 
-            acction()
+            try {
+                acction()
+            } catch (e: IllegalStateException) {
+                Log.e(":::", "¿Tienes un movil o una tostadora? No le dió tiempo a cargar al context")
+            }
 
         },500)
     }

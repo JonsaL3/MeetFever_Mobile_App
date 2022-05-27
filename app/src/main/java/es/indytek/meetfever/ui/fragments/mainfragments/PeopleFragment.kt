@@ -234,18 +234,13 @@ class PeopleFragment : Fragment() {
                 }
                 else {
                     val personas = any as PersonaWrapper
-                    try {
-
-                        Utils.terminarCarga(binding.loadingAnimationPersonasQueQuizasConoczcas){
-                            Animations.pintarLinearRecyclerViewSuavemente(
-                                linearLayoutManager = LinearLayoutManager(requireContext()),
-                                recyclerView = binding.personasQueQuizasConozcasRecyclerView,
-                                adapter = PersonaRecyclerViewAdapter(personas, currentUsuario),
-                                orientation = LinearLayoutManager.HORIZONTAL,
-                            )
-                        }
-                    } catch (e: IllegalStateException) {
-                        Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
+                    Utils.terminarCarga(binding.loadingAnimationPersonasQueQuizasConoczcas) {
+                        Animations.pintarLinearRecyclerViewSuavemente(
+                            linearLayoutManager = LinearLayoutManager(requireContext()),
+                            recyclerView = binding.personasQueQuizasConozcasRecyclerView,
+                            adapter = PersonaRecyclerViewAdapter(personas, currentUsuario),
+                            orientation = LinearLayoutManager.HORIZONTAL,
+                        )
                     }
                 }
 
