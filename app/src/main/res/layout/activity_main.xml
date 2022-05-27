@@ -68,7 +68,7 @@
                         app:miniFabBackgroundTint="@color/white"
                         app:miniFabDrawableTint="@color/black"
                         app:miniFabTitleTextColor="@color/title_text_color"
-                        android:layout_marginBottom="70dp"/>
+                        android:layout_marginBottom="0dp"/>
 
 
                 </FrameLayout>
@@ -199,41 +199,5 @@
             app:abb_tabs="@menu/tabs" />
 
     </LinearLayout>
-
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <io.github.yavski.fabspeeddial.FabSpeedDial
-            android:id="@+id/menu_accion_rapida"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:src="@drawable/ic_experiencia_detalle_background_gradient"
-            app:fabDrawableTint="@color/fab_background_tint"
-            app:fabGravity="bottom_end"
-            app:fabMenu="@menu/menu_main"
-            app:menu="@menu/menu_main"
-            app:miniFabBackgroundTint="@color/white"
-            app:miniFabDrawableTint="@color/black"
-            app:miniFabTitleTextColor="@color/title_text_color"
-            android:layout_marginBottom="70dp"/>
-    </FrameLayout>
-
-    <ImageView
-        android:id="@+id/ir_a_ajustes"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:padding="5dp"
-        android:src="@drawable/ic_settings_tuerca"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.93"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.03000002" />
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
