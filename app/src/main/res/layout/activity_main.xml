@@ -68,7 +68,7 @@
                         app:miniFabBackgroundTint="@color/white"
                         app:miniFabDrawableTint="@color/black"
                         app:miniFabTitleTextColor="@color/title_text_color"
-                        android:layout_marginBottom="70dp"/>
+                        android:layout_marginBottom="0dp"/>
 
 
                 </FrameLayout>
@@ -199,8 +199,5 @@
             app:abb_tabs="@menu/tabs" />
 
     </LinearLayout>
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

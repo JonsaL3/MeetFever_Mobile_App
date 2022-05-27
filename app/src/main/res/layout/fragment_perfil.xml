@@ -130,6 +130,7 @@
                         app:shapeAppearanceOverlay="@style/roundTopCorners"
                         />
 
+
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/filterImage"
                         android:layout_width="match_parent"
@@ -188,6 +189,7 @@
 
                 <FrameLayout
                     android:id="@+id/seguir_no_seguir"
+                    android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toTopOf="@+id/profilePicture"
@@ -201,16 +203,32 @@
                         android:layout_width="33dp"
                         android:layout_height="30dp"
                         android:background="@drawable/ic_follow"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        />
 
                     <ImageView
                         android:id="@+id/dejar_de_seguir_boton"
                         android:layout_width="33dp"
                         android:layout_height="30dp"
                         android:background="@drawable/ic_unfollow"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        />
 
                 </FrameLayout>
+
+                <ImageView
+                    android:id="@+id/generar_qr_seguir"
+                    android:layout_width="33dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_qr_svgrepo_com"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/frameLayout"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.95"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.100000024"
+                    app:tint="@color/white" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -246,5 +264,22 @@
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/layout_qr_seguir"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:background="#AA000000">
+
+        <ImageView
+            android:id="@+id/qr_seguir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+    </LinearLayout>
 
 </FrameLayout>

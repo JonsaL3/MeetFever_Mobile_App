@@ -90,4 +90,10 @@ dependencies {
     implementation "androidx.camera:camera-view:${camerax_version}"
     implementation "androidx.camera:camera-extensions:${camerax_version}"
 
+    // para generar los QR y seguir a gente
+    implementation "androidmads.library.qrgenearator:QRGenearator:1.0.3"
+
+    // para el lector de códigos QR
+    implementation  'com.google.android.gms:play-services-vision:20.1.3'
+
 }

@@ -192,14 +192,12 @@ class ExplorerFragment : Fragment() {
     private fun pintarExperienciasDestacadas() {
 
         // busco las experiencias mas mencionadas
-        WebServiceExperiencia.findTop4ExperienciasMasComentadas(requireContext(), object:
-            WebServiceGenericInterface {
+        WebServiceExperiencia.findTop4ExperienciasMasComentadas(requireContext(), object: WebServiceGenericInterface {
             override fun callback(any: Any) {
 
                 if (any == 0) {
                     // TODO ERROR
-
-                        Utils.terminarCargaOnError(binding.loadingAnimationExperienciasDestacadas, binding.experienciasDestacadasTextoNone)
+                    Utils.terminarCargaOnError(binding.loadingAnimationExperienciasDestacadas, binding.experienciasDestacadasTextoNone)
 
                 }
                 else {
@@ -207,11 +205,11 @@ class ExplorerFragment : Fragment() {
                     val experiencias = any as ExperienciaWrapper
                     try {
 
-                        Utils.terminarCarga(binding.loadingAnimationExperienciasDestacadas){
+                        Utils.terminarCarga(binding.loadingAnimationExperienciasDestacadas) {
                             Animations.pintarGridRecyclerViewSuavemente(
                                 gridLayoutManager = GridLayoutManager(requireContext(), 2),
                                 recyclerView = binding.experienciaDestacadasRecyclerView,
-                                adapter = ExperienciaRecyclerViewAdapter(experiencias, currentUsuario),
+                                adapter = ExperienciaRecyclerViewAdapter(experiencias.sortedBy { it.titulo }, currentUsuario),
                             )
                         }
 

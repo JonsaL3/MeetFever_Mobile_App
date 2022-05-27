@@ -20,6 +20,7 @@ import es.indytek.meetfever.ui.fragments.mainfragments.TrendingsFragment
 import es.indytek.meetfever.ui.fragments.secondaryfragments.fever.RedactarFeverFragment
 import es.indytek.meetfever.ui.fragments.secondaryfragments.perfil.PerfilFragment
 import es.indytek.meetfever.ui.fragments.secondaryfragments.usersettings.UserSettingsFragment
+import es.indytek.meetfever.ui.fragments.utilityfragments.BarcodeFragment
 import es.indytek.meetfever.utils.Animations
 import es.indytek.meetfever.utils.Utils
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter
@@ -62,6 +63,8 @@ class MainActivity : AppCompatActivity() {
         loadDataToDrawer()
 
         loadDataIntoUI()
+
+        chargeDrawer()
 
     }
 
@@ -138,6 +141,10 @@ class MainActivity : AppCompatActivity() {
                         R.id.ver_perfil -> {
                             cargarPerfil()
                         }
+
+                        R.id.meet_scanner -> {
+                            cargarMeetScanner()
+                        }
                     }
 
                 }
@@ -155,90 +162,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun chargeDrawer(){
-
-        //cargo la barra indicandole: contexto, drawerlayout,
-        toggle = ActionBarDrawerToggle(this, binding.drawerLayout, R.string.open_drawer, R.string.close_drawer)
-
-        //le meto al drawerlayout un listener para abrir el menu
-        binding.drawerLayout.addDrawerListener(toggle)
-
-        //permite sincronizar el icono del menu y el panel de navegacion
-        toggle.syncState()
-
-        //enchufo el icono de navegacion
-
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = ""
-        supportActionBar?.setHomeButtonEnabled(true)
-
-        //le asigno color al boton.
-        toggle.drawerArrowDrawable.color = getColor(R.color.white)
-
-        //asigno a la actionbar un logo personalizado.
-        //pracambiarlo ir a layout action_bar
-        supportActionBar?.setDisplayShowCustomEnabled(true)
-        val inflater = this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-
-        //listeners en los items del nav y asignar los fragmentos a cda boton
-
-        binding.navView.setNavigationItemSelectedListener {
-            when(it.itemId){
-
-//                R.id.nav_invoice -> {
-//
-//
-//
-//                }
-//
-//                R.id.nav_support -> {
-//
-//                }
-//                R.id.nav_add_log_out -> {
-//
-//                }
-
-            }
-
-
-            binding.drawerLayout.closeDrawer(GravityCompat.START)
-
-            true
-        }
-    }
-
-    private fun loadDataToDrawer(){
-
-        val header : View = binding.navView.getHeaderView(0)
-
-        currentUsuario.fotoPerfil?.let {
-            Utils.putBase64ImageIntoImageViewWithoutCornersWithPlaceholder(
-                header.findViewById(R.id.imagen),
-                it,
-                this,
-                R.drawable.ic_default_background_image
-            )
-        }
-
-        currentUsuario.fotoFondo?.let {
-            Utils.putBase64ImageIntoImageViewWithoutCornersWithPlaceholder(
-                header.findViewById(R.id.backgroundProfile),
-                it,
-                this,
-                R.drawable.ic_default_background_image
-            )
-        }
-
-        header.findViewById<TextView>(R.id.nick).apply {
-            this.text = currentUsuario.nick
-        }
-
-        header.findViewById<TextView>(R.id.frase).apply {
-            this.text = currentUsuario.frase
-        }
-    }
-
-    private fun chargeDrawer(){
+    private fun chargeDrawer() {
 
         //cargo la barra indicandole: contexto, drawerlayout,
         toggle = ActionBarDrawerToggle(this, binding.drawerLayout, R.string.open_drawer, R.string.close_drawer)
@@ -334,6 +258,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun cargarTrendingsFragment() {
         val fragmento = TrendingsFragment.newInstance(currentUsuario)
+        Utils.cambiarDeFragmentoGuardandoElAnterior(supportFragmentManager,fragmento, "", R.id.frame_layout)
+    }
+
+    private fun cargarMeetScanner() {
+        val fragmento = BarcodeFragment.newInstance(currentUsuario)
         Utils.cambiarDeFragmentoGuardandoElAnterior(supportFragmentManager,fragmento, "", R.id.frame_layout)
     }
 

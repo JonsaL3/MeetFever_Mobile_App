@@ -221,6 +221,7 @@ class CameraFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         Utils.ocultarBottomBar(requireActivity())
+        Utils.ocultarElementosUI(requireActivity())
     }
 
     companion object {

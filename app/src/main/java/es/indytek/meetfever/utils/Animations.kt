@@ -1,6 +1,8 @@
 package es.indytek.meetfever.utils
 
 import android.animation.ValueAnimator
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
@@ -26,6 +28,10 @@ object Animations {
         view.visibility = View.VISIBLE
         view.alpha = 1f
         view.animate().alpha(0f).setDuration(duration).start()
+
+        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+            view.visibility = View.GONE
+        },Constantes.TIEMPO_DE_ANIMACIONES)
     }
 
     fun esperarYOcultarVistaSuavemente(
