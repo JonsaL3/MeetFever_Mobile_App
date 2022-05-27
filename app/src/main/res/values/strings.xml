@@ -100,5 +100,6 @@
     <string name="no_ha_seleccionado_ninguna_experiencia_opcional">No ha seleccionado ninguna experiencia (opcional)</string>
     <string name="no_ha_seleccionado_ning_n_local_aun">No ha seleccionado ningún local aún</string>
     <string name="atr_s">Atrás</string>
+    <string name="meet_follower_scanner">Meet Follower Scanner</string>
 
 </resources>
