@@ -6,26 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragments.utilityfragments.CameraFragment">
 
-    <androidx.camera.view.PreviewView
-        android:id="@+id/viewFinder"
+    <SurfaceView
+        android:id="@+id/cameraSurfaceView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        />
-
-    <ImageButton
-        android:id="@+id/hacer_foto_boton"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:background="@drawable/ic_photo_camera_photograph_svgrepo_com_1"
-        android:fontFamily="@font/montserrat_light"
-        android:text="@string/iniciar_sesi_n"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

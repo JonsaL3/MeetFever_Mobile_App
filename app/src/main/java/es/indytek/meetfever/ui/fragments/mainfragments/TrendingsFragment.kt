@@ -1,8 +1,6 @@
 package es.indytek.meetfever.ui.fragments.mainfragments
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -10,19 +8,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import es.indytek.meetfever.R
 import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
 import es.indytek.meetfever.data.webservice.WebServiceOpinion
-import es.indytek.meetfever.data.webservice.WebServicePersona
 import es.indytek.meetfever.databinding.FragmentTrendingsBinding
 import es.indytek.meetfever.models.opinion.OpinionWrapper
-import es.indytek.meetfever.models.persona.PersonaWrapper
 import es.indytek.meetfever.models.usuario.Usuario
-import es.indytek.meetfever.ui.recyclerviews.adapters.EmpresaRecyclerViewAdapter
 import es.indytek.meetfever.ui.recyclerviews.adapters.OpinionRecyclerViewAdapter
-import es.indytek.meetfever.ui.recyclerviews.adapters.PersonaRecyclerViewAdapter
 import es.indytek.meetfever.utils.Animations
 import es.indytek.meetfever.utils.Utils
 import nl.joery.animatedbottombar.AnimatedBottomBar
@@ -89,7 +82,6 @@ class TrendingsFragment : Fragment() {
                                 val opiniones = any as OpinionWrapper
                                 //ocultarContenido()
                                 try {
-
                                     Animations.pintarLinearRecyclerViewSuavemente(
                                         linearLayoutManager = LinearLayoutManager(requireContext()),
                                         recyclerView = binding.busquedaOpinionesRecyclerView,

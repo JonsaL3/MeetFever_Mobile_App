@@ -3,15 +3,15 @@ package es.indytek.meetfever.ui.fragments.secondaryfragments.perfil
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.GridLayoutManager
+import androidmads.library.qrgenearator.QRGContents
+import androidmads.library.qrgenearator.QRGEncoder
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.zxing.WriterException
 import es.indytek.meetfever.R
 import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
 import es.indytek.meetfever.data.webservice.WebServiceOpinion
@@ -22,11 +22,9 @@ import es.indytek.meetfever.models.opinion.OpinionWrapper
 import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.models.usuario.UsuarioWrapper
 import es.indytek.meetfever.ui.fragments.secondaryfragments.follow.FollowedFollowingFragment
-import es.indytek.meetfever.ui.recyclerviews.adapters.ExperienciaRecyclerViewAdapter
 import es.indytek.meetfever.ui.recyclerviews.adapters.OpinionRecyclerViewAdapter
 import es.indytek.meetfever.utils.Animations
 import es.indytek.meetfever.utils.Utils
-import nl.joery.animatedbottombar.AnimatedBottomBar
 
 private const val ARG_PARAM1 = "usuarioGenerico"
 private const val ARG_PARAM2 = "usuario"
@@ -56,6 +54,11 @@ class PerfilFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentPerfilBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         // pinto tohdo lo relacionado con el usuario
         pintar()
@@ -66,11 +69,7 @@ class PerfilFragment : Fragment() {
         // precargo los seguidores y los seguidos
         precargarSeguidoresYSeguidos()
 
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        // oculto los elementos que solo quiero que se vean en los 3 fragmentos principales
         Utils.ocultarElementosUI(requireActivity())
     }
 
@@ -78,6 +77,37 @@ class PerfilFragment : Fragment() {
 
         binding.seguirNoSeguir.setOnClickListener {
             seguirODejarDeSeguir()
+        }
+
+        binding.generarQrSeguir.setOnClickListener {
+            mostrarQRSeguir()
+        }
+
+    }
+
+    private fun mostrarQRSeguir() {
+
+        if (currentUsuario != usuario)
+            return
+
+        val datosDelQr = "MEETFEVERMOBILEAPP;${usuario.id}"
+
+        val qrEnconder = QRGEncoder(datosDelQr, null, QRGContents.Type.TEXT, 600)
+
+        try {
+
+            // genero el qr y lo enchufo
+            val bitmap = qrEnconder.encodeAsBitmap()
+            binding.qrSeguir.setImageBitmap(bitmap)
+
+            // una vez cargado lo pinto y me preparo para quitarlo
+            Animations.mostrarVistaSuavemente(binding.layoutQrSeguir)
+            binding.layoutQrSeguir.setOnClickListener {
+                Animations.ocultarVistaSuavemente(binding.layoutQrSeguir)
+            }
+
+        } catch (e: WriterException) {
+            e.printStackTrace()
         }
 
     }
@@ -131,8 +161,12 @@ class PerfilFragment : Fragment() {
 
         if (currentUsuario != usuario) {
 
+            binding.seguirNoSeguir.visibility = View.VISIBLE
+
             WebServiceUsuario.isSeguidoPorUser(currentUsuario.id, usuario.id, requireContext(), object: WebServiceGenericInterface {
                 override fun callback(any: Any) {
+
+                    Log.w(":::", "isSeguidoPorUser: $any")
 
                     if (any == 0) {
                         // todo error
@@ -188,6 +222,12 @@ class PerfilFragment : Fragment() {
         pintarDatosUsuario()
         pintarOpiniones()
         pintarBotonSeguir()
+        pintarEscaneoQr()
+    }
+
+    private fun pintarEscaneoQr() {
+        if (currentUsuario == usuario)
+            Animations.mostrarVistaSuavemente(binding.generarQrSeguir)
     }
 
     private fun pintarDatosUsuario() {

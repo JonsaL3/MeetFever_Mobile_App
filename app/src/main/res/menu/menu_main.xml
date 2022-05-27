@@ -13,4 +13,10 @@
         android:icon="@drawable/ic_profile_image_icon"
         />
 
+    <item
+        android:id="@+id/meet_scanner"
+        android:title="@string/meet_follower_scanner"
+        android:icon="@drawable/ic_qr_svgrepo_com"
+        />
+
 </menu>

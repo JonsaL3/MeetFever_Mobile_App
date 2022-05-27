@@ -20,6 +20,7 @@ import es.indytek.meetfever.ui.fragments.mainfragments.TrendingsFragment
 import es.indytek.meetfever.ui.fragments.secondaryfragments.fever.RedactarFeverFragment
 import es.indytek.meetfever.ui.fragments.secondaryfragments.perfil.PerfilFragment
 import es.indytek.meetfever.ui.fragments.secondaryfragments.usersettings.UserSettingsFragment
+import es.indytek.meetfever.ui.fragments.utilityfragments.BarcodeFragment
 import es.indytek.meetfever.utils.Animations
 import es.indytek.meetfever.utils.Utils
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter
@@ -137,6 +138,10 @@ class MainActivity : AppCompatActivity() {
 
                         R.id.ver_perfil -> {
                             cargarPerfil()
+                        }
+
+                        R.id.meet_scanner -> {
+                            cargarMeetScanner()
                         }
                     }
 
@@ -334,6 +339,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun cargarTrendingsFragment() {
         val fragmento = TrendingsFragment.newInstance(currentUsuario)
+        Utils.cambiarDeFragmentoGuardandoElAnterior(supportFragmentManager,fragmento, "", R.id.frame_layout)
+    }
+
+    private fun cargarMeetScanner() {
+        val fragmento = BarcodeFragment.newInstance(currentUsuario)
         Utils.cambiarDeFragmentoGuardandoElAnterior(supportFragmentManager,fragmento, "", R.id.frame_layout)
     }
 
