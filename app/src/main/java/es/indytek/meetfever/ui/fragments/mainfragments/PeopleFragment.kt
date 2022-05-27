@@ -166,25 +166,6 @@ class PeopleFragment : Fragment() {
         Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager,fragmento, "", R.id.frame_layout)
     }
 
-    // pinta los datos del tio que inició sesión
-    private fun pintarNombreDelUsuarioQueInicioSesion() {
-
-        // quiero saber que hora es para ver si es de dia o de noche
-        val hora = LocalTime.now()
-
-        // Le pongo un mensaje u otro en funcion de la hora
-        if (hora.hour >= 18 || hora.hour <= 6) {
-            "¡${this.getString(R.string.buenas_noches)} ${currentUsuario.nick}!".also {
-                binding.textoBuenosDias.text = it
-            }
-        } else {
-            "¡${this.getString(R.string.buenos_dias)} ${currentUsuario.nick}!".also {
-                binding.textoBuenosDias.text = it
-            }
-        }
-
-    }
-
     // pinta el recycler de las personas con mas seguidores
     private fun pintarTopPersonas() {
 
@@ -251,7 +232,6 @@ class PeopleFragment : Fragment() {
 
     // Esta funcion llama al resto de componentes y los pinta
     private fun pintar() {
-        pintarNombreDelUsuarioQueInicioSesion()
         pintarTopPersonas()
         pintarPersonasQueQuizasConozca()
     }

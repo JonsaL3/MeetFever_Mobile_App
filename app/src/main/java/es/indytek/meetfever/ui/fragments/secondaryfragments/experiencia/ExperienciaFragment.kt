@@ -94,7 +94,6 @@ class ExperienciaFragment : Fragment() {
 
     // funcion que se encarga de pintar to-do
     private fun pintar() {
-        pintarNombreDelUsuarioQueInicioSesion()
         pintarExperiencia()
     }
 
@@ -139,26 +138,6 @@ class ExperienciaFragment : Fragment() {
 
         // pinto el nombre de la empresa que organiza la experiencia
         binding.botonVerEmpresaTexto.text = experiencia.empresa.nombreEmpresa
-
-    }
-
-
-    // pinta los datos del tio que inició sesión
-    private fun pintarNombreDelUsuarioQueInicioSesion() {
-
-        // quiero saber que hora es para ver si es de dia o de noche
-        val hora = LocalTime.now()
-
-        // Le pongo un mensaje u otro en funcion de la hora
-        if (hora.hour >= 18 || hora.hour <= 6) {
-            "¡${this.getString(R.string.buenos_dias)} ${usuario.nick}!".also {
-                binding.textoBuenosDias.text = it
-            }
-        } else {
-            "¡${this.getString(R.string.buenas_noches)} ${usuario.nick}!".also {
-                binding.textoBuenosDias.text = it
-            }
-        }
 
     }
 

@@ -188,25 +188,6 @@ class ExplorerFragment : Fragment() {
         Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager,fragmento, "", R.id.frame_layout)
     }
 
-    // pinta los datos del tio que inició sesión
-    private fun pintarNombreDelUsuarioQueInicioSesion() {
-
-        // quiero saber que hora es para ver si es de dia o de noche
-        val hora = LocalTime.now()
-
-        // Le pongo un mensaje u otro en funcion de la hora
-        if (hora.hour >= 18 || hora.hour <= 6) {
-            "¡${this.getString(R.string.buenas_noches)} ${currentUsuario.nick}!".also {
-                binding.textoBuenosDias.text = it
-            }
-        } else {
-            "¡${this.getString(R.string.buenos_dias)} ${currentUsuario.nick}!".also {
-                binding.textoBuenosDias.text = it
-            }
-        }
-
-    }
-
     // pinto las 4 experiencias mas mencionadas en opiniones
     private fun pintarExperienciasDestacadas() {
 
@@ -280,7 +261,6 @@ class ExplorerFragment : Fragment() {
 
     // esta función llama al resto de funciones para que pinten los elementos del fragment
     private fun pintar() {
-        pintarNombreDelUsuarioQueInicioSesion()
         pintarExperienciasDestacadas()
         pintarTopEmpresas()
     }

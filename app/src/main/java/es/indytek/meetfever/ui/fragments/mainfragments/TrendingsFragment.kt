@@ -125,27 +125,7 @@ class TrendingsFragment : Fragment() {
 
     // esta funcion llama a todas las funciones de dibujado
     private fun pintar() {
-        pintarNombreDelUsuarioQueInicioSesion()
         pintarOpiniones()
-    }
-
-    // pinta los datos del tio que inició sesión
-    private fun pintarNombreDelUsuarioQueInicioSesion() {
-
-        // quiero saber que hora es para ver si es de dia o de noche
-        val hora = LocalTime.now()
-
-        // Le pongo un mensaje u otro en funcion de la hora
-        if (hora.hour >= 18 || hora.hour <= 6) {
-            "¡${this.getString(R.string.buenas_noches)} ${currentUsuario.nick}!".also {
-                binding.textoBuenosDias.text = it
-            }
-        } else {
-            "¡${this.getString(R.string.buenos_dias)} ${currentUsuario.nick}!".also {
-                binding.textoBuenosDias.text = it
-            }
-        }
-
     }
 
     // pinto las 100 opiniones con mas megustas de las ultimas 24 horas

@@ -10,7 +10,6 @@
     android:background="@color/negro_fondo"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     >
-
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
@@ -21,29 +20,166 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.cardview.widget.CardView
+
+
+        <androidx.drawerlayout.widget.DrawerLayout
+            android:id="@+id/drawerLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="10dp"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
-            app:cardBackgroundColor="@android:color/transparent"
-            card_view:cardElevation="0dp"
-            app:cardCornerRadius="25dp">
+            tools:openDrawer="end">
 
-            <FrameLayout
-                android:id="@+id/frame_layout"
+
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0">
+                android:layout_height="0dp"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                app:cardBackgroundColor="@android:color/transparent"
+                card_view:cardElevation="0dp"
+                app:cardCornerRadius="25dp">
 
-            </FrameLayout>
-        </androidx.cardview.widget.CardView>
+                <FrameLayout
+                    android:id="@+id/frame_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0">
+
+                </FrameLayout>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <io.github.yavski.fabspeeddial.FabSpeedDial
+                        android:id="@+id/menu_accion_rapida"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|end"
+                        android:src="@drawable/ic_experiencia_detalle_background_gradient"
+                        app:fabDrawableTint="@color/fab_background_tint"
+                        app:fabGravity="bottom_end"
+                        app:fabMenu="@menu/menu_main"
+                        app:menu="@menu/menu_main"
+                        app:miniFabBackgroundTint="@color/white"
+                        app:miniFabDrawableTint="@color/black"
+                        app:miniFabTitleTextColor="@color/title_text_color"
+                        android:layout_marginBottom="70dp"/>
+
+
+                </FrameLayout>
+
+                <ImageView
+                    android:id="@+id/openDrawer"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="start"
+                    android:layout_margin="15dp"
+                    android:src="@drawable/ic_menu"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.07"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.04000002" />
+
+
+                <TextView
+                    android:id="@+id/textoBuenosDias"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/montserrat_light"
+                    android:text="@string/buenos_dias_meetfever"
+                    android:textColor="@color/white"
+                    />
+
+                <ImageView
+                    android:id="@+id/ir_a_ajustes"
+                    android:layout_gravity="end"
+                    android:layout_margin="15dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_settings_tuerca"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.92"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.04000002"
+                    />
+            </androidx.cardview.widget.CardView>
+
+
+
+            <com.google.android.material.navigation.NavigationView
+                android:id="@+id/nav_view"
+                android:layout_width="325dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:fitsSystemWindows="true"
+                app:headerLayout="@layout/nav_header"
+                app:menu="@menu/nav_menu"
+                android:background="@drawable/ic_drawer_bg"
+                app:itemTextColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/botonMisFacturas"
+                        android:layout_width="250dp"
+                        android:padding="10dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/my_invoices"
+                        android:textColor="@color/white"
+                        android:background="@drawable/anim_button_pressed"
+                        android:fontFamily="@font/montserrat_light"
+                        android:layout_marginTop="260dp"
+                        android:textAllCaps="false"
+                        />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/botonSoporte"
+                        android:padding="10dp"
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/support"
+                        android:textColor="@color/white"
+                        android:background="@drawable/anim_button_pressed"
+                        android:fontFamily="@font/montserrat_light"
+                        android:layout_marginTop="40dp"
+                        android:textAllCaps="false"
+                        />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/botonLogOut"
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:text="@string/log_out"
+                        android:textColor="@color/white"
+                        android:background="@drawable/anim_button_pressed"
+                        android:fontFamily="@font/montserrat_light"
+                        android:layout_marginTop="50dp"
+                        android:textAllCaps="false"
+                        />
+
+                </LinearLayout>
+
+            </com.google.android.material.navigation.NavigationView>
+
+
+        </androidx.drawerlayout.widget.DrawerLayout>
 
         <nl.joery.animatedbottombar.AnimatedBottomBar
             android:id="@+id/bottom_bar"
@@ -63,6 +199,7 @@
             app:abb_tabs="@menu/tabs" />
 
     </LinearLayout>
+
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -95,6 +232,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.03000002" />
+
 
 
 
