@@ -6,9 +6,7 @@ import android.graphics.Color
 import android.os.Build
 import android.util.Log
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
-import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import es.indytek.meetfever.R
@@ -19,7 +17,9 @@ import es.indytek.meetfever.models.opinion.Opinion
 import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.ui.fragments.mainfragments.TrendingsFragment
 import es.indytek.meetfever.ui.fragments.secondaryfragments.perfil.PerfilFragment
+import es.indytek.meetfever.utils.Animations
 import es.indytek.meetfever.utils.Utils
+import java.time.format.DateTimeFormatter
 
 
 class OpinionViewHolder(
@@ -36,6 +36,9 @@ class OpinionViewHolder(
 
         binding.textoNombre.text = objeto.autor.nick
         binding.opinionText.text = objeto.descripcion
+
+        if (Utils.isFamous(objeto.autor))
+            Animations.mostrarVistaSuavemente(binding.famousRectangle)
 
         // lo pinto de un color u otro en función de donde vengo
         if (claseOrigen.simpleName == TrendingsFragment::class.java.simpleName) {
@@ -86,7 +89,7 @@ class OpinionViewHolder(
             Utils.putResourceImageIntoImageViewWithoutCorners(binding.btnMeGusta, R.drawable.ic_likebutton, itemView.context)
         }
 
-        // TODO pinto el numero de megustas de la opinion
+        binding.fechaOpinion.text = objeto.fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")).toString()
 
         // Creo un listener que me permita darle a me gusta a una opinion
         binding.btnMeGusta.setOnClickListener {
@@ -97,7 +100,7 @@ class OpinionViewHolder(
                 override fun callback(any: Any) {
 
                     if (any == 0) {
-                        // TODO ERROR
+                        Toast.makeText(view.context, "Error al realizar un me gusta.", Toast.LENGTH_SHORT).show()
                     } else {
 
                         if (!objeto.like) {

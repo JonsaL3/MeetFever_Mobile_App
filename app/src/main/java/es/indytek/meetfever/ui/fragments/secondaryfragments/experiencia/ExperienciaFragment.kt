@@ -21,7 +21,6 @@ import es.indytek.meetfever.ui.fragments.secondaryfragments.perfil.PerfilFragmen
 import es.indytek.meetfever.utils.Constantes
 import es.indytek.meetfever.utils.Utils
 import java.math.BigDecimal
-import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
 

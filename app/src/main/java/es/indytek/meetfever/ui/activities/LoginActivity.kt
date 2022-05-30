@@ -5,12 +5,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.widget.Toast
+import es.indytek.meetfever.R
 import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
 import es.indytek.meetfever.data.webservice.WebServiceUsuario
 import es.indytek.meetfever.databinding.ActivityLoginBinding
 import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.utils.Animations
 import es.indytek.meetfever.utils.CreateMD5
+import es.indytek.meetfever.utils.DialogMaker
 
 class LoginActivity : AppCompatActivity() {
 
@@ -59,11 +62,11 @@ class LoginActivity : AppCompatActivity() {
                 override fun callback(any: Any) {
 
                     if (any == 0) { // en caso de que vaya mal muestro un popup
-                        //TODO mostrar popup de error
+                        DialogMaker(this@LoginActivity, getString(R.string.atencion), getString(R.string.creedenciales_erroneas)).infoNoCustomActions()
                         Animations.ocultarVistaSuavemente(binding.prePantallaDeCarga, 500)
                     } else { // en caso de que vaya bien me voy a la main activity
 
-                        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+                        Handler(Looper.getMainLooper()).postDelayed({
                             irAMainActivity(any as Usuario)
                         },2000)
 
@@ -73,7 +76,7 @@ class LoginActivity : AppCompatActivity() {
             })
 
         } else { // en caso de que los campos sea empty
-            // TODO error
+            Toast.makeText(this, "Hay campos vacíos", Toast.LENGTH_SHORT).show()
         }
 
     }

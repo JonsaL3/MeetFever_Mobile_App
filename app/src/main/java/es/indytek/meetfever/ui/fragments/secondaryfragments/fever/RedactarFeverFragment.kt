@@ -70,7 +70,6 @@ class RedactarFeverFragment : Fragment() {
         arguments?.let {
             currentUsuario = it.getSerializable(ARG_PARAM1) as Usuario
         }
-
         emoticonos = ArrayList()
         imageViews = linkedMapOf()
     }
@@ -95,13 +94,7 @@ class RedactarFeverFragment : Fragment() {
         // arranco el contador de caracteres y lo limito a 250
         procesadorDeTextoYCaracteres()
 
-        loadListeners()
-
         Utils.ocultarElementosUI(requireActivity())
-    }
-
-    private fun loadListeners(){
-        binding.botonSendFever.setOnClickListener { sendFeverToServer() }
     }
 
     fun removeDuplicate(str: CharArray, length: Int): kotlin.String {
@@ -133,261 +126,126 @@ class RedactarFeverFragment : Fragment() {
     // cuento que el usuario no supere los 250 caracteres
     private fun procesadorDeTextoYCaracteres() {
 
-        var empresaEncontrada = false
-        var experienciaEncontrada = false
+        var ultimaEmpresaEncontrada: Empresa? = null
 
         binding.opinionContainer.addTextChangedListener { text ->
 
+            var ultimoCaracter: kotlin.String? = null
+
+            // Primero actualizo el contador de caracteres
             Utils.setTextColorAsResource(binding.numeroCaracteresOpinion, R.color.gris_textos, requireContext())
             if (text.toString().length > 250) {
                 binding.numeroCaracteresOpinion.setTextColor(Color.RED)
             }
-
             "${text.toString().length}/250 Caracteres".also {
                 binding.numeroCaracteresOpinion.text = it
             }
 
-            text?.let {
+            // REALIZO LAS BUSQUEDAS EN BASE A @ ###############################################
+            try {
+                // me quedo con lo que hay después del arroba.
+                val busquedaEmpresa = text.toString().split(" ").filter {
+                    it.contains("@")
+                }[0].removePrefix("@")
 
-                if (text.contains("@")) {
+                // busco la empresa en la base de datos
+                if (ultimaEmpresaEncontrada == null) {
 
-                    Log.d(":::", "ME ACTUALIZO")
+                    // TODO PULIR CUANDO PONGO COSAS DESPUÉS DE LA EMPRESA ENCONTRADA
+                    // TODO PONER DE COLOR EL TEXTO QUE CORRESPONDE CON EL NICK DE LA EMPRESA
+                    // TODO LAS EXPERIENCIAS POR TITULO
+                    WebServiceEmpresa.findEmpresaByNickname(busquedaEmpresa, requireContext(), object: WebServiceGenericInterface {
+                        override fun callback(any: Any) {
 
-                    // obtengo las palabras que empiezan por @
-                    val split =  text.toString().split(" ")
-                    val empresas = split.filter {
-                        it.startsWith("@")
-                    }
-
-                    try {
-                        var empresa = empresas[0]
-
-                        // si una palabra empieza por @...
-                        val empresaCortada = empresa.substring(1, empresa.length)
-
-                        Log.d(":::", "EMPRESA ENCONTRADA -> $empresaEncontrada")
-                        Log.d(":::", "EMPRESA CORTADA -> $empresaCortada")
-
-                        if (!empresaEncontrada) {
-
-                            WebServiceEmpresa.findEmpresaByNickname(empresaCortada, requireContext(), object: WebServiceGenericInterface {
-                                override fun callback(any: Any) {
-
-                                    if (any == 0) {
-                                        // TODO ERROR
-                                    } else {
-                                        empresaEncontrada = true
-                                        val empresaDescargada = any as Empresa
-
-                                        // pongo la foto en la preview
-                                        val foto = empresaDescargada.fotoPerfil
-                                        this@RedactarFeverFragment.idEmpresa = empresaDescargada.id
-
-                                        foto?.let {
-                                            Utils.putBase64ImageIntoImageViewWithPlaceholder(binding.previewEnterprise, foto, requireContext(), R.drawable.ic_default_enterprise_black_and_white)
-                                        } ?: run {
-                                            Utils.putResourceImageIntoImageView(binding.previewEnterprise, R.drawable.ic_default_enterprise_black_and_white, requireContext())
-                                        }
-
-                                        // oculto los mensajes de que no se encontró ninguna empresa
-                                        binding.noSeleccionadoPreview.visibility = View.GONE
-                                        binding.elLocalQueSeleccione.visibility = View.GONE
-
-                                        // muestro el nombre de la empresa y su frase
-                                        binding.nombreEmpresa.visibility = View.VISIBLE
-                                        binding.nombreEmpresa.text = empresaDescargada.nick
-
-                                        binding.descripcionEmpresa.visibility = View.VISIBLE
-                                        binding.descripcionEmpresa.text = empresaDescargada.frase
-
-                                        binding.degradado.visibility = View.VISIBLE
-                                        binding.previewEnterprise.visibility = View.VISIBLE
-
-                                        // marco esa palabra en el edit text de otro color
-                                        val start = text.indexOf(empresa)
-                                        val end = start + empresa.length
-                                        binding.opinionContainer.text?.setSpan(ForegroundColorSpan(requireContext().getColor(R.color.rosa_meet)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-                                    }
-
-                                }
-                            })
-
-                        } else if (empresaCortada != binding.nombreEmpresa.text.toString()) {
-
-                            empresaEncontrada = false
-
-                            // oculto la foto etc
-                            binding.nombreEmpresa.visibility = View.GONE
-                            binding.descripcionEmpresa.visibility = View.GONE
-                            binding.previewEnterprise.visibility = View.GONE
-                            binding.degradado.visibility = View.GONE
-                            binding.previewEnterprise.setImageDrawable(null)
-
-                            // Vuelvo a mostrar lo de por defecto
-                            binding.noSeleccionadoPreview.visibility = View.VISIBLE
-                            binding.elLocalQueSeleccione.visibility = View.VISIBLE
-
-
-                            // vuelvo a poner el color en su sitio
-                            val start = text.indexOf(empresa)
-                            val end = start + empresa.length
-                            binding.opinionContainer.text?.setSpan(ForegroundColorSpan(requireContext().getColor(R.color.gris_textos)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-                        // Vuelvo a mostrar lo de por defecto
-                        binding.noSeleccionadoPreview.visibility = View.VISIBLE
-
-                            binding.opinionContainer.setTextColor(requireContext().getColor(R.color.gris_textos))
-                        }
-
-                    } catch(e: Exception) {
-                        Log.e(":::", "No se puede buscar una empresa vacia")
-                        Utils.enviarRegistroDeErrorABBDD(
-                            context = requireContext(),
-                            stacktrace = e.message.toString(),
-                        )
-                    }
-
-                    //si el texto contiene ese patron, hará la busqueda.
-                }else if(text.matches(Regex("#.* "))) {
-
-                    // obtengo las palabras que empiezan por #
-                    val experiencias = text.toString().split(" ").filter {
-                        it.startsWith("#")
-                    }
-
-                    val experiencia = experiencias[0]
-
-                    val experienciaCortada = experiencia.substring(1, experiencia.length)
-
-                    Log.d(":::", "EXPERIENCIA ENCONTRADA -> $experienciaEncontrada")
-                    Log.d(":::", "EXPERIENCIA CORTADA -> $experienciaCortada")
-
-                    if (!experienciaEncontrada) {
-
-                        WebServiceExperiencia.findExperienciaByTitulo(experienciaCortada, requireContext(), object: WebServiceGenericInterface {
-                            override fun callback(any: Any) {
-
-                                if (any == 0) {
-                                    // TODO ERROR
-                                } else {
-                                    experienciaEncontrada = true
-                                    val experienciasDescargadas = any as ExperienciaWrapper
-
-                                    selectExperience(experienciasDescargadas)
-
-                                    // marco esa palabra en el edit text de otro color
-                                    val start = text.indexOf(experiencia)
-                                    val end = start + experiencia.length
-                                    binding.opinionContainer.text?.setSpan(ForegroundColorSpan(requireContext().getColor(R.color.rosa_meet)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-                                }
-
+                            ultimaEmpresaEncontrada = if (any == 0) {
+                                // en caso de fracaso borro lo que haya
+                                ocultarEmpresa()
+                                null
+                            } else {
+                                // en caso de exito me quedo con la empresa y marco como encontrada
+                                val empresa = any as Empresa
+                                mostrarEmpresa(empresa)
+                                empresa
                             }
-                        })
 
-                    } else if (experienciaCortada != binding.nombreEmpresa.text.toString()) {
-
-                        experienciaEncontrada = false
-
-                        // oculto la foto etc
-                        binding.experienciaNombre.visibility = View.GONE
-                        binding.experienciaDescripcion.visibility = View.GONE
-                        binding.experienciaPreview.visibility = View.GONE
-                        binding.experienciaPreviewDegradado.visibility = View.GONE
-                        binding.experienciaPreview.setImageDrawable(null)
-
-                        // Vuelvo a mostrar lo de por defecto
-                        binding.noSeleccionadoExperienciaPreview.visibility = View.VISIBLE
-
-                        // vuelvo a poner el color en su sitio
-                        val start = text.indexOf(experiencia)
-                        val end = start + experiencia.length
-                        binding.opinionContainer.text?.setSpan(ForegroundColorSpan(requireContext().getColor(R.color.gris_textos)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-                        binding.opinionContainer.setTextColor(requireContext().getColor(R.color.gris_textos))
-                    }
-
+                        }
+                    })
 
                 } else {
 
-                    empresaEncontrada = false
-
-                    binding.opinionContainer.text?.setSpan(ForegroundColorSpan(requireContext().getColor(R.color.gris_textos)), 0, text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-                    // oculto la foto etc
-                    binding.nombreEmpresa.visibility = View.GONE
-                    binding.descripcionEmpresa.visibility = View.GONE
-                    binding.previewEnterprise.visibility = View.GONE
-                    binding.degradado.visibility = View.GONE
-                    binding.previewEnterprise.setImageDrawable(null)
-
-                    // Vuelvo a mostrar lo de por defecto
-                    binding.noSeleccionadoPreview.visibility = View.VISIBLE
-                    binding.elLocalQueSeleccione.visibility = View.VISIBLE
+                    if (!text.toString().contains(ultimaEmpresaEncontrada!!.nick)) {
+                        ocultarEmpresa()
+                        ultimaEmpresaEncontrada = null
+                    }
 
                 }
 
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            // si no hay arrobas es que no ha buscado nada.
+            Log.d(":::->", text.toString())
+            if (!text!!.contains("@")) {
+                ocultarEmpresa()
+                ultimaEmpresaEncontrada = null
             }
 
         }
 
     }
 
-    private fun selectExperience(experiencias: ExperienciaWrapper){
+    private fun mostrarEmpresa(empresa: Empresa) {
 
-        experiencias.forEach {
-            //creo la caja de experiencia
-            val linearLayout = LinearLayout(requireContext())
-            linearLayout.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            linearLayout.orientation = LinearLayout.HORIZONTAL
-
-            //creo sufoto
-            val imageView = ImageView(requireContext())
-            imageView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-
-            it.foto?.let {foto ->
-                Utils.putBase64ImageIntoImageViewWithPlaceholder(binding.previewEnterprise, foto, requireContext(), R.drawable.ic_default_enterprise_black_and_white)
-            } ?: run {
-                Utils.putResourceImageIntoImageView(binding.previewEnterprise, R.drawable.ic_default_enterprise_black_and_white, requireContext())
-            }
-
-            //anado la foto al linear layout
-            linearLayout.addView(imageView)
-
-            //creo el linearlayout que contiene a la descripcion y el titulo
-            val linearLayout2 = LinearLayout(requireContext())
-            linearLayout2.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            linearLayout2.orientation = LinearLayout.VERTICAL
-
-            //creo el titulo
-            val textView = TextView(requireContext())
-            textView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            textView.text = it.titulo
-
-            //creo la descripcion
-            val textView2 = TextView(requireContext())
-            textView2.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            textView2.text = it.descripcion
-
-            //por ultimo lo aniado al papa
-            binding.experienciasLayout.addView(linearLayout)
-
-            //creo un imageview
-            val view = View(requireContext())
-            view.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1)
-
-            //le asigno un color
-            view.setBackgroundColor(requireContext().getColor(R.color.gris_textos))
-
-            //le asigno un padding
-            view.setPadding(10, 0, 10, 0)
-
-            //lo aniado a su papa
-            binding.experienciasLayout.addView(view)
-
+        empresa.fotoPerfil?.let {
+            Utils.putBase64ImageIntoImageView(binding.previewEnterprise, it, requireContext())
         }
 
+        binding.nombreEmpresa.text = empresa.nombreEmpresa
+        binding.descripcionEmpresa.text = empresa.frase
+
+        binding.noSeleccionadoPreview.visibility = View.GONE
+        binding.elLocalQueSeleccione.visibility = View.GONE
+
+        binding.previewEnterprise.visibility = View.VISIBLE
+        binding.degradado.visibility = View.VISIBLE
+        binding.nombreEmpresa.visibility = View.VISIBLE
+        binding.descripcionEmpresa.visibility = View.VISIBLE
+        binding.previewEnterprise.visibility = View.VISIBLE
+
+    }
+
+    private fun ocultarEmpresa() {
+
+        binding.previewEnterprise.visibility = View.GONE
+        binding.degradado.visibility = View.GONE
+        binding.nombreEmpresa.visibility = View.GONE
+        binding.descripcionEmpresa.visibility = View.GONE
+        binding.previewEnterprise.visibility = View.GONE
+
+        binding.noSeleccionadoPreview.visibility = View.VISIBLE
+        binding.elLocalQueSeleccione.visibility = View.VISIBLE
+
+    }
+
+    private fun contarNumeroDeArrobasEnUnaFrase(frase: kotlin.String): Int {
+        var numeroDeArrobas = 0
+        for (element in frase) {
+            if (element == '@') {
+                numeroDeArrobas++
+            }
+        }
+        return numeroDeArrobas
+    }
+
+    private fun contarNumeroDeHashTagsEnUnaFrase(frase: kotlin.String): Int {
+        var numeroDeHashtags = 0
+        for (element in frase) {
+            if (element == '#') {
+                numeroDeHashtags++
+            }
+        }
+        return numeroDeHashtags
     }
 
     private fun loadExperienceOnUI(experiencia: Experiencia){
@@ -526,28 +384,6 @@ class RedactarFeverFragment : Fragment() {
             animTime+= 100L
 
         }
-    }
-
-    private fun sendFeverToServer(){
-
-        val imageView = imageViews.filter { (_,v) -> !v }.toList()[0]
-        val emoticono = emoticonos[imageViews.toList().indexOf(imageView)]
-
-        val opinion =  Opinion(
-            descripcion = binding.opinionContainer.text.toString(),
-            eMOTICONO = emoticono,
-            autor = currentUsuario,
-            idEmpresa = idEmpresa,
-            idExperiencia = idExperiencia,
-            titulo = ""
-
-        )
-
-        Log.d(":::", opinion.toString())
-
-        binding.opinionContainer.setText(removeDuplicate(binding.opinionContainer.text.toString().toCharArray(), binding.opinionContainer.text.toString().length))
-        Toast.makeText(requireContext(), binding.opinionContainer.text.toString(), Toast.LENGTH_SHORT).show()
-
     }
 
     override fun onResume() {

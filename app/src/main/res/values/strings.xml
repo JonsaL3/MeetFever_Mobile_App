@@ -42,7 +42,7 @@
     <string name="close_drawer">Close</string>
 
     <!--   DIOLGS   -->
-    <string name="no_text_has_been_passed">Se ha proporcionado texto para mostrar.</string>
+    <string name="no_text_has_been_passed">No se ha proporcionado texto para mostrar.</string>
     <string name="dialog_accept">Aceptar</string>
     <string name="dialog_cancel">Cancelar</string>
     <string name="default_loading_text">Cargando…</string>
@@ -112,5 +112,25 @@
     <string name="atr_s">Atrás</string>
     <string name="meet_follower_scanner">Meet Follower Scanner</string>
     <string name="resultado_de_la_b_squeda">Resultado de la búsqueda.</string>
+    <string name="error">Error</string>
+    <string name="no_hay_internet">No hay conexión a internet.</string>
+    <string name="volver_al_login">Volver al login.</string>
+    <string name="esperar">Esperar…</string>
+    <string name="rellena">Rellena todos los campos.</string>
+    <string name="correo_no_valido">El correo electrónico no es válido.</string>
+    <string name="contrasenas_no_coinciden">Las contraseñas no coinciden.</string>
+    <string name="registro_exitoso_inicie_sesion">Registro exitoso, inicie sesión.</string>
+    <string name="error_al_cargar_imagen">Error al cargar la imagen…</string>
+    <string name="usuario_no_permisos">Usuario no tiene permisos.</string>
+    <string name="error_put">Se ha producido un error al contactar con el servidor (PUT)</string>
+    <string name="error_post">Se ha producido un error al contactar con el servidor (POST)</string>
+    <string name="error_get">Se ha producido un error al contactar con el servidor (GET)</string>
+    <string name="atencion">Atención</string>
+    <string name="creedenciales_erroneas">El usuario o la contraseña son incorrectos</string>
+    <string name="no_se_pudo_actualizar_empresa">No se ha podido actualizar la empresa, es posible que alguno de los campos ya correspondan a otro usuario.</string>
+    <string name="no_se_pudo_actualizar_persona">No se ha podido actualizar la persona, es posible que alguno de los campos ya correspondan a otro usuario.</string>
+
+    <string name="empresa_actualizada_correctamente">Se ha actualizado correctamente la empresa.</string>
+    <string name="exito">Exito</string>
 
 </resources>

@@ -1,18 +1,14 @@
 package es.indytek.meetfever.ui.recyclerviews.viewholders
 
-import android.graphics.PorterDuff
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import es.indytek.meetfever.R
-import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
-import es.indytek.meetfever.data.webservice.WebServiceOpinion
 import es.indytek.meetfever.databinding.ViewholderPersonaBinding
-import es.indytek.meetfever.models.opinion.OpinionWrapper
 import es.indytek.meetfever.models.persona.Persona
 import es.indytek.meetfever.models.usuario.Usuario
-import es.indytek.meetfever.models.usuario.UsuarioWrapper
 import es.indytek.meetfever.ui.fragments.secondaryfragments.perfil.PerfilFragment
+import es.indytek.meetfever.utils.Animations
 import es.indytek.meetfever.utils.Utils
 
 class PersonaViewHolder(
@@ -29,6 +25,10 @@ class PersonaViewHolder(
 
         // Si tiene foto de perfil, la pinto
         Utils.pintarFotoDePerfil(objeto, binding.imagen, view.context)
+
+        if (Utils.isFamous(objeto)) {
+            Animations.mostrarVistaSuavemente(binding.famousRectangle)
+        }
 
         binding.viewholderPersona.setOnClickListener {
             onClick(objeto)

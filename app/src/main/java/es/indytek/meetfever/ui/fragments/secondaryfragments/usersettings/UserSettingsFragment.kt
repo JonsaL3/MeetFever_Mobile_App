@@ -26,8 +26,11 @@ import es.indytek.meetfever.models.persona.Persona
 import es.indytek.meetfever.models.sexo.Sexo
 import es.indytek.meetfever.models.sexo.SexoWrapper
 import es.indytek.meetfever.models.usuario.Usuario
+import es.indytek.meetfever.ui.fragments.secondaryfragments.perfil.PerfilFragment
 import es.indytek.meetfever.ui.fragments.utilityfragments.CameraFragment
 import es.indytek.meetfever.utils.Animations
+import es.indytek.meetfever.utils.DialogAcceptCustomActionInterface
+import es.indytek.meetfever.utils.DialogMaker
 import es.indytek.meetfever.utils.Extensions.toBase64
 import es.indytek.meetfever.utils.Extensions.toBase64String
 import es.indytek.meetfever.utils.Utils
@@ -166,13 +169,16 @@ class UserSettingsFragment : Fragment() {
                 override fun callback(any: Any) {
 
                     if (any == 0) {
-                        // TODO error
-                        Log.d(":::", "ERROR")
+                        DialogMaker(requireContext(), requireContext().getString(R.string.error), getString(R.string.no_se_pudo_actualizar_empresa)).warningNoCustomActions()
                     } else {
-
                         currentUsuario = empresaActualizada
                         Log.d(":::, ", "EMPRESA ACTUALIZADA CORRECTAMENTE")
-
+                        DialogMaker(requireContext(), getString(R.string.exito), getString(R.string.empresa_actualizada_correctamente)).infoCustomAccept("Aceptar", object: DialogAcceptCustomActionInterface {
+                            override fun acceptButton() {
+                                val fragmento = PerfilFragment.newInstance(currentUsuario, currentUsuario)
+                                Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager, fragmento, "", R.id.frame_layout)
+                            }
+                        })
                     }
 
                 }
@@ -205,12 +211,16 @@ class UserSettingsFragment : Fragment() {
                 override fun callback(any: Any) {
 
                     if (any == 0) {
-                        // TODO error
-                        Log.d(":::", "ERROR")
+                        DialogMaker(requireContext(), requireContext().getString(R.string.error), getString(R.string.no_se_pudo_actualizar_persona)).warningNoCustomActions()
                     } else {
                         currentUsuario = personaAActualizar
                         Log.d(":::, ", "USUARIO ACTUALIZADA CORRECTAMENTE")
-                        // TODO CUADRO DE CARGA Y DE EXITO DE ACTUALIZACION, Y QUE ME MUEVA A OTRA PANTALLA O ALGO
+                        DialogMaker(requireContext(), getString(R.string.exito), getString(R.string.empresa_actualizada_correctamente)).infoCustomAccept("Aceptar", object: DialogAcceptCustomActionInterface {
+                            override fun acceptButton() {
+                                val fragmento = PerfilFragment.newInstance(currentUsuario, currentUsuario)
+                                Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager, fragmento, "", R.id.frame_layout)
+                            }
+                        })
                     }
 
                 }
@@ -292,9 +302,10 @@ class UserSettingsFragment : Fragment() {
             override fun callback(any: Any) {
 
                 if (any == 0) {
-                    // TODO ERRROR
+                    Toast.makeText(requireContext(), "Error al obtener los sexos del servidor.", Toast.LENGTH_SHORT).show()
                 } else {
                     val sexos = any as SexoWrapper
+                    sexos.sortedBy { it.id }
                     val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, sexos)
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                     binding.spinnerSexoPersona.adapter = adapter
@@ -341,8 +352,7 @@ class UserSettingsFragment : Fragment() {
                     }
 
                 } catch (e: RuntimeException) {
-                    // TODO USAR TARJETAS PRO DE JULIO
-                    Toast.makeText(requireContext(), "Error al cargar la imagen...", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.error_al_cargar_imagen), Toast.LENGTH_SHORT).show()
                     Utils.pintarFotoDePerfil(currentUsuario, binding.fotoPerfil, requireContext())
                     Utils.enviarRegistroDeErrorABBDD(
                         context = requireContext(),

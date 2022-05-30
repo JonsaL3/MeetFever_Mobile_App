@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -21,6 +22,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
+import es.indytek.meetfever.R
 import es.indytek.meetfever.databinding.FragmentCameraBinding
 import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.utils.Utils
@@ -50,6 +52,7 @@ class CameraFragment : Fragment() {
         contexto = requireContext()
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -69,6 +72,7 @@ class CameraFragment : Fragment() {
     }
 
     // CONTROLAR LA CÁMARA #########################################################################
+    @RequiresApi(Build.VERSION_CODES.Q)
     private fun hacerFoto() {
 
         Log.d(":::", "SE HA PRESIONADO EL BOTON DE HACER UNA FOTO")
@@ -189,7 +193,7 @@ class CameraFragment : Fragment() {
                 startCamera()
             } else {
                 // TO.DO MOSTRAR UN DIALOG
-                Toast.makeText(contexto, "Usuario no tiene permisos.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(contexto, getString(R.string.usuario_no_permisos), Toast.LENGTH_SHORT).show()
                 //finish()
             }
         }
@@ -205,6 +209,7 @@ class CameraFragment : Fragment() {
         cameraExecutor.shutdown()
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     private fun cargarListeners() {
 
         binding.hacerFotoBoton.setOnClickListener {

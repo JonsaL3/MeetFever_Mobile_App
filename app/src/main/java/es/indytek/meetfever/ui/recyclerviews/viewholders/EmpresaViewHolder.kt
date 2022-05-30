@@ -57,10 +57,10 @@ class EmpresaViewHolder(
         WebServiceOpinion.obtenerOpinionPorIdAutor(empresa, currentUsuario, itemView.context, object: WebServiceGenericInterface {
             override fun callback(any: Any) {
 
-                if (any == 0) {
-                    opiniones = OpinionWrapper()
+                opiniones = if (any == 0) {
+                    OpinionWrapper()
                 } else {
-                    opiniones = any as OpinionWrapper
+                    any as OpinionWrapper
                 }
 
                 val fragmento = PerfilFragment.newInstance(empresa, currentUsuario)

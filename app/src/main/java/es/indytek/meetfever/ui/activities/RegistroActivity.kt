@@ -3,7 +3,6 @@ package es.indytek.meetfever.ui.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PatternMatcher
 import android.util.Log
 import android.util.Patterns
 import android.widget.ArrayAdapter
@@ -12,7 +11,6 @@ import es.indytek.meetfever.R
 import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
 import es.indytek.meetfever.data.webservice.WebServiceSexo
 import es.indytek.meetfever.data.webservice.WebServiceUsuario
-import es.indytek.meetfever.databinding.ActivityLoginBinding
 import es.indytek.meetfever.databinding.ActivityRegistroBinding
 import es.indytek.meetfever.models.empresa.Empresa
 import es.indytek.meetfever.models.persona.Persona
@@ -103,17 +101,17 @@ class RegistroActivity : AppCompatActivity() {
         val nombreSexo = binding.spinnerSexo.selectedItem.toString()
 
         if (correo.isEmpty() || nickname.isEmpty() || contrasena.isEmpty() || contrasena2.isEmpty()) {
-            Toast.makeText(this, "Rellena todos los campos.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.rellena), Toast.LENGTH_SHORT).show()
             return
         }
 
         if (!isCorreoElectronico(correo)) {
-            Toast.makeText(this, "El correo electrónico no es válido.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.correo_no_valido), Toast.LENGTH_SHORT).show()
             return
         }
 
         if (contrasena != contrasena2) {
-            Toast.makeText(this, "Las contraseñas no coinciden.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.contrasenas_no_coinciden), Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -129,15 +127,11 @@ class RegistroActivity : AppCompatActivity() {
         Log.d(":::","cuenta: $cuenta")
 
         WebServiceUsuario.registrarse(cuenta, this, object: WebServiceGenericInterface {
-            override fun callback(any: Any) {
-
-                if (any == 0) {
-                    // TODO ERROR
-                } else {
-                    irAInicioDeSesion()
-                    Toast.makeText(this@RegistroActivity, "Registro exitoso, inicie sesión", Toast.LENGTH_SHORT).show()
-                }
-
+            override fun callback(any: Any) = if (any == 0) {
+                // TODO ERROR
+            } else {
+                irAInicioDeSesion()
+                Toast.makeText(this@RegistroActivity, getString(R.string.registro_exitoso_inicie_sesion), Toast.LENGTH_SHORT).show()
             }
         })
 

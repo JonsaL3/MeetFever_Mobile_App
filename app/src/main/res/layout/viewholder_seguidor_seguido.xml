@@ -11,15 +11,29 @@
     android:background="@drawable/ic_background_gradient_shape_followed_following"
     >
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/foto_perfil"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
-        android:layout_gravity="center_vertical"
-        android:src="@color/design_default_color_primary"
-        app:shapeAppearance="@style/circular"
+    <FrameLayout
         android:layout_marginStart="30dp"
-        />
+        android:layout_gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/foto_perfil"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:src="@color/design_default_color_primary"
+            app:shapeAppearance="@style/circular"
+            />
+
+        <ImageView
+            android:id="@+id/famous_edges"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:src="@drawable/ic_famous_edges"
+            android:visibility="gone"
+            />
+
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,7 +50,7 @@
             tools:text="Auron Sasel"
             android:textColor="@color/white"
             android:textSize="20sp"
-            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"
             />
 
         <View

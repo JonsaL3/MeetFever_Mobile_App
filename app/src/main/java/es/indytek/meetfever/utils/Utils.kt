@@ -429,7 +429,7 @@ object Utils {
     fun terminarCargaOnError(loadningAnimation: View, noDataFoundTextView: View) {
 
         Animations.ocultarVistaSuavemente(loadningAnimation, 500)
-        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+        Handler(Looper.getMainLooper()).postDelayed({
             noDataFoundTextView.visibility = View.VISIBLE
             Animations.mostrarVistaSuavemente(noDataFoundTextView,500)
 
@@ -439,6 +439,11 @@ object Utils {
     fun colorIsConsideredDark(color: Int): Boolean {
         val darkness = 1 - (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255
         return darkness >= 0.5
+    }
+
+    // aqui deberia contar el numero de seguidores pero por la prueba simplemente badbunny será famoso
+    fun isFamous(usuario: Usuario): Boolean {
+        return usuario.correo == "badbunny@gmail.com"
     }
 
 }

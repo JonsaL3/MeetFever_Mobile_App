@@ -2,13 +2,9 @@ package es.indytek.meetfever.data.webservice
 
 import android.content.Context
 import android.util.Log
-import com.google.gson.GsonBuilder
-import es.indytek.meetfever.models.empresa.EmpresaWrapper
-import es.indytek.meetfever.models.typeAdapters.LocalDateTimeTypeAdapter
 import es.indytek.meetfever.utils.Utils
 import org.json.JSONObject
 import java.lang.Exception
-import java.time.LocalDateTime
 
 object WebServiceMeGusta {
 
