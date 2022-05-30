@@ -46,6 +46,9 @@
     <string name="dialog_accept">Aceptar</string>
     <string name="dialog_cancel">Cancelar</string>
     <string name="default_loading_text">Cargando…</string>
+    <string name="dialog_hurray">¡Felicidades!</string>
+    <string name="dialog_started_to_follow">Has empezado a seguir a este usuario</string>
+    <string name="back_to_home">Volver a inicio</string>
 
     <!--  NONE MESSAGES  -->
     <string name="top_locales_none">No se encontraron Top locales.</string>

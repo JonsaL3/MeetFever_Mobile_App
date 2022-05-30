@@ -14,6 +14,7 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -243,11 +244,21 @@ object Utils {
         ocultarBotonAjustes(activity)
         ocultarBottomBar(activity)
         ocultarFabSpeedDial(activity)
+        ocultarBotonMenu(activity)
+        ocultarTextoBienvenida(activity)
     }
     fun mostrarElementosUI(activity: Activity) {
         mostrarBotonAjustes(activity)
         mostrarBottomBar(activity)
         mostrarFabSpeedDial(activity)
+        mostrarBotonMenu(activity)
+        mostrarTextoBienvenida(activity)
+    }
+
+    fun transparentThemeOn(activity: Activity){
+        val god = activity.findViewById<ConstraintLayout>(R.id.god)
+
+        god.fitsSystemWindows=true
     }
 
     fun mostrarBottomBar(activity: Activity) {
@@ -309,6 +320,64 @@ object Utils {
 
     fun ocultarBotonAjustes(activity: Activity) {
         val imageView = activity.findViewById<ImageView>(R.id.ir_a_ajustes)
+
+        if(imageView.visibility == View.VISIBLE) {
+
+            Animations.ocultarVistaSuavemente(imageView)
+
+            imageView.visibility = View.GONE
+
+        }
+
+    }
+
+    fun mostrarBotonMenu(activity: Activity) {
+        val imageView = activity.findViewById<ImageView>(R.id.openDrawer)
+
+        if(imageView.visibility == View.GONE) {
+
+            Handler(Looper.getMainLooper()).postDelayed(Runnable {
+
+                imageView.visibility = View.VISIBLE
+
+                Animations.mostrarVistaSuavemente(imageView)
+
+            },500)
+
+        }
+    }
+
+    fun ocultarBotonMenu(activity: Activity) {
+        val imageView = activity.findViewById<ImageView>(R.id.openDrawer)
+
+        if(imageView.visibility == View.VISIBLE) {
+
+            Animations.ocultarVistaSuavemente(imageView)
+
+            imageView.visibility = View.GONE
+
+        }
+
+    }
+
+    fun mostrarTextoBienvenida(activity: Activity) {
+        val imageView = activity.findViewById<TextView>(R.id.textoBuenosDias)
+
+        if(imageView.visibility == View.GONE) {
+
+            Handler(Looper.getMainLooper()).postDelayed(Runnable {
+
+                imageView.visibility = View.VISIBLE
+
+                Animations.mostrarVistaSuavemente(imageView)
+
+            },500)
+
+        }
+    }
+
+    fun ocultarTextoBienvenida(activity: Activity) {
+        val imageView = activity.findViewById<TextView>(R.id.textoBuenosDias)
 
         if(imageView.visibility == View.VISIBLE) {
 
