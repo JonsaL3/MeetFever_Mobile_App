@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources  xmlns:tools="http://schemas.android.com/tools">
 
     <style name="roundTopCorners" parent="">
         <item name="cornerFamily">rounded</item>
@@ -33,6 +33,26 @@
     <!-- para hacer una imagen shapable totalmente circular -->
     <style name="circular" parent="">
         <item name="cornerSize">50%</item>
+    </style>
+
+    <!-- QR theme. -->
+    <style name="Theme.MeetFeverQR" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/seminegro_fondo</item>
+        <item name="colorPrimaryVariant">@color/negro_fondo</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/rosa_meet</item>
+        <item name="colorSecondaryVariant">@color/azul_meet</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+        <item name="android:navigationBarColor">@color/negro_fondo</item>
+
+        <!--    Hago el que el tema tenga transparencias    -->
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
 </resources>

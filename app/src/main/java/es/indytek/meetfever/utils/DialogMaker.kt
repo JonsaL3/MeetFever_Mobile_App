@@ -5,11 +5,19 @@
 
 package es.indytek.meetfever.utils
 
+import android.app.ActionBar
 import android.app.Dialog
 import android.content.Context
+import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.marginBottom
+import com.airbnb.lottie.Lottie
+import com.airbnb.lottie.LottieAnimationView
+import com.airbnb.lottie.LottieDrawable
+import com.bumptech.glide.load.engine.Resource
 import es.indytek.meetfever.R
 
 
@@ -37,6 +45,10 @@ class DialogMaker(
     //Info layout minimum components:
     //Tittle (textView -> ID: text_info_title), body (textView -> ID: text_info_message), acceptBtn (Button -> ID: btn_info_accept).
     private val infoLayout = R.layout.info_dialog
+
+    //Info layout minimum components:
+    //Lottie (textView -> ID: lottie),Tittle (textView -> ID: text_info_title), body (textView -> ID: text_info_message), acceptBtn (Button -> ID: btn_info_accept).
+    private val infoLayoutWithLottie = R.layout.info_dialog_with_lottie
 
     //Info layout minimum components:
     //Tittle (textView -> ID: text_info_message).
@@ -154,6 +166,43 @@ class DialogMaker(
 
     }
 
+    //Info Dialog with accept button custom action and custom Lottie:
+    fun infoCustomAcceptWithLottie(
+        customAcceptText: String = acceptText,
+        customAccept: DialogAcceptCustomActionInterface
+    ) {
+
+        //Dialog
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window?.setBackgroundDrawableResource(background)
+        dialog.setCancelable(false)
+
+        //Added layout to the dialog.
+        dialog.setContentView(R.layout.info_dialog_with_lottie)
+
+        //Added title to the dialog.
+        val titleText = dialog.findViewById(R.id.text_info_title) as TextView
+        titleText.text = title
+
+        //Added message to the dialog.
+        val messageText = dialog.findViewById(R.id.text_info_message) as TextView
+        messageText.text = message
+
+        val acceptBtn = dialog.findViewById(R.id.btn_info_accept) as Button
+        acceptBtn.text = customAcceptText
+
+        acceptBtn.setOnClickListener {
+
+            customAccept.acceptButton()
+
+            dialog.dismiss()
+
+        }
+
+        dialog.show()
+
+    }
     //Warning Dialog with no custom actions:
 
     fun warningNoCustomActions(

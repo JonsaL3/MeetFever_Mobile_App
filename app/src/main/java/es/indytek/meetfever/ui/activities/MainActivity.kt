@@ -1,6 +1,7 @@
 package es.indytek.meetfever.ui.activities
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +12,7 @@ import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import com.bumptech.glide.Glide
+import com.google.gson.Gson
 import es.indytek.meetfever.R
 import es.indytek.meetfever.databinding.ActivityMainBinding
 import es.indytek.meetfever.models.usuario.Usuario
@@ -143,7 +145,10 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         R.id.meet_scanner -> {
-                            cargarMeetScanner()
+                            val intent = Intent(this@MainActivity, QrActivity::class.java)
+                            intent.putExtra("user", Gson().toJson(currentUsuario))
+                            startActivity(intent)
+                            //cargarMeetScanner()
                         }
                     }
 

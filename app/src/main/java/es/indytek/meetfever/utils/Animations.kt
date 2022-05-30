@@ -1,13 +1,18 @@
 package es.indytek.meetfever.utils
 
 import android.animation.ValueAnimator
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import es.indytek.meetfever.R
+import es.indytek.meetfever.R.anim.rotate
+
 
 
 object Animations {
@@ -106,6 +111,15 @@ object Animations {
 
         anim.duration = duration
         anim.start()
+    }
+
+    fun rotarViewIndefinidamente(view: View, context: Context){
+
+        //rotate animation infinite
+        val rotate = AnimationUtils.loadAnimation(context, R.anim.rotate)
+        view.startAnimation(rotate)
+
+
     }
 
 }
