@@ -108,6 +108,10 @@ class PerfilFragment : Fragment() {
 
         } catch (e: WriterException) {
             e.printStackTrace()
+            Utils.enviarRegistroDeErrorABBDD(
+                context = requireContext(),
+                stacktrace = e.message.toString(),
+            )
         }
 
     }
@@ -278,19 +282,13 @@ class PerfilFragment : Fragment() {
 
                 } else {
                     val opiniones = any as OpinionWrapper
-                    try {
-
-                        Utils.terminarCarga(binding.loadingAnimationOpinionesPerfil){
-                            Animations.pintarLinearRecyclerViewSuavemente(
-                                linearLayoutManager = LinearLayoutManager(requireContext()),
-                                recyclerView = binding.opinionesUsuarioRecycler,
-                                adapter = OpinionRecyclerViewAdapter(opiniones, PerfilFragment::class.java, currentUsuario),
-                                orientation = LinearLayoutManager.VERTICAL,
-                            )
-                        }
-
-                    } catch (e: IllegalStateException) {
-                        Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
+                    Utils.terminarCarga(requireContext(), binding.loadingAnimationOpinionesPerfil){
+                        Animations.pintarLinearRecyclerViewSuavemente(
+                            linearLayoutManager = LinearLayoutManager(requireContext()),
+                            recyclerView = binding.opinionesUsuarioRecycler,
+                            adapter = OpinionRecyclerViewAdapter(opiniones, PerfilFragment::class.java, currentUsuario),
+                            orientation = LinearLayoutManager.VERTICAL,
+                        )
                     }
                 }
 

@@ -242,6 +242,10 @@ class RedactarFeverFragment : Fragment() {
 
                     } catch(e: Exception) {
                         Log.e(":::", "No se puede buscar una empresa vacia")
+                        Utils.enviarRegistroDeErrorABBDD(
+                            context = requireContext(),
+                            stacktrace = e.message.toString(),
+                        )
                     }
 
                     //si el texto contiene ese patron, hará la busqueda.
@@ -452,6 +456,10 @@ class RedactarFeverFragment : Fragment() {
 
                     } catch (e: Exception) {
                         e.printStackTrace()
+                        Utils.enviarRegistroDeErrorABBDD(
+                            context = requireContext(),
+                            stacktrace = e.message.toString(),
+                        )
                     }
 
 

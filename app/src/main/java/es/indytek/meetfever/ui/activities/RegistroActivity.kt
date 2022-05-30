@@ -98,7 +98,9 @@ class RegistroActivity : AppCompatActivity() {
         val contrasena = binding.inputContrasenaRegistro.text.toString()
         val contrasena2 = binding.inputContrasena2Registro.text.toString()
         val isEmpresa = binding.checkEmpresa.isChecked
-        val sexo: Sexo? = binding.spinnerSexo.selectedItem as Sexo?
+
+        val idSexo = binding.spinnerSexo.selectedItemPosition // TODO LA ID PUEDE NO COINCIDIR CON LA POSICION
+        val nombreSexo = binding.spinnerSexo.selectedItem.toString()
 
         if (correo.isEmpty() || nickname.isEmpty() || contrasena.isEmpty() || contrasena2.isEmpty()) {
             Toast.makeText(this, "Rellena todos los campos.", Toast.LENGTH_SHORT).show()
@@ -115,15 +117,11 @@ class RegistroActivity : AppCompatActivity() {
             return
         }
 
-        if (!isEmpresa && sexo == null) {
-            Toast.makeText(this, "Selecciona un sexo.", Toast.LENGTH_SHORT).show()
-            return
-        }
-
         cuenta = if (isEmpresa) {
-            Empresa(correo, contrasena, nickname)
+            Empresa(correo, CreateMD5().create(contrasena), nickname)
         } else {
-            Persona(correo, contrasena, nickname, sexo!!)
+            val sexo = Sexo(idSexo + 1, nombreSexo)
+            Persona(correo, CreateMD5().create(contrasena), nickname, sexo)
         }
 
         cuenta.contrasena = CreateMD5().create(cuenta.contrasena)

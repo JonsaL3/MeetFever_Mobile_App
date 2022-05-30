@@ -31,6 +31,10 @@ class IconoViewHolder(
             Utils.putBase64ImageIntoImageView(binding.imagenEmoticono, objeto.emoji, view.context)
         } catch (e: IllegalArgumentException) {
             Log.e(":::", "Parece que alguien dejó un emoji de prueba que no se puede utilizar....")
+            Utils.enviarRegistroDeErrorABBDD(
+                context = view.context,
+                stacktrace = e.message.toString(),
+            )
         }
 
         if (objeto.isSelected) {

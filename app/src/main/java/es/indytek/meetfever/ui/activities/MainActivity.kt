@@ -3,6 +3,8 @@ package es.indytek.meetfever.ui.activities
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -22,6 +24,7 @@ import es.indytek.meetfever.ui.fragments.secondaryfragments.perfil.PerfilFragmen
 import es.indytek.meetfever.ui.fragments.secondaryfragments.usersettings.UserSettingsFragment
 import es.indytek.meetfever.ui.fragments.utilityfragments.BarcodeFragment
 import es.indytek.meetfever.utils.Animations
+import es.indytek.meetfever.utils.Constantes
 import es.indytek.meetfever.utils.Utils
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter
 import nl.joery.animatedbottombar.AnimatedBottomBar
@@ -68,7 +71,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
     private fun cargarListeners() {
         binding.irAAjustes.setOnClickListener {
             val fragmento = UserSettingsFragment.newInstance(currentUsuario)
@@ -111,12 +113,15 @@ class MainActivity : AppCompatActivity() {
             ) {
                  when (newIndex) {
                     2 -> {
+                        desactivarBottomBarTemporalmente()
                         cargarTrendingsFragment()
                     }
                     0 -> {
+                        desactivarBottomBarTemporalmente()
                         cargarPeopleFragment()
                     }
                     else -> {
+                        desactivarBottomBarTemporalmente()
                         cargarExplorerFragment()
                     }
                 }
@@ -124,6 +129,23 @@ class MainActivity : AppCompatActivity() {
 
         })
 
+    }
+
+    private fun desactivarBottomBarTemporalmente() {
+        desactivarBottomBar()
+        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+            reactivarBottomBar()
+        },Constantes.TIEMPO_DE_ANIMACIONES * 2)
+    }
+
+    private fun desactivarBottomBar() {
+        binding.bottomBar.setTabEnabledAt(0, false)
+        binding.bottomBar.setTabEnabledAt(1, false)
+    }
+
+    private fun reactivarBottomBar() {
+        binding.bottomBar.setTabEnabledAt(0, true)
+        binding.bottomBar.setTabEnabledAt(1, true)
     }
 
     // los botones extra floating
@@ -190,6 +212,7 @@ class MainActivity : AppCompatActivity() {
         //listeners en los items del nav y asignar los fragmentos a cda boton
 
         binding.navView.setNavigationItemSelectedListener {
+
             when(it.itemId){
 
 //                R.id.nav_invoice -> {

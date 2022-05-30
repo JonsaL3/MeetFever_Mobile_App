@@ -10,6 +10,7 @@ import es.indytek.meetfever.models.persona.PersonaWrapper
 import es.indytek.meetfever.models.typeAdapters.LocalDateTimeTypeAdapter
 import es.indytek.meetfever.models.typeAdapters.LocalDateTypeAdapter
 import es.indytek.meetfever.models.usuario.Usuario
+import es.indytek.meetfever.utils.Utils
 import org.json.JSONObject
 import java.lang.Exception
 import java.time.LocalDate
@@ -18,11 +19,12 @@ import java.time.LocalDateTime
 object WebServiceOpinion {
 
     // busco una opinion por cualquiera de sus campos
-    fun buscarOpinion(busqueda: String, context: Context, callback : WebServiceGenericInterface) {
+    fun buscarOpinion(busqueda: String, idUsuario: Int,           context: Context, callback : WebServiceGenericInterface) {
 
-        val url = "interface/api/meetfever/opinion/BUSQUEDAOPINION" // TODO URL DE ALBERTO
+        val url = "interface/api/meetfever/opinion/ObetenerOpinionGeneral"
         val jsonObject = JSONObject().apply {
-            put("busqueda", busqueda)
+            put("Palabra", busqueda)
+            put("Id_Usuario", idUsuario)
         }
 
         try {
@@ -33,7 +35,7 @@ object WebServiceOpinion {
                     if (any.toString().isNotEmpty()) {
                         // Obtengo el response
                         val opiniones = GsonBuilder()
-                            .registerTypeAdapter(LocalDate::class.java, LocalDateTypeAdapter())
+                            .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeTypeAdapter())
                             .create()
                             .fromJson(any.toString(), OpinionWrapper::class.java)
                         if (opiniones.size > 0)
@@ -49,6 +51,10 @@ object WebServiceOpinion {
 
         } catch (e: Exception) {
             e.printStackTrace()
+            Utils.enviarRegistroDeErrorABBDD(
+                context = context,
+                stacktrace = e.message.toString(),
+            )
         }
 
     }
@@ -84,6 +90,10 @@ object WebServiceOpinion {
 
         } catch (e: Exception) {
             e.printStackTrace()
+            Utils.enviarRegistroDeErrorABBDD(
+                context = context,
+                stacktrace = e.message.toString(),
+            )
         }
     }
 
@@ -120,6 +130,10 @@ object WebServiceOpinion {
 
         } catch (e: Exception) {
             e.printStackTrace()
+            Utils.enviarRegistroDeErrorABBDD(
+                context = context,
+                stacktrace = e.message.toString(),
+            )
         }
     }
 

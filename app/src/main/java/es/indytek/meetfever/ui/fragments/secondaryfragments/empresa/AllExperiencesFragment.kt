@@ -61,8 +61,7 @@ class AllExperiencesFragment : Fragment() {
     // pinto las experiencias
     private fun pintarTodasLasExperiencias() {
 
-        WebServiceExperiencia.findAllExperiencias(requireContext(), object:
-            WebServiceGenericInterface {
+        WebServiceExperiencia.findAllExperiencias(requireContext(), object: WebServiceGenericInterface {
             override fun callback(any: Any) {
 
                 if (any == 0) {
@@ -72,17 +71,12 @@ class AllExperiencesFragment : Fragment() {
 
                 } else {
                     val experiencias = any as ExperienciaWrapper
-                    try {
-
-                        Utils.terminarCarga(binding.loadingAnimation){
-                            Animations.pintarGridRecyclerViewSuavemente(
-                                gridLayoutManager = GridLayoutManager(requireContext(), 2),
-                                recyclerView = binding.recyclerAllExperiences,
-                                adapter = ExperienciaRecyclerViewAdapter(experiencias, usuario),
-                            )
-                        }
-                    } catch (e: IllegalStateException) {
-                        Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
+                    Utils.terminarCarga(requireContext(), binding.loadingAnimation) {
+                        Animations.pintarGridRecyclerViewSuavemente(
+                            gridLayoutManager = GridLayoutManager(requireContext(), 2),
+                            recyclerView = binding.recyclerAllExperiences,
+                            adapter = ExperienciaRecyclerViewAdapter(experiencias, usuario),
+                        )
                     }
                 }
 

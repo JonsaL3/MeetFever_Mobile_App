@@ -121,6 +121,10 @@ class CameraFragment : Fragment() {
                         requireActivity().supportFragmentManager.popBackStackImmediate()
                     } catch (e: IllegalStateException) {
                         e.printStackTrace()
+                        Utils.enviarRegistroDeErrorABBDD(
+                            context = requireContext(),
+                            stacktrace = e.message.toString(),
+                        )
                     }
 
                 }
@@ -154,6 +158,10 @@ class CameraFragment : Fragment() {
                 cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture)
             } catch(exc: Exception) {
                 Log.e(TAG, "Fallo en el bindeo de caso de uso.", exc)
+                Utils.enviarRegistroDeErrorABBDD(
+                    context = requireContext(),
+                    stacktrace = exc.message.toString(),
+                )
             }
 
         }, ContextCompat.getMainExecutor(contexto))

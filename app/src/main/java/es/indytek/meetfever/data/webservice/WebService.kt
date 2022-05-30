@@ -7,6 +7,7 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
 import es.indytek.meetfever.models.genericResults.DefaultResult
+import es.indytek.meetfever.utils.Utils
 import org.json.JSONObject
 
 object WebService {
@@ -45,6 +46,10 @@ object WebService {
 
         } catch (e: Exception) {
             e.printStackTrace()
+            Utils.enviarRegistroDeErrorABBDD(
+                context = context,
+                stacktrace = e.message.toString(),
+            )
         }
 
     }
@@ -81,6 +86,10 @@ object WebService {
 
         } catch (e: Exception) {
             e.printStackTrace()
+            Utils.enviarRegistroDeErrorABBDD(
+                context = context,
+                stacktrace = e.message.toString(),
+            )
         }
 
     }
@@ -119,6 +128,10 @@ object WebService {
 
         } catch (e: Exception) {
             e.printStackTrace()
+            Utils.enviarRegistroDeErrorABBDD(
+                context = context,
+                stacktrace = e.message.toString(),
+            )
         }
 
     }
