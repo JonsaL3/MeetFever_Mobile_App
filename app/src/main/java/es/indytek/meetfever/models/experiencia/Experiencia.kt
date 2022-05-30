@@ -22,6 +22,9 @@ data class Experiencia(
     @SerializedName("Precio")
     var precio: Float = 0f,
     @SerializedName("Titulo")
-    var titulo: String? = ""
+    var titulo: String? = "",
+    @SerializedName("Numero_entradas")
+    var numeroEntradas : Int = 0
+
 
 ) : Serializable

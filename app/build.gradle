@@ -82,7 +82,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     // Paypal
-    implementation 'com.paypal.sdk:paypal-android-sdk:2.14.2'
+    implementation 'com.paypal.checkout:android-sdk:0.6.2'
 
     // para la cámara
     def camerax_version = "1.1.0-beta01"

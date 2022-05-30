@@ -136,7 +136,7 @@ object WebServiceExperiencia {
 
         val url = "interface/api/meetfever/experiencia/ObtenerExperienciasPorTitulo"
         val jsonObject = JSONObject().apply {
-            put("Nick", nickname)
+            put("Titulo", nickname)
         }
 
         try {
@@ -149,7 +149,7 @@ object WebServiceExperiencia {
                         val empresa = GsonBuilder()
                             .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeTypeAdapter())
                             .create()
-                            .fromJson(any.toString(), Empresa::class.java)
+                            .fromJson(any.toString(), ExperienciaWrapper::class.java)
                         callback.callback(empresa)
                     } else
                         callback.callback(0)
