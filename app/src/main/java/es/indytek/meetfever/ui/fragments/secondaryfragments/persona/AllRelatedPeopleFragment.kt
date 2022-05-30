@@ -71,18 +71,12 @@ class AllRelatedPeopleFragment : Fragment() {
 
                 } else {
                     val personas = any as PersonaWrapper
-                    try {
-
-                        Utils.terminarCarga(binding.loadingAnimation){
-                            Animations.pintarGridRecyclerViewSuavemente(
-                                gridLayoutManager = GridLayoutManager(requireContext(), 3),
-                                recyclerView = binding.recyclerAllInfluencers,
-                                adapter = PersonaRecyclerViewAdapter(personas, usuario),
-                            )
-                        }
-
-                    } catch (e: IllegalStateException) {
-                        Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
+                    Utils.terminarCarga(requireContext(), binding.loadingAnimation){
+                        Animations.pintarGridRecyclerViewSuavemente(
+                            gridLayoutManager = GridLayoutManager(requireContext(), 3),
+                            recyclerView = binding.recyclerAllInfluencers,
+                            adapter = PersonaRecyclerViewAdapter(personas, usuario),
+                        )
                     }
                 }
 

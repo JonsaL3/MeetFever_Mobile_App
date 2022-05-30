@@ -205,7 +205,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:fontFamily="@font/montserrat_light"
-                    android:text="@string/experiencias_destacadas"
+                    android:text="@string/experiencias_encontradas"
                     android:textColor="@color/white"
                     android:textSize="22sp"
                     />
@@ -225,7 +225,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:fontFamily="@font/montserrat_light"
-                    android:text="@string/top_locales"
+                    android:text="@string/locales_encontrados"
                     android:textColor="@color/white"
                     android:textSize="22sp"
                     />

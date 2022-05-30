@@ -2,15 +2,12 @@
 package es.indytek.meetfever.ui.fragments.mainfragments
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,24 +15,18 @@ import es.indytek.meetfever.R
 import es.indytek.meetfever.data.webservice.WebServiceEmpresa
 import es.indytek.meetfever.data.webservice.WebServiceExperiencia
 import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
-import es.indytek.meetfever.data.webservice.WebServicePersona
 import es.indytek.meetfever.databinding.FragmentExplorerBinding
 import es.indytek.meetfever.models.empresa.EmpresaWrapper
 import es.indytek.meetfever.models.experiencia.ExperienciaWrapper
-import es.indytek.meetfever.models.opinion.OpinionWrapper
 import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.ui.fragments.secondaryfragments.empresa.AllEmpresasFragment
 import es.indytek.meetfever.ui.fragments.secondaryfragments.empresa.AllExperiencesFragment
 import es.indytek.meetfever.ui.recyclerviews.adapters.EmpresaRecyclerViewAdapter
 import es.indytek.meetfever.ui.recyclerviews.adapters.ExperienciaRecyclerViewAdapter
-import es.indytek.meetfever.ui.recyclerviews.adapters.OpinionRecyclerViewAdapter
 import es.indytek.meetfever.utils.Animations
-import es.indytek.meetfever.utils.DialogMaker
 import es.indytek.meetfever.utils.Utils
 import nl.joery.animatedbottombar.AnimatedBottomBar
-import java.time.LocalTime
-import java.util.stream.Collectors
-import kotlin.math.E
+import java.lang.Exception
 
 private const val ARG_PARAM1 = "usuario"
 
@@ -72,12 +63,25 @@ class ExplorerFragment : Fragment() {
         // arranco el motor de busqueda
         motorDeBusqueda()
 
+        //throw Exception("Error")
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Utils.mostrarElementosUI(requireActivity())
+
+        /*try {
+            throw Exception("Esto es una excepcion de prueba")
+        } catch (e: Exception) {
+            Log.e(":::", "Excepcion")
+            Utils.enviarRegistroDeErrorABBDD(
+                context = requireContext(),
+                stacktrace = e.message.toString(),
+            )
+        }*/
+
     }
 
     // Preparo las busquedas
@@ -111,6 +115,10 @@ class ExplorerFragment : Fragment() {
                                     )
                                 } catch (e: IllegalStateException) {
                                     Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
+                                    Utils.enviarRegistroDeErrorABBDD(
+                                        context = requireContext(),
+                                        stacktrace = e.message.toString(),
+                                    )
                                 }
                             }
 
@@ -133,6 +141,10 @@ class ExplorerFragment : Fragment() {
                                     )
                                 } catch (e: IllegalStateException) {
                                     Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
+                                    Utils.enviarRegistroDeErrorABBDD(
+                                        context = requireContext(),
+                                        stacktrace = e.message.toString(),
+                                    )
                                 }
                             }
 
@@ -203,19 +215,14 @@ class ExplorerFragment : Fragment() {
                 else {
                     // Una vez encontradas las pinto suavemente
                     val experiencias = any as ExperienciaWrapper
-                    try {
-
-                        Utils.terminarCarga(binding.loadingAnimationExperienciasDestacadas) {
-                            Animations.pintarGridRecyclerViewSuavemente(
-                                gridLayoutManager = GridLayoutManager(requireContext(), 2),
-                                recyclerView = binding.experienciaDestacadasRecyclerView,
-                                adapter = ExperienciaRecyclerViewAdapter(experiencias.sortedBy { it.titulo }, currentUsuario),
-                            )
-                        }
-
-                    } catch (e: IllegalStateException) {
-                        Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
+                    Utils.terminarCarga(requireContext(), binding.loadingAnimationExperienciasDestacadas) {
+                        Animations.pintarGridRecyclerViewSuavemente(
+                            gridLayoutManager = GridLayoutManager(requireContext(), 2),
+                            recyclerView = binding.experienciaDestacadasRecyclerView,
+                            adapter = ExperienciaRecyclerViewAdapter(experiencias.sortedBy { it.titulo }, currentUsuario),
+                        )
                     }
+
                 }
 
             }
@@ -231,27 +238,18 @@ class ExplorerFragment : Fragment() {
             override fun callback(any: Any) {
                 if (any == 0) {
                     // TODO ERROR
-
-                        Utils.terminarCargaOnError(binding.loadingAnimationTopLocales, binding.localesTrendingTextoNone)
-
+                    Utils.terminarCargaOnError(binding.loadingAnimationTopLocales, binding.localesTrendingTextoNone)
                 }
                 else {
                     // Una vez encontradas las pinto suavemente
                     val empresas = any as EmpresaWrapper
-                    try {
-
-                        Utils.terminarCarga(binding.loadingAnimationTopLocales){
-                            Animations.pintarLinearRecyclerViewSuavemente(
-                                linearLayoutManager = LinearLayoutManager(requireContext()),
-                                recyclerView = binding.localesTrendingRecycler,
-                                adapter = EmpresaRecyclerViewAdapter(empresas, currentUsuario),
-                                orientation = LinearLayoutManager.HORIZONTAL,
-                            )
-                        }
-
-
-                    } catch (e: Exception) {
-                        Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
+                    Utils.terminarCarga(requireContext(), binding.loadingAnimationTopLocales){
+                        Animations.pintarLinearRecyclerViewSuavemente(
+                            linearLayoutManager = LinearLayoutManager(requireContext()),
+                            recyclerView = binding.localesTrendingRecycler,
+                            adapter = EmpresaRecyclerViewAdapter(empresas, currentUsuario),
+                            orientation = LinearLayoutManager.HORIZONTAL,
+                        )
                     }
                 }
             }

@@ -344,6 +344,10 @@ class UserSettingsFragment : Fragment() {
                     // TODO USAR TARJETAS PRO DE JULIO
                     Toast.makeText(requireContext(), "Error al cargar la imagen...", Toast.LENGTH_SHORT).show()
                     Utils.pintarFotoDePerfil(currentUsuario, binding.fotoPerfil, requireContext())
+                    Utils.enviarRegistroDeErrorABBDD(
+                        context = requireContext(),
+                        stacktrace = e.message.toString(),
+                    )
                 }
 
             }

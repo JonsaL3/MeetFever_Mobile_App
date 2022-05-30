@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.activities.LoginActivity"
     android:background="@color/negro_fondo"
+    android:clipToPadding="false"
     >
 
     <ScrollView
@@ -22,7 +23,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:scrollbars="none"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,7 +50,8 @@
                 android:gravity="center"
                 android:text="@string/meet_fever_inicia_sesi_n"
                 android:textColor="@color/white"
-                android:textSize="25sp" />
+                android:textSize="25sp"
+                />
 
             <EditText
                 android:id="@+id/inputEmail"
@@ -65,6 +68,7 @@
                 android:layout_marginTop="40dp"
                 android:textColor="@color/gris_textos"
                 android:textColorHint="@color/gris_textos"
+                android:elevation="20dp"
                 />
 
             <EditText
@@ -82,6 +86,7 @@
                 android:textColorHint="@color/gris_textos"
                 android:textSize="15sp"
                 android:layout_marginTop="40dp"
+
                 />
 
             <androidx.appcompat.widget.AppCompatButton

@@ -92,6 +92,10 @@ class FollowedFollowingFragment : Fragment() {
             )
         } catch (e: IllegalStateException) {
             Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
+            Utils.enviarRegistroDeErrorABBDD(
+                context = requireContext(),
+                stacktrace = e.message.toString(),
+            )
         }
 
     }

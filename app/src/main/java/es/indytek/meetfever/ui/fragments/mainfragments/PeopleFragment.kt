@@ -94,7 +94,7 @@ class PeopleFragment : Fragment() {
                                 //ocultarContenido()
                                 try {
 
-                                    Utils.terminarCarga(binding.loadingAnimationPersonasQueQuizasConoczcas){
+                                    Utils.terminarCarga(requireContext(), binding.loadingAnimationPersonasQueQuizasConoczcas){
                                         Animations.pintarGridRecyclerViewSuavemente(
                                             gridLayoutManager = GridLayoutManager(requireContext(), 3),
                                             recyclerView = binding.busquedaPersonasRecyclerView,
@@ -104,6 +104,10 @@ class PeopleFragment : Fragment() {
 
                                 } catch (e: IllegalStateException) {
                                     Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
+                                    Utils.enviarRegistroDeErrorABBDD(
+                                        context = requireContext(),
+                                        stacktrace = e.message.toString(),
+                                    )
                                 }
                             }
 
@@ -122,23 +126,15 @@ class PeopleFragment : Fragment() {
     private fun ocultarContenido() {
         if (!contenidoOculto) {
             contenidoOculto = true
-            Animations.ocultarVistaSuavemente(binding.localesTrendingTexto)
-            Animations.ocultarVistaSuavemente(binding.topPersonasRecyclerView)
-            Animations.ocultarVistaSuavemente(binding.personasQueQuizasConozcasRecyclerView)
-            Animations.ocultarVistaSuavemente(binding.personasQueQuizasConozcasTexto)
-
-            Animations.mostrarVistaSuavemente(binding.busquedaPersonasRecyclerView)
+            Animations.ocultarVistaSuavemente(binding.defaultPeople)
+            Animations.mostrarVistaSuavemente(binding.customPeople)
         }
     }
 
     private fun mostrarContenido() {
         contenidoOculto = false
-        Animations.mostrarVistaSuavemente(binding.localesTrendingTexto)
-        Animations.mostrarVistaSuavemente(binding.topPersonasRecyclerView)
-        Animations.mostrarVistaSuavemente(binding.personasQueQuizasConozcasRecyclerView)
-        Animations.mostrarVistaSuavemente(binding.personasQueQuizasConozcasTexto)
-
-        Animations.ocultarVistaSuavemente(binding.busquedaPersonasRecyclerView)
+        Animations.ocultarVistaSuavemente(binding.customPeople)
+        Animations.mostrarVistaSuavemente(binding.defaultPeople)
     }
 
     // listeners que necesito
@@ -180,19 +176,13 @@ class PeopleFragment : Fragment() {
 
                 } else {
                     val personas = any as PersonaWrapper
-                    try {
-
-                        Utils.terminarCarga(binding.loadingAnimationTopInfluencers){
-                            Animations.pintarLinearRecyclerViewSuavemente(
-                                linearLayoutManager = LinearLayoutManager(requireContext()),
-                                recyclerView = binding.topPersonasRecyclerView,
-                                adapter = PersonaRecyclerViewAdapter(personas, currentUsuario),
-                                orientation = LinearLayoutManager.HORIZONTAL,
-                            )
-                        }
-
-                    } catch (e: IllegalStateException) {
-                        Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
+                    Utils.terminarCarga(requireContext(), binding.loadingAnimationTopInfluencers){
+                        Animations.pintarLinearRecyclerViewSuavemente(
+                            linearLayoutManager = LinearLayoutManager(requireContext()),
+                            recyclerView = binding.topPersonasRecyclerView,
+                            adapter = PersonaRecyclerViewAdapter(personas, currentUsuario),
+                            orientation = LinearLayoutManager.HORIZONTAL,
+                        )
                     }
                 }
 
@@ -209,13 +199,11 @@ class PeopleFragment : Fragment() {
 
                 if (any == 0) {
                     // TODO ERROR
-
-                        Utils.terminarCargaOnError(binding.loadingAnimationPersonasQueQuizasConoczcas, binding.personasQueNone)
-
+                    Utils.terminarCargaOnError(binding.loadingAnimationPersonasQueQuizasConoczcas, binding.personasQueNone)
                 }
                 else {
                     val personas = any as PersonaWrapper
-                    Utils.terminarCarga(binding.loadingAnimationPersonasQueQuizasConoczcas) {
+                    Utils.terminarCarga(requireContext(), binding.loadingAnimationPersonasQueQuizasConoczcas) {
                         Animations.pintarLinearRecyclerViewSuavemente(
                             linearLayoutManager = LinearLayoutManager(requireContext()),
                             recyclerView = binding.personasQueQuizasConozcasRecyclerView,

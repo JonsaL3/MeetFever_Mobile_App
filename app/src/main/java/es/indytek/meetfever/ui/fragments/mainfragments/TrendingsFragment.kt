@@ -73,7 +73,7 @@ class TrendingsFragment : Fragment() {
                     mostrarContenido()
                 } else {
                     ocultarContenido()
-                    WebServiceOpinion.buscarOpinion(s.toString(), requireContext(), object: WebServiceGenericInterface {
+                    WebServiceOpinion.buscarOpinion(s.toString(), currentUsuario.id, requireContext(), object: WebServiceGenericInterface {
                         override fun callback(any: Any) {
 
                             if (any == 0) {
@@ -90,6 +90,10 @@ class TrendingsFragment : Fragment() {
                                     )
                                 } catch (e: IllegalStateException) {
                                     Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
+                                    Utils.enviarRegistroDeErrorABBDD(
+                                        context = requireContext(),
+                                        stacktrace = e.message.toString(),
+                                    )
                                 }
                             }
 
@@ -108,19 +112,15 @@ class TrendingsFragment : Fragment() {
     private fun ocultarContenido() {
         if (!contenidoOculto) {
             contenidoOculto = true
-            Animations.ocultarVistaSuavemente(binding.feversValoradosTexto)
-            Animations.ocultarVistaSuavemente(binding.topOpinionesRecycler)
-
-            Animations.mostrarVistaSuavemente(binding.busquedaOpinionesRecyclerView)
+            Animations.mostrarVistaSuavemente(binding.opinionesCustom)
+            Animations.ocultarVistaSuavemente(binding.opinionesDefault)
         }
     }
 
     private fun mostrarContenido() {
         contenidoOculto = false
-        Animations.mostrarVistaSuavemente(binding.feversValoradosTexto)
-        Animations.mostrarVistaSuavemente(binding.topOpinionesRecycler)
-
-        Animations.ocultarVistaSuavemente(binding.busquedaOpinionesRecyclerView)
+        Animations.mostrarVistaSuavemente(binding.opinionesDefault)
+        Animations.ocultarVistaSuavemente(binding.opinionesCustom)
     }
 
     // esta funcion llama a todas las funciones de dibujado
@@ -145,19 +145,13 @@ class TrendingsFragment : Fragment() {
                     top100OpinionesMasGustadas24H.forEach {
                         Log.d(":::", it.numeroLikes.toString() + " " + it.like)
                     }
-                    try {
-
-                        Utils.terminarCarga(binding.loadingAnimationOpiniones){
-                            Animations.pintarLinearRecyclerViewSuavemente(
-                                linearLayoutManager = LinearLayoutManager(requireContext()),
-                                recyclerView = binding.topOpinionesRecycler,
-                                adapter = OpinionRecyclerViewAdapter(top100OpinionesMasGustadas24H, TrendingsFragment::class.java, currentUsuario),
-                                orientation = LinearLayoutManager.VERTICAL,
-                            )
-                        }
-
-                    } catch (e: IllegalStateException) {
-                        Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
+                    Utils.terminarCarga(requireContext(), binding.loadingAnimationOpiniones){
+                        Animations.pintarLinearRecyclerViewSuavemente(
+                            linearLayoutManager = LinearLayoutManager(requireContext()),
+                            recyclerView = binding.topOpinionesRecycler,
+                            adapter = OpinionRecyclerViewAdapter(top100OpinionesMasGustadas24H, TrendingsFragment::class.java, currentUsuario),
+                            orientation = LinearLayoutManager.VERTICAL,
+                        )
                     }
                 }
 

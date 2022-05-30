@@ -3,22 +3,25 @@ package es.indytek.meetfever.data.webservice
 import android.content.Context
 import android.util.Log
 import com.google.gson.GsonBuilder
+import es.indytek.meetfever.models.empresa.Empresa
 import es.indytek.meetfever.models.empresa.EmpresaWrapper
 import es.indytek.meetfever.models.typeAdapters.LocalDateTimeTypeAdapter
+import es.indytek.meetfever.models.typeAdapters.LocalDateTypeAdapter
 import es.indytek.meetfever.utils.Utils
 import org.json.JSONObject
 import java.lang.Exception
+import java.time.LocalDate
 import java.time.LocalDateTime
 
-object WebServiceMeGusta {
+object WebServiceRegistroErrores {
 
-    // si le he dado me gusta y le vuelvo a dar me lo quita y viceversa
-    fun darMeGustaOQuitarlo(idOpinion: Int, idUsuario: Int, context: Context, callback : WebServiceGenericInterface) {
+    // Enviar error a la bbdd
+    fun enviarError(stacktrace: String, appFuente: Int, context: Context, callback : WebServiceGenericInterface) {
 
-        val url = "interface/api/meetfever/MeGusta/DarMeGusta"
+        val url = "interface/api/meetfever/registroerrorcontroler/InsertarRegistroDeError"
         val jsonObject = JSONObject().apply {
-            put("Id_Opinion", idOpinion)
-            put("Id_Usuario", idUsuario)
+            put("Excepcion", stacktrace)
+            put("Aplicacion_Fuente", appFuente)
         }
 
         try {
@@ -26,13 +29,10 @@ object WebServiceMeGusta {
             WebService.processRequestPost(context, url, jsonObject, object: WebServiceGenericInterface {
                 override fun callback(any: Any) {
 
-                    Log.d(":::", any.toString())
-
                     if (any.toString().isNotEmpty()) {
                         callback.callback(any)
-                    } else {
+                    } else
                         callback.callback(0)
-                    }
 
                 }
             })

@@ -46,14 +46,14 @@ class OpinionViewHolder(
 
                 val color = Utils.getDominantColorInImageFromBase64(it)
 
-                if (color == Color.BLACK) { // puede ocurrir que el base 64 este mal formado, por lo que devolverá negro y arruinará la targeta
-                    binding.opinionContainer.backgroundTintList = ColorStateList.valueOf(Color.WHITE)
+                if (Utils.colorIsConsideredDark(color)) { // puede ocurrir que el base 64 este mal formado, por lo que devolverá negro y arruinará la targeta
+                    binding.opinionContainer.backgroundTintList = ColorStateList.valueOf(Color.GRAY)
                 } else {
                     binding.opinionContainer.backgroundTintList = ColorStateList.valueOf(color)
                 }
 
             }?: kotlin.run { // si no tiene foto lo pongo de blanco
-                binding.opinionContainer.backgroundTintList = ColorStateList.valueOf(Color.WHITE)
+                binding.opinionContainer.backgroundTintList = ColorStateList.valueOf(Color.GRAY)
             }
         }
 
@@ -67,6 +67,10 @@ class OpinionViewHolder(
                 Utils.putBase64ImageIntoImageView(binding.emojiOpinion, it, itemView.context)
             } catch (e: IllegalArgumentException) {
                 Log.e(":::", "Parece que alguien se dejo el emoji de prueba puesto en la opinión")
+                Utils.enviarRegistroDeErrorABBDD(
+                    context = view.context,
+                    stacktrace = e.message.toString(),
+                )
             }
         }
 
