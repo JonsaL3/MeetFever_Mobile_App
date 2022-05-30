@@ -5,8 +5,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.media.Image
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Handler
@@ -14,26 +12,22 @@ import android.os.Looper
 import android.util.Base64
 import android.util.Log
 import android.view.View
-import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.core.view.marginTop
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.palette.graphics.Palette
-import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import es.indytek.meetfever.R
+import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
+import es.indytek.meetfever.data.webservice.WebServiceRegistroErrores
 import es.indytek.meetfever.models.empresa.Empresa
-import es.indytek.meetfever.models.persona.Persona
 import es.indytek.meetfever.models.usuario.Usuario
-import es.indytek.meetfever.ui.recyclerviews.adapters.ExperienciaRecyclerViewAdapter
 import io.github.yavski.fabspeeddial.FabSpeedDial
 import nl.joery.animatedbottombar.AnimatedBottomBar
 import java.io.ByteArrayInputStream
@@ -233,10 +227,14 @@ object Utils {
     fun cambiarDeFragmentoGuardandoElAnterior(
         fragmentManager: FragmentManager,
         fragment: Fragment,
-        tag: String,
+        tag: String = "fragAnterior",
         container: Int
     ) {
         val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.setCustomAnimations(
+            R.anim.anim_fade_in,
+            R.anim.anim_fade_out,
+        )
         fragmentTransaction.replace(container, fragment, tag)
         fragmentTransaction.addToBackStack(tag)
         fragmentTransaction.commit()
@@ -391,7 +389,7 @@ object Utils {
 
     }
 
-    fun terminarCarga(loadningAnimation: View, acction: () -> Unit) {
+    fun terminarCarga(context: Context, loadningAnimation: View, acction: () -> Unit) {
 
         Animations.ocultarVistaSuavemente(loadningAnimation)
 
@@ -403,9 +401,29 @@ object Utils {
                 acction()
             } catch (e: IllegalStateException) {
                 Log.e(":::", "¿Tienes un movil o una tostadora? No le dió tiempo a cargar al context")
+                enviarRegistroDeErrorABBDD(
+                    context = context,
+                    stacktrace = e.message.toString(),
+                )
             }
 
         },500)
+    }
+
+    fun enviarRegistroDeErrorABBDD(stacktrace: String, appFuente: Int = 0, context: Context) {
+
+        WebServiceRegistroErrores.enviarError(stacktrace, appFuente, context, object: WebServiceGenericInterface {
+            override fun callback(any: Any) {
+
+                if (any == 0) { // TODO por algun motivo llega un 0 a veces pero se inserta igualmente
+                    Log.e(":::", "No se pudo enviar el error al servidor.")
+                } else {
+                    Log.d(":::", "Log enviado correctamente a la base de datos.")
+                }
+
+            }
+        })
+
     }
 
     fun terminarCargaOnError(loadningAnimation: View, noDataFoundTextView: View) {
@@ -416,6 +434,11 @@ object Utils {
             Animations.mostrarVistaSuavemente(noDataFoundTextView,500)
 
         },500)
+    }
+
+    fun colorIsConsideredDark(color: Int): Boolean {
+        val darkness = 1 - (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255
+        return darkness >= 0.5
     }
 
 }

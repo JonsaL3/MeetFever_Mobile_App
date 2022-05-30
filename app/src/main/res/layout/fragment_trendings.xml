@@ -72,57 +72,97 @@
 
             </FrameLayout>
 
-            <TextView
-                android:id="@+id/fevers_valorados_texto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:fontFamily="@font/montserrat_light"
-                android:text="@string/feevers_mas_valorados_del_dia"
-                android:textColor="@color/white"
-                android:textSize="22sp"
-                android:layout_marginTop="-10dp"
-                android:layout_marginBottom="5dp"
-                />
+           <LinearLayout
+               android:id="@+id/opiniones_default"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/opinionesNone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:fontFamily="@font/montserrat_light"
-                android:text="@string/feevers_mas_valorados_del_dia_none"
-                android:textColor="@color/gris_textos"
-                android:textSize="15sp"
-                android:visibility="gone"
-                />
+               <TextView
+                   android:id="@+id/fevers_valorados_texto"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_gravity="center_horizontal"
+                   android:fontFamily="@font/montserrat_light"
+                   android:text="@string/feevers_mas_valorados_del_dia"
+                   android:textColor="@color/white"
+                   android:textSize="22sp"
+                   android:layout_marginTop="-10dp"
+                   android:layout_marginBottom="5dp"
+                   />
 
-            <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/loadingAnimationOpiniones"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                app:lottie_rawRes="@raw/loading_animation_thin"
-                app:lottie_autoPlay="true"
-                app:lottie_loop="true"/>
+               <TextView
+                   android:id="@+id/opinionesNone"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_gravity="center_horizontal"
+                   android:fontFamily="@font/montserrat_light"
+                   android:text="@string/feevers_mas_valorados_del_dia_none"
+                   android:textColor="@color/gris_textos"
+                   android:textSize="15sp"
+                   android:visibility="gone"
+                   />
+
+               <com.airbnb.lottie.LottieAnimationView
+                   android:id="@+id/loadingAnimationOpiniones"
+                   android:layout_width="100dp"
+                   android:layout_height="100dp"
+                   android:layout_gravity="center"
+                   app:lottie_rawRes="@raw/loading_animation_thin"
+                   app:lottie_autoPlay="true"
+                   app:lottie_loop="true"/>
 
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/top_opiniones_recycler"
-                android:layout_gravity="center"
+               <androidx.recyclerview.widget.RecyclerView
+                   android:id="@+id/top_opiniones_recycler"
+                   android:layout_gravity="center"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_marginHorizontal="5dp"
+                   />
+
+           </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/opiniones_custom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="5dp"
-                />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/busqueda_opiniones_recycler_view"
-                android:layout_gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="5dp"
+                android:orientation="vertical"
                 android:visibility="gone"
-                />
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/montserrat_light"
+                    android:text="Fevers encontrados"
+                    android:textColor="@color/white"
+                    android:textSize="22sp"
+                    android:layout_marginTop="-10dp"
+                    android:layout_marginBottom="5dp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/montserrat_light"
+                    android:text="@string/feevers_mas_valorados_del_dia_none"
+                    android:textColor="@color/gris_textos"
+                    android:textSize="15sp"
+                    android:visibility="gone"
+                    />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/busquedaOpinionesRecyclerView"
+                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    />
+
+            </LinearLayout>
 
         </LinearLayout>
 

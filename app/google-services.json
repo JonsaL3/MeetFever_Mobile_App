@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "401151418780",
+    "project_id": "meetfever--mobile",
+    "storage_bucket": "meetfever--mobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:401151418780:android:56a4a47c79adc54a0be859",
+        "android_client_info": {
+          "package_name": "es.indytek.meetfever"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "401151418780-9rqa3utq04mmq3hit0m2q9vv73vta0pd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjCzqJ6QdPRIMimpMiIp5nJxRj0prYDS0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "401151418780-9rqa3utq04mmq3hit0m2q9vv73vta0pd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

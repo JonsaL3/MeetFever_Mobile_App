@@ -7,6 +7,7 @@ import es.indytek.meetfever.models.persona.Persona
 import es.indytek.meetfever.models.persona.PersonaWrapper
 import es.indytek.meetfever.models.typeAdapters.LocalDateTypeAdapter
 import es.indytek.meetfever.models.usuario.Usuario
+import es.indytek.meetfever.utils.Utils
 import org.json.JSONObject
 import java.lang.Exception
 import java.time.LocalDate
@@ -45,6 +46,10 @@ object WebServicePersona {
 
         } catch (e: Exception) {
             e.printStackTrace()
+            Utils.enviarRegistroDeErrorABBDD(
+                context = context,
+                stacktrace = e.message.toString(),
+            )
         }
 
     }
@@ -77,6 +82,10 @@ object WebServicePersona {
 
         } catch (e: Exception) {
             e.printStackTrace()
+            Utils.enviarRegistroDeErrorABBDD(
+                context = context,
+                stacktrace = e.message.toString(),
+            )
         }
     }
 
@@ -112,6 +121,10 @@ object WebServicePersona {
 
         } catch (e: Exception) {
             e.printStackTrace()
+            Utils.enviarRegistroDeErrorABBDD(
+                context = context,
+                stacktrace = e.message.toString(),
+            )
         }
     }
 
@@ -145,6 +158,10 @@ object WebServicePersona {
 
         } catch (e: Exception) {
             e.printStackTrace()
+            Utils.enviarRegistroDeErrorABBDD(
+                context = context,
+                stacktrace = e.message.toString(),
+            )
         }
     }
 
@@ -180,6 +197,10 @@ object WebServicePersona {
 
         } catch (e: Exception) {
             e.printStackTrace()
+            Utils.enviarRegistroDeErrorABBDD(
+                context = context,
+                stacktrace = e.message.toString(),
+            )
         }
     }
 
@@ -206,6 +227,10 @@ object WebServicePersona {
 
         } catch (e: Exception) {
             e.printStackTrace()
+            Utils.enviarRegistroDeErrorABBDD(
+                context = context,
+                stacktrace = e.message.toString(),
+            )
         }
     }
 
