@@ -2,9 +2,12 @@ package es.indytek.meetfever.data.webservice
 
 import android.content.Context
 import android.util.Log
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import es.indytek.meetfever.models.empresa.Empresa
 import es.indytek.meetfever.models.empresa.EmpresaWrapper
+import es.indytek.meetfever.models.entrada.Entrada
+import es.indytek.meetfever.models.experiencia.Experiencia
 import es.indytek.meetfever.models.experiencia.ExperienciaWrapper
 import es.indytek.meetfever.models.opinion.OpinionWrapper
 import es.indytek.meetfever.models.typeAdapters.LocalDateTimeTypeAdapter
@@ -166,6 +169,37 @@ object WebServiceExperiencia {
             )
         }
 
+    }
+
+    fun conseguirNumeroEntradas(experiencia: Experiencia, context: Context, callback : WebServiceGenericInterface) {
+
+        val url = "interface/api/meetfever/experiencia/ObtenerEntradasPorExperiencia"
+        val jsonObject = JSONObject().apply {
+            put("Id", experiencia.id)
+        }
+
+
+        Log.d(":::", jsonObject.toString())
+
+        try {
+
+            WebService.processRequestPost(context, url, jsonObject, object: WebServiceGenericInterface {
+                override fun callback(any: Any) {
+
+                    if (any.toString().isNotEmpty()) {
+
+                        callback.callback(any)
+
+                    } else {
+                        callback.callback(0)
+                    }
+
+                }
+            })
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
 }
