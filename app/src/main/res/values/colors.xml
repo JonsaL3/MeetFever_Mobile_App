@@ -27,5 +27,6 @@
     <color name="negro_botones">#292a2f</color>
     <color name="semi_gris">#37393F</color>
     <color name="naranja_opinion">#E2986C</color>
+    <color name="negro_transparente">#75000000</color>
 
 </resources>

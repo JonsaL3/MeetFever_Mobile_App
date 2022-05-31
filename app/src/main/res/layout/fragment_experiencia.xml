@@ -283,7 +283,7 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/boton_pagar"
-                android:layout_width="150dp"
+                android:layout_width="wrap_content"
                 android:layout_gravity="center"
                 android:layout_height="40dp"
                 android:text="@string/comprar_entrada"
@@ -293,6 +293,8 @@
                 android:layout_marginTop="10dp"
                 android:textAllCaps="false"
                 android:layout_marginBottom="50dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
                 />
 
         </LinearLayout>

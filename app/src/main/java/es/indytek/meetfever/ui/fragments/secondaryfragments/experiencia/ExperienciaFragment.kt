@@ -1,5 +1,7 @@
 package es.indytek.meetfever.ui.fragments.secondaryfragments.experiencia
 
+import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -12,15 +14,21 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.paypal.checkout.paymentbutton.PayPalButton
 import es.indytek.meetfever.R
+import es.indytek.meetfever.data.webservice.WebServiceExperiencia
+import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
 import es.indytek.meetfever.databinding.FragmentExperienciaBinding
 import es.indytek.meetfever.models.experiencia.Experiencia
 import es.indytek.meetfever.models.persona.Persona
 import es.indytek.meetfever.models.usuario.Usuario
+import es.indytek.meetfever.ui.fragments.mainfragments.ExplorerFragment
 import es.indytek.meetfever.ui.fragments.secondaryfragments.perfil.PerfilFragment
 import es.indytek.meetfever.utils.Constantes
+import es.indytek.meetfever.utils.DialogAcceptCustomActionInterface
+import es.indytek.meetfever.utils.DialogMaker
 import es.indytek.meetfever.utils.Utils
 import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 
 
 private const val ARG_PARAM1 = "usuario"
@@ -35,6 +43,10 @@ class ExperienciaFragment : Fragment() {
     private lateinit var usuario: Usuario
     private lateinit var experiencia: Experiencia
 
+    private var entradasVendidas: Int = 0
+
+    private lateinit var dialog: Dialog
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -42,6 +54,9 @@ class ExperienciaFragment : Fragment() {
             experiencia = it.getSerializable(ARG_PARAM2) as Experiencia
         }
 
+        entradasVendidas = experiencia.numeroEntradas
+
+        getNumeroEntradas()
     }
 
     override fun onCreateView(
@@ -65,9 +80,12 @@ class ExperienciaFragment : Fragment() {
         binding.nEntradas.text = "1"
 
         arrancarListeners()
+
+        dialog = DialogMaker(requireContext()).infoLoading()
     }
 
     // arranco los listeners
+    @SuppressLint("SetTextI18n")
     private fun arrancarListeners() {
         binding.botonVerEmpresaTexto.setOnClickListener {
             val fragmento = PerfilFragment.newInstance (
@@ -83,11 +101,38 @@ class ExperienciaFragment : Fragment() {
 
             if (usuario is Persona){
 
-                val fragmento = PasarelaDePagoFragment.newInstance(usuario as Persona, binding.nEntradas.text.toString().toInt()
-                )
-                Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager,fragmento, "", R.id.frame_layout)
+                if(!(usuario as Persona).nombre.isNullOrEmpty() ||
+                    !(usuario as Persona).apellido1.isNullOrEmpty() ||
+                    !(usuario as Persona).apellido2.isNullOrEmpty() ||
+                    !(usuario as Persona).dni.isNullOrEmpty()
+                ){
+                    if(
+                        (binding.nEntradas.text.toString().toInt() + entradasVendidas) <= (experiencia.numeroEntradas - entradasVendidas)
+                    ){
+                        val fragmento = PasarelaDePagoFragment.newInstance(usuario as Persona, binding.nEntradas.text.toString().toInt(), experiencia)
+                        Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager,fragmento, "", R.id.frame_layout)
+                    }else{
+
+                        DialogMaker(
+                            requireContext(),
+                            getString(R.string.error_tittle),
+                            getString(R.string.error_no_entradas)
+                        ).infoNoCustomActions()
+                    }
+                }else{
+
+                    DialogMaker(
+                        requireContext(),
+                        getString(R.string.error_tittle),
+                        getString(R.string.data_error_profile_message)
+                    ).infoNoCustomActions()
+                }
             }else{
-                //TODO error
+                DialogMaker(
+                    requireContext(),
+                    getString(R.string.error_tittle),
+                    getString(R.string.account_with_no_permission)
+                ).infoNoCustomActions()
             }
 
         }
@@ -95,11 +140,13 @@ class ExperienciaFragment : Fragment() {
         binding.botonRestarEntradas.setOnClickListener {
             if(binding.nEntradas.text.toString().toInt() != 1){
                 binding.nEntradas.text = (binding.nEntradas.text.toString().toInt() - 1).toString()
+                binding.precioCifra.text = ((experiencia.precio * Constantes.COMISION_MEET_FEVER * Constantes.IVA).roundToInt() * binding.nEntradas.text.toString().toInt()).toString() + " €"
             }
         }
 
         binding.botonSumarEntradas.setOnClickListener {
                 binding.nEntradas.text = (binding.nEntradas.text.toString().toInt() + 1).toString()
+                binding.precioCifra.text = ((experiencia.precio * Constantes.COMISION_MEET_FEVER * Constantes.IVA).roundToInt() * binding.nEntradas.text.toString().toInt()).toString() + " €"
         }
 
 
@@ -118,7 +165,7 @@ class ExperienciaFragment : Fragment() {
         binding.fechaExperiencia.text = experiencia.fechaCelebracion.format(DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm")).toString()
 
         // calculo el precio mas el iba mas la comisión
-        ((experiencia.precio * Constantes.COMISION_MEET_FEVER * Constantes.IVA).roundToInt().toString() + "€").also { binding.precioCifra.text = it }
+        ((experiencia.precio * Constantes.COMISION_MEET_FEVER * Constantes.IVA).roundToInt().toString() + " €").also { binding.precioCifra.text = it }
 
         // pinto la imagen de la experiencia
         val foto = experiencia.foto
@@ -151,6 +198,53 @@ class ExperienciaFragment : Fragment() {
 
         // pinto el nombre de la empresa que organiza la experiencia
         binding.botonVerEmpresaTexto.text = experiencia.empresa.nombreEmpresa
+
+    }
+
+    private fun getNumeroEntradas(){
+
+        WebServiceExperiencia.conseguirNumeroEntradas(
+            experiencia,
+            requireContext(),
+            object: WebServiceGenericInterface{
+                override fun callback(any: Any) {
+
+                    if (any !is Int){
+
+                        dialog.dismiss()
+
+                        entradasVendidas = any.toString().split(":")[1].split("}")[0].toInt()
+                    }else{
+
+                        DialogMaker(
+                            requireContext(),
+                            getString(R.string.error_tittle),
+                            getString(R.string.data_error_message)
+                        ).infoCustomAccept(
+                            customAcceptText = getString(R.string.back_to_home),
+                            customAccept = object: DialogAcceptCustomActionInterface{
+                                override fun acceptButton() {
+
+                                    val fragmento = ExplorerFragment.newInstance(usuario)
+                                    Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager,fragmento, "", R.id.frame_layout)
+
+                                    val fragmentTransaction = fragmentManager?.beginTransaction()
+                                    fragmentTransaction?.setCustomAnimations(
+                                        R.anim.anim_fade_in,
+                                        R.anim.anim_fade_out,
+                                    )
+                                    fragmentTransaction?.replace(R.id.frame_layout, fragmento, "")
+                                    fragmentTransaction?.commit()
+
+                                }
+                            }
+                        )
+
+                    }
+
+                }
+            }
+        )
 
     }
 

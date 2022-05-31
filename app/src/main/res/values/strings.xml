@@ -73,6 +73,8 @@
     <string name="precio_texto">Precio texto:</string>
     <string name="iva_comisi_n_incluido">Iva + Comisión incluido</string>
     <string name="comprar_entrada">Comprar Entrada/s</string>
+    <string name="comprar_entrada_now">Proceder a la compra</string>
+    <string name="comprar_entrada_cancel">Cancelar pago</string>
     <string name="meetfever">MeetFever!®</string>
     <string name="color_your_life">Color your life.</string>
     <string name="todas_las_experiencias_destacadas">Todas las experiencias destacadas</string>
@@ -112,5 +114,29 @@
     <string name="atr_s">Atrás</string>
     <string name="meet_follower_scanner">Meet Follower Scanner</string>
     <string name="resultado_de_la_b_squeda">Resultado de la búsqueda.</string>
+
+    <!--  Entrada viewholder  -->
+    <string name="ev_name">Nombre.</string>
+    <string name="ev_surname1">Primer apellido.</string>
+    <string name="ev_surname2">Segundo apellido.</string>
+    <string name="ev_id">DNI.</string>
+    <string name="n_entrada_t">Entrada número: %1$s</string>
+    <string name="solo_queda_un_paso_m_s">¡Solo queda un paso más!</string>
+    <string name="pulsa_en_el_boton_de_paypal_para_completar_el_pago">Pulsa en el boton de paypal para completar el pago.</string>
+
+<!--    DIALOG-->
+    <string name="data_error_profile_message">Termina de rellenar tus datos en ajustes.</string>
+    <string name="data_error_message">Error al cargar datos, inténtelo de nuevo más tarde.</string>
+    <string name="error_no_entradas">Lo sentimos, no quedan entradas para esta experiencia. 😔</string>
+    <string name="account_with_no_permission">Esta cuenta no tiene permiso para comprar.</string>
+    <string name="error_tittle">Error</string>
+    <string name="error_message">Campos incompletos.</string>
+    <string name="error_cancel_purchasee">Compra cancelada.</string>
+    <string name="purchase_error_message">Error durante la compra.</string>
+    <string name="purcharse_ok_tittle">¡Gracias!</string>
+    <string name="purchase_ok_message">Compra realizada correctamente ❤</string>
+    <string name="error_purchase">Error al registrar la compra, la compra se ha realizado, contacte con soporte y adjunte el siguiente código: %1$s</string>
+
+
 
 </resources>

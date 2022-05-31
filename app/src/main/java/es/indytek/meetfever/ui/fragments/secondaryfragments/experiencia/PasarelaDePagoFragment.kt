@@ -1,41 +1,77 @@
 package es.indytek.meetfever.ui.fragments.secondaryfragments.experiencia
 
+import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.LinearLayout
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.paypal.checkout.approve.OnApprove
+import com.paypal.checkout.cancel.OnCancel
+import com.paypal.checkout.createorder.CreateOrder
+import com.paypal.checkout.createorder.CurrencyCode
+import com.paypal.checkout.createorder.OrderIntent
+import com.paypal.checkout.createorder.UserAction
+import com.paypal.checkout.error.OnError
+import com.paypal.checkout.order.Amount
+import com.paypal.checkout.order.AppContext
+import com.paypal.checkout.order.Order
+import com.paypal.checkout.order.PurchaseUnit
+import com.paypal.checkout.paymentbutton.PayPalButton
 import es.indytek.meetfever.R
+import es.indytek.meetfever.data.webservice.WebServiceEntrada
+import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
 import es.indytek.meetfever.databinding.FragmentPasarelaDePagoBinding
+import es.indytek.meetfever.models.entrada.Entrada
+import es.indytek.meetfever.models.experiencia.Experiencia
 import es.indytek.meetfever.models.persona.Persona
+import es.indytek.meetfever.ui.fragments.mainfragments.ExplorerFragment
+import es.indytek.meetfever.ui.fragments.secondaryfragments.empresa.AllEmpresasFragment
+import es.indytek.meetfever.ui.recyclerviews.adapters.EntradaAdapter
+import es.indytek.meetfever.utils.Animations
+import es.indytek.meetfever.utils.Constantes
+import es.indytek.meetfever.utils.DialogMaker
+import es.indytek.meetfever.utils.Utils
+import java.time.LocalDate
 import java.time.LocalDateTime
+import kotlin.math.roundToInt
 
 
 private const val ARG_PARAM1 = "currentUsuario"
 private const val ARG_PARAM2 = "numeroDeEntradas"
+private const val ARG_PARAM3 = "experiencia"
 class PasarelaDePagoFragment : Fragment() {
 
     // datos que necesito
     private lateinit var currentUsuario: Persona
     private var numeroDeEntradas: Int = 0
+    private lateinit var experiencia: Experiencia
 
     private lateinit var binding: FragmentPasarelaDePagoBinding
 
     private lateinit var fecha: LocalDateTime
 
-    private lateinit var arrayEditTextViewNombre: ArrayList<TextView>
-    private lateinit var arrayEditTextViewApellido1: ArrayList<TextView>
-    private lateinit var arrayEditTextViewApellido2: ArrayList<TextView>
-    private lateinit var arrayEditTextViewDni: ArrayList<TextView>
+    val listEntradas = mutableListOf<Entrada>()
+
+    private lateinit var payPalButton: PayPalButton
+
+    private var cntOkRequests: Int = 0
+    private var cntErrorRequests: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             currentUsuario = it.getSerializable(ARG_PARAM1) as Persona
             numeroDeEntradas = it.getSerializable(ARG_PARAM2) as Int
+            experiencia = it.getSerializable(ARG_PARAM3) as Experiencia
         }
     }
 
@@ -56,105 +92,223 @@ class PasarelaDePagoFragment : Fragment() {
 
         fecha = LocalDateTime.now()
 
-        mostrarFormulario()
+        mostrarFormularioRecycler()
+
+        loadListeners()
+
+        payPalButton = binding.payPalButton
+
+        payPalButton.setup(
+            createOrder =
+            CreateOrder { createOrderActions ->
+                val order =
+                    Order(
+                        intent = OrderIntent.CAPTURE,
+                        appContext = AppContext(userAction = UserAction.PAY_NOW),
+                        purchaseUnitList =
+                        listOf(
+                            PurchaseUnit(
+                                amount =
+                                Amount(currencyCode = CurrencyCode.EUR, value = (experiencia.precio * Constantes.COMISION_MEET_FEVER * Constantes.IVA * numeroDeEntradas).roundToInt().toString())
+                            )
+                        )
+                    )
+                createOrderActions.create(order)
+            },
+            onApprove =
+            OnApprove { approval ->
+                approval.orderActions.capture { captureOrderResult ->
+                    Log.i(":::", "CaptureOrderResult: $captureOrderResult")
+
+                    Utils.hideKeyboard(requireContext(), binding.root)
+
+                    val id = captureOrderResult.toString().split("(")[2].split(",")[0].split("=")[1]
+
+                    listEntradas.forEach {
+                        it.idPaypal = id
+                    }
+
+                    binding.loadingFakeDialog.visibility = VISIBLE
+
+                    listEntradas.forEach {
+                        WebServiceEntrada.insertarCompra(it, requireContext(), object : WebServiceGenericInterface{
+                            override fun callback(any: Any) {
+
+                                if(any.toString() == "") {
+
+                                    cntOkRequests++
+
+                                }else{
+                                    cntErrorRequests++
+                                }
+
+                                checkStatusWebService(id)
+
+                            }
+                        })
+                    }
+
+                }
+            },
+            onCancel = OnCancel {
+                Log.v(":::", "OnCancel")
+                DialogMaker(
+                    requireContext(),
+                    getString(R.string.error_tittle),
+                    getString(R.string.error_cancel_purchasee)
+                ).infoNoCustomActions()
+            },
+            onError = OnError { errorInfo ->
+                Log.v(":::", "OnError")
+                Log.d(":::", "Error details: $errorInfo")
+                DialogMaker(
+                    requireContext(),
+                    getString(R.string.error_tittle),
+                    getString(R.string.purchase_error_message)
+                ).infoNoCustomActions()
+            }
+        )
+
+        Log.d(":::", (experiencia.precio * Constantes.COMISION_MEET_FEVER * Constantes.IVA * numeroDeEntradas).roundToInt().toString())
     }
 
-    private fun mostrarFormulario(){
-
-        val parentLayout = binding.parentLayout
-
-        var childLayout = LinearLayout(requireContext())
-        childLayout.orientation = LinearLayout.VERTICAL
-        childLayout.background = requireContext().getDrawable(R.drawable.ic_custom_boton)
-        childLayout.setPadding(10,10,10,10)
-
-        var editTextNombre = EditText(requireContext())
-        editTextNombre.setTextColor(resources.getColor(R.color.white))
-        editTextNombre.setText(currentUsuario.nombre)
-
-        childLayout.addView(editTextNombre)
-
-        var editTextApellido1 = EditText(requireContext())
-        editTextApellido1.setTextColor(resources.getColor(R.color.white))
-        editTextApellido1.setText(currentUsuario.apellido1)
-
-        childLayout.addView(editTextApellido1)
-
-        var editTextApellido2 = EditText(requireContext())
-        editTextApellido2.setTextColor(resources.getColor(R.color.white))
-        editTextApellido2.setText(currentUsuario.apellido2)
-
-        childLayout.addView(editTextApellido2)
-
-        var editTextFechaNac = EditText(requireContext())
-        editTextFechaNac.setTextColor(resources.getColor(R.color.white))
-        editTextFechaNac.setText(currentUsuario.fechaNacimiento.toString())
-
-        childLayout.addView(editTextFechaNac)
-
-        parentLayout.addView(childLayout)
-
-        for (i in 2..numeroDeEntradas){
-
-            childLayout = LinearLayout(requireContext())
-            childLayout.orientation = LinearLayout.VERTICAL
-            childLayout.background = requireContext().getDrawable(R.drawable.ic_custom_boton)
-            childLayout.setPadding(10,10,10,10)
-
-            editTextNombre = EditText(requireContext())
-            editTextNombre.setTextColor(resources.getColor(R.color.white))
-            editTextNombre.hint = "Nombre titular $i"
-            editTextNombre.setHintTextColor(resources.getColor(R.color.gris_textos))
-
-            childLayout.addView(editTextNombre)
-
-            editTextApellido1 = EditText(requireContext())
-            editTextApellido1.setTextColor(resources.getColor(R.color.white))
-            editTextApellido1.hint = "Primer apellido titular $i"
-            editTextApellido1.setHintTextColor(resources.getColor(R.color.gris_textos))
-
-            childLayout.addView(editTextApellido1)
-
-            editTextApellido2 = EditText(requireContext())
-            editTextApellido2.setTextColor(resources.getColor(R.color.white))
-            editTextApellido2.hint = "Segundo apellido tituar $i"
-            editTextApellido2.setHintTextColor(resources.getColor(R.color.gris_textos))
-
-            childLayout.addView(editTextApellido2)
-
-            editTextFechaNac = EditText(requireContext())
-            editTextFechaNac.setTextColor(resources.getColor(R.color.white))
-            editTextFechaNac.hint = "Fecha de nacimiento titular $i"
-            editTextFechaNac.setHintTextColor(resources.getColor(R.color.gris_textos))
-
-            childLayout.addView(editTextFechaNac)
+    private fun mostrarFormularioRecycler(){
 
 
-            val layoutParamsChild = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            layoutParamsChild.setMargins(0,30,0,0)
+        for(i in 1..numeroDeEntradas)
+            listEntradas.add(Entrada(
+                idPersona = currentUsuario.id,
+                idExperiencia = experiencia.id,
+                fecha = LocalDateTime.now()
+            ))
 
-            parentLayout.addView(childLayout, layoutParamsChild)
+        listEntradas[0].nombre = currentUsuario.nombre.toString()
+        listEntradas[0].apellido1 = currentUsuario.apellido1.toString()
+        listEntradas[0].apellido2 = currentUsuario.apellido2.toString()
+        listEntradas[0].dni = currentUsuario.dni.toString()
 
-            val view = View(requireContext())
-            view.setBackgroundColor(resources.getColor(R.color.gris_textos))
+        Animations.pintarLinearRecyclerViewSuavemente(
+            linearLayoutManager = LinearLayoutManager(requireContext()),
+            recyclerView = binding.recyclerviewpago,
+            adapter = EntradaAdapter(listEntradas, experiencia),
+            orientation = LinearLayoutManager.VERTICAL
+        )
 
-            val layoutParamsView = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, 1
-            )
-            layoutParamsChild.setMargins(0,10,0,0)
-            parentLayout.addView(view, layoutParamsView)
+
+    }
+
+    private fun checkStatusWebService(id: String){
+
+        Utils.hideKeyboard(requireContext(), binding.root)
+
+        if((cntOkRequests + cntErrorRequests) == listEntradas.size) {
+
+            if(cntErrorRequests == 0){
+
+                binding.loadingFakeDialog.visibility = GONE
+
+            Animations.mostrarVistaSuavemente(binding.OnApprove)
+
+            Handler(Looper.getMainLooper()).postDelayed(Runnable {
+
+                binding.lottiAnim3.playAnimation()
+
+                Handler(Looper.getMainLooper()).postDelayed(Runnable {
+
+                    Animations.mostrarVistaSuavemente(binding.thaksFakeDialog)
+
+                }, 600)
+            }, 400)
+
+            }else{
+
+                binding.loadingFakeDialog.visibility = GONE
+
+                DialogMaker(
+                    requireContext(),
+                    getString(R.string.error_tittle),
+                    getString(R.string.error_purchase, id)
+                ).infoNoCustomActions()
+            }
         }
     }
 
+    private fun verifyData(){
+
+        val adapter = binding.recyclerviewpago.adapter as EntradaAdapter
+
+        val list = mutableListOf<Entrada>()
+        listEntradas.forEach {
+            list.add(it)
+        }
+
+        Log.d(":::", list.toString())
+
+        list.removeIf { it.nombre.isEmpty() || it.apellido1.isEmpty() || it.apellido2.isEmpty() || it.dni.isEmpty() }
+
+        if(list.size != listEntradas.size){
+            Log.d(":::","ERROR DE DATOS")
+            DialogMaker(
+                requireContext(),
+                getString(R.string.error_tittle),
+                getString(R.string.error_message)
+            ).infoNoCustomActions()
+        }else{
+
+            //TODO pillar ID de transaccion y mandarlo al WS
+
+
+                Log.d(":::","TODO OK")
+
+                Utils.hideKeyboard(requireContext(), binding.root)
+
+                Animations.mostrarVistaSuavemente(binding.layoutConfirmPayment)
+
+                Handler(Looper.getMainLooper()).postDelayed(Runnable {
+                    binding.lottiAnim.playAnimation()
+                },400)
+        }
+
+
+    }
+
+    private fun loadListeners(){
+        binding.botonPagar.setOnClickListener {
+            verifyData()
+        }
+
+        binding.botonCancelarPago.setOnClickListener {
+            binding.layoutConfirmPayment.visibility = GONE
+        }
+
+        binding.botonBackToHome.setOnClickListener {
+
+            val fragmento = ExplorerFragment.newInstance(currentUsuario)
+            Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager,fragmento, "", R.id.frame_layout)
+
+            val fragmentTransaction = fragmentManager?.beginTransaction()
+            fragmentTransaction?.setCustomAnimations(
+                R.anim.anim_fade_in,
+                R.anim.anim_fade_out,
+            )
+            fragmentTransaction?.replace(R.id.frame_layout, fragmento, "")
+            fragmentTransaction?.commit()
+        }
+
+
+
+    }
+
+
+
     companion object {
         @JvmStatic
-        fun newInstance(currentUsuario: Persona, numeroDeEntradas: Int) =
+        fun newInstance(currentUsuario: Persona, numeroDeEntradas: Int, experiencia: Experiencia) =
             PasarelaDePagoFragment().apply {
                 arguments = Bundle().apply {
                     putSerializable(ARG_PARAM1, currentUsuario)
                     putSerializable(ARG_PARAM2, numeroDeEntradas)
+                    putSerializable(ARG_PARAM3, experiencia)
                 }
             }
     }
