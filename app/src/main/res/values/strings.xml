@@ -132,5 +132,18 @@
 
     <string name="empresa_actualizada_correctamente">Se ha actualizado correctamente la empresa.</string>
     <string name="exito">Exito</string>
+    <string name="seleccionar_la_empresa_que_te_proporcion_la_vivencia">Seleccionar la empresa que te proporcionó la vivencia:</string>
+    <string name="selecciona_la_experiencia_opcional">Selecciona la experiencia (opcional):</string>
+    <string name="buscar_experiencia">Buscar Experiencia</string>
+    <string name="escriba_aqui_su_opini_n_acerca_de_una_empresa_o_servicio">Escriba aqui su opinión acerca de una empresa o servicio...</string>
+    <string name="buscar_empresa">Buscar Empresa</string>
+    <string name="buscar_empresa_por_nick">Buscar empresa por nick...</string>
+    <string name="buscar_empresa_local">Buscar empresa/local...</string>
+    <string name="ninguna_empresa_coincide_con_la_b_suqueda">Ninguna empresa coincide con la búsuqueda...</string>
+    <string name="buscar_experiencia_por_titulo">Buscar experiencia por titulo...</string>
+    <string name="ninguna_experiencia_coincide_con_la_b_squeda">Ninguna experiencia coincide con la búsqueda...</string>
+    <string name="empresa_seleccionada">Empresa seleccionada</string>
+    <string name="experiencia_seleccionada">Experiencia seleccionada</string>
+    <string name="meetmoji_seleccionado">MeetMoji Seleccionado</string>
 
 </resources>

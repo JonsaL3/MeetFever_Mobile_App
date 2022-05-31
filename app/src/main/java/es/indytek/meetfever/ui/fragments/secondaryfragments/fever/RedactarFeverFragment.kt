@@ -5,8 +5,8 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
-import android.text.Spannable
-import android.text.style.ForegroundColorSpan
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,32 +14,29 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import es.indytek.meetfever.R
-import es.indytek.meetfever.data.webservice.WebServiceEmoticono
-import es.indytek.meetfever.data.webservice.WebServiceEmpresa
-import es.indytek.meetfever.data.webservice.WebServiceExperiencia
-import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
+import es.indytek.meetfever.data.webservice.*
 import es.indytek.meetfever.databinding.FragmentRedactarFeverBinding
 import es.indytek.meetfever.models.emoticono.Emoticono
 import es.indytek.meetfever.models.emoticono.EmoticonoWrapper
-import es.indytek.meetfever.models.empresa.Empresa
-import es.indytek.meetfever.models.experiencia.Experiencia
+import es.indytek.meetfever.models.empresa.EmpresaWrapper
 import es.indytek.meetfever.models.experiencia.ExperienciaWrapper
 import es.indytek.meetfever.models.opinion.Opinion
+import es.indytek.meetfever.models.opinion.OpinionWrapper
 import es.indytek.meetfever.models.usuario.Usuario
-import es.indytek.meetfever.utils.Animations
-import es.indytek.meetfever.utils.Utils
-import java.lang.String
-import java.util.*
+import es.indytek.meetfever.ui.fragments.mainfragments.TrendingsFragment
+import es.indytek.meetfever.ui.recyclerviews.adapters.EmpresaBusquedaRecyclerViewAdapter
+import es.indytek.meetfever.ui.recyclerviews.adapters.ExperienciaBusquedaRecyclerViewAdapter
+import es.indytek.meetfever.ui.recyclerviews.adapters.OpinionRecyclerViewAdapter
+import es.indytek.meetfever.utils.*
+import java.time.LocalDateTime
 import kotlin.Any
 import kotlin.Boolean
 import kotlin.ByteArray
-import kotlin.CharArray
 import kotlin.Exception
 import kotlin.Int
 import kotlin.also
@@ -47,7 +44,6 @@ import kotlin.apply
 import kotlin.collections.ArrayList
 import kotlin.collections.LinkedHashMap
 import kotlin.let
-import kotlin.run
 import kotlin.toString
 
 private const val ARG_PARAM1 = "currentUsuario"
@@ -58,12 +54,9 @@ class RedactarFeverFragment : Fragment() {
     private lateinit var currentUsuario: Usuario
     private lateinit var emoticonos: ArrayList<Emoticono>
     private lateinit var imageViews: LinkedHashMap<ImageView, Boolean>
-    private var idEmpresa: Int = 0
-    private var idExperiencia: Int = 0
 
-    /*private var atCount: Int = 0
-    private var padCount: Int = 0*/
-
+    private var selectedEmpresaId: Int = -1
+    private var selectedExperiencia: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,10 +71,7 @@ class RedactarFeverFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentRedactarFeverBinding.inflate(inflater, container, false)
-
-
         return binding.root
     }
 
@@ -94,43 +84,223 @@ class RedactarFeverFragment : Fragment() {
         // arranco el contador de caracteres y lo limito a 250
         procesadorDeTextoYCaracteres()
 
+        // arranco los listeners
+        arrancarListeners()
+
         Utils.ocultarElementosUI(requireActivity())
     }
 
-    fun removeDuplicate(str: CharArray, length: Int): kotlin.String {
-        //Creating index variable to use it as index in the modified string
-        var index = 0
+    private fun publicarFever() {
+        val descripcion = binding.opinionContainer.text.toString()
+        val fecha = LocalDateTime.now()
+        val idAutor = currentUsuario.id
+        val idEmpresa = selectedEmpresaId
+        val idExperiencia = selectedExperiencia
+        var idEmoji = -1
 
-        // Traversing character array
-        for (i in 0 until length) {
-
-            // Check whether str[i] is present before or not
-            var j: Int = 0
-            while (j < i) {
-                if (str[i] == str[j] && str[i] == '@') {
-                    break
-                }
-                j++
-            }
-
-            // If the character is not present before, add it to resulting string
-            if (j == i) {
-                str[index++] = str[i]
-            }
+        try {
+            val posEmoticono = imageViews.filter { it.value }.toList()[0]
+            val emoticono = emoticonos[imageViews.toList().indexOf(posEmoticono)]
+            idEmoji = emoticono.id
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
         }
-        println(String.valueOf(Arrays.copyOf(str, index)))
-        return String.valueOf(Arrays.copyOf(str, index))
+
+        if (descripcion.isEmpty()) {
+            Toast.makeText(requireContext(), "Debes escribir una opinión...", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (idEmoji == -1) {
+            Toast.makeText(requireContext(), "Debes seleccionar un emoticono...", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (selectedEmpresaId == -1) {
+            Toast.makeText(requireContext(), "Debes seleccionar una empresa...", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // La experiencia es opcional....
+
+        WebServiceOpinion.insertarOpinion(
+            descripcion,
+            fecha,
+            idEmoji,
+            idAutor,
+            idEmpresa,
+            idExperiencia,
+            requireContext(),
+            object: WebServiceGenericInterface {
+                override fun callback(any: Any) {
+
+                    if (any == 0) {
+
+                    } else {
+                        DialogMaker(requireContext(), "Exito", "Fever publicado con éxito").infoCustomAccept("Aceptar", object: DialogAcceptCustomActionInterface {
+                            override fun acceptButton() {
+                                requireActivity().supportFragmentManager.popBackStackImmediate()
+                            }
+                        })
+                    }
+
+                }
+            })
+
+
     }
 
+    private fun arrancarListeners() {
+
+        binding.selectorEmpresa.setOnClickListener {
+            Animations.ocultarVistaSuavemente(binding.selectorEmpresa)
+        }
+
+        binding.selectorExperiencia.setOnClickListener {
+            Animations.ocultarVistaSuavemente(binding.selectorExperiencia)
+        }
+
+        binding.botonSeleccionarExperiencia.setOnClickListener {
+            Animations.mostrarVistaSuavemente(binding.selectorExperiencia)
+            motorBusquedaExperiencia()
+        }
+
+        binding.botonBuscarEmpresa.setOnClickListener {
+
+            Animations.mostrarVistaSuavemente(binding.selectorEmpresa)
+            motorBusquedaEmpresa()
+
+        }
+
+        binding.botonSendFever.setOnClickListener {
+            publicarFever()
+        }
+
+    }
+
+    private fun motorBusquedaExperiencia() {
+
+        val textWatcher = object: TextWatcher {
+
+            override fun afterTextChanged(s: Editable?) {
+
+                Log.d(":::B", s.toString())
+
+                if (s.toString().isEmpty()) {
+                    Animations.mostrarVistaSuavemente(binding.textoErrorBusquedaExperiencia)
+                    Animations.ocultarVistaSuavemente(binding.recyclerSelectorExperiencias)
+                } else {
+                    WebServiceExperiencia.buscarExperiencia(s.toString(), requireContext(), object: WebServiceGenericInterface {
+                        override fun callback(any: Any) {
+
+                            if (any == 0) {
+                                Animations.mostrarVistaSuavemente(binding.textoErrorBusquedaExperiencia)
+                                Animations.ocultarVistaSuavemente(binding.recyclerSelectorExperiencias)
+                            } else {
+                                val experiencias = any as ExperienciaWrapper
+                                Animations.ocultarVistaSuavemente(binding.textoErrorBusquedaExperiencia)
+                                //ocultarContenido()
+                                try {
+                                    Animations.pintarLinearRecyclerViewSuavemente(
+                                        linearLayoutManager = LinearLayoutManager(requireContext()),
+                                        recyclerView = binding.recyclerSelectorExperiencias,
+                                        adapter = ExperienciaBusquedaRecyclerViewAdapter(experiencias, currentUsuario, object: FromViewHolderToParent {
+                                            override fun passthroughData(any: Any) {
+                                                val idExperiencia = any as Int
+                                                selectedExperiencia = idExperiencia
+                                            }
+                                        }),
+                                        orientation = LinearLayoutManager.VERTICAL
+                                    )
+                                } catch (e: IllegalStateException) {
+                                    Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
+                                    Utils.enviarRegistroDeErrorABBDD(
+                                        context = requireContext(),
+                                        stacktrace = e.message.toString(),
+                                    )
+                                }
+                            }
+
+                        }
+                    })
+
+                }
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        }
+
+        binding.inputTituloExperiencia.addTextChangedListener(textWatcher)
+
+    }
+
+    private fun motorBusquedaEmpresa() {
+
+        val textWatcher = object: TextWatcher {
+
+            override fun afterTextChanged(s: Editable?) {
+
+                Log.d(":::B", s.toString())
+
+                if (s.toString().isEmpty()) {
+                    Animations.mostrarVistaSuavemente(binding.textoErrorBusquedaEmpresa)
+                    Animations.ocultarVistaSuavemente(binding.recyclerSelectorEmpresas)
+                } else {
+                    WebServiceEmpresa.buscarEmpresa(s.toString(), requireContext(), object: WebServiceGenericInterface {
+                        override fun callback(any: Any) {
+
+                            if (any == 0) {
+                                Animations.mostrarVistaSuavemente(binding.textoErrorBusquedaEmpresa)
+                                Animations.ocultarVistaSuavemente(binding.recyclerSelectorEmpresas)
+                            } else {
+                                val empresas = any as EmpresaWrapper
+                                Log.d(":::::", any.toString())
+                                Animations.ocultarVistaSuavemente(binding.textoErrorBusquedaEmpresa)
+                                //ocultarContenido()
+                                try {
+                                    Animations.pintarLinearRecyclerViewSuavemente(
+                                        linearLayoutManager = LinearLayoutManager(requireContext()),
+                                        recyclerView = binding.recyclerSelectorEmpresas,
+                                        adapter = EmpresaBusquedaRecyclerViewAdapter(empresas, currentUsuario, object: FromViewHolderToParent {
+                                            override fun passthroughData(any: Any) {
+                                                val idEmpresa = any as Int
+                                                selectedEmpresaId = idEmpresa
+                                            }
+                                        }),
+                                        orientation = LinearLayoutManager.VERTICAL
+                                    )
+                                } catch (e: IllegalStateException) {
+                                    Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
+                                    Utils.enviarRegistroDeErrorABBDD(
+                                        context = requireContext(),
+                                        stacktrace = e.message.toString(),
+                                    )
+                                }
+                            }
+
+                        }
+                    })
+
+                }
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        }
+
+        binding.inputNickEmpresa.addTextChangedListener(textWatcher)
+
+    }
 
     // cuento que el usuario no supere los 250 caracteres
     private fun procesadorDeTextoYCaracteres() {
 
-        var ultimaEmpresaEncontrada: Empresa? = null
-
         binding.opinionContainer.addTextChangedListener { text ->
-
-            var ultimoCaracter: kotlin.String? = null
 
             // Primero actualizo el contador de caracteres
             Utils.setTextColorAsResource(binding.numeroCaracteresOpinion, R.color.gris_textos, requireContext())
@@ -141,142 +311,8 @@ class RedactarFeverFragment : Fragment() {
                 binding.numeroCaracteresOpinion.text = it
             }
 
-            // REALIZO LAS BUSQUEDAS EN BASE A @ ###############################################
-            try {
-                // me quedo con lo que hay después del arroba.
-                val busquedaEmpresa = text.toString().split(" ").filter {
-                    it.contains("@")
-                }[0].removePrefix("@")
-
-                // busco la empresa en la base de datos
-                if (ultimaEmpresaEncontrada == null) {
-
-                    // TODO PULIR CUANDO PONGO COSAS DESPUÉS DE LA EMPRESA ENCONTRADA
-                    // TODO PONER DE COLOR EL TEXTO QUE CORRESPONDE CON EL NICK DE LA EMPRESA
-                    // TODO LAS EXPERIENCIAS POR TITULO
-                    WebServiceEmpresa.findEmpresaByNickname(busquedaEmpresa, requireContext(), object: WebServiceGenericInterface {
-                        override fun callback(any: Any) {
-
-                            ultimaEmpresaEncontrada = if (any == 0) {
-                                // en caso de fracaso borro lo que haya
-                                ocultarEmpresa()
-                                null
-                            } else {
-                                // en caso de exito me quedo con la empresa y marco como encontrada
-                                val empresa = any as Empresa
-                                mostrarEmpresa(empresa)
-                                empresa
-                            }
-
-                        }
-                    })
-
-                } else {
-
-                    if (!text.toString().contains(ultimaEmpresaEncontrada!!.nick)) {
-                        ocultarEmpresa()
-                        ultimaEmpresaEncontrada = null
-                    }
-
-                }
-
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
-            // si no hay arrobas es que no ha buscado nada.
-            Log.d(":::->", text.toString())
-            if (!text!!.contains("@")) {
-                ocultarEmpresa()
-                ultimaEmpresaEncontrada = null
-            }
-
         }
 
-    }
-
-    private fun mostrarEmpresa(empresa: Empresa) {
-
-        empresa.fotoPerfil?.let {
-            Utils.putBase64ImageIntoImageView(binding.previewEnterprise, it, requireContext())
-        }
-
-        binding.nombreEmpresa.text = empresa.nombreEmpresa
-        binding.descripcionEmpresa.text = empresa.frase
-
-        binding.noSeleccionadoPreview.visibility = View.GONE
-        binding.elLocalQueSeleccione.visibility = View.GONE
-
-        binding.previewEnterprise.visibility = View.VISIBLE
-        binding.degradado.visibility = View.VISIBLE
-        binding.nombreEmpresa.visibility = View.VISIBLE
-        binding.descripcionEmpresa.visibility = View.VISIBLE
-        binding.previewEnterprise.visibility = View.VISIBLE
-
-    }
-
-    private fun ocultarEmpresa() {
-
-        binding.previewEnterprise.visibility = View.GONE
-        binding.degradado.visibility = View.GONE
-        binding.nombreEmpresa.visibility = View.GONE
-        binding.descripcionEmpresa.visibility = View.GONE
-        binding.previewEnterprise.visibility = View.GONE
-
-        binding.noSeleccionadoPreview.visibility = View.VISIBLE
-        binding.elLocalQueSeleccione.visibility = View.VISIBLE
-
-    }
-
-    private fun contarNumeroDeArrobasEnUnaFrase(frase: kotlin.String): Int {
-        var numeroDeArrobas = 0
-        for (element in frase) {
-            if (element == '@') {
-                numeroDeArrobas++
-            }
-        }
-        return numeroDeArrobas
-    }
-
-    private fun contarNumeroDeHashTagsEnUnaFrase(frase: kotlin.String): Int {
-        var numeroDeHashtags = 0
-        for (element in frase) {
-            if (element == '#') {
-                numeroDeHashtags++
-            }
-        }
-        return numeroDeHashtags
-    }
-
-    private fun loadExperienceOnUI(experiencia: Experiencia){
-        // pongo la foto en la preview
-        val foto = experiencia.foto
-        this@RedactarFeverFragment.idExperiencia = experiencia.id
-
-
-        foto?.let {
-            Utils.putBase64ImageIntoImageViewWithPlaceholder(binding.experienciaPreview, foto, requireContext(), R.drawable.ic_default_enterprise_black_and_white)
-        } ?: run {
-            Utils.putResourceImageIntoImageView(binding.experienciaPreview, R.drawable.ic_default_enterprise_black_and_white, requireContext())
-        }
-
-        // oculto los mensajes de que no se encontró ninguna empresa
-        binding.noSeleccionadoPreview.visibility = View.GONE
-
-        // muestro el nombre de la empresa y su frase
-        binding.experienciaNombre.visibility = View.VISIBLE
-        binding.experienciaNombre.text = experiencia.titulo
-
-        binding.experienciaDescripcion.visibility = View.VISIBLE
-        val wordsDescription = experiencia.descripcion?.split(" ")
-        binding.experienciaDescripcion.text =
-            wordsDescription?.get(0) ?: " " +
-                    wordsDescription?.get(1) ?: " " +
-                    wordsDescription?.get(2) ?: " " +
-                    wordsDescription?.get(3) ?: "" + "..."
-
-        binding.experienciaPreviewDegradado.visibility = View.VISIBLE
-        binding.experienciaPreview.visibility = View.VISIBLE
     }
 
     // pintar todzxo
@@ -344,6 +380,8 @@ class RedactarFeverFragment : Fragment() {
             imageViews[imageView] = false
 
             imageView.setOnClickListener {
+
+                binding.noSeleccionado.text = getString(R.string.meetmoji_seleccionado)
 
                 imageView.startAnimation(AnimationUtils.loadAnimation(requireContext(), androidx.appcompat.R.anim.abc_popup_enter))
 

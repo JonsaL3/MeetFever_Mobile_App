@@ -126,6 +126,7 @@
         <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/layout/warning_dialog.xml" value="0.2942708333333333" />
         <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/menu/nav_menu.xml" value="0.27239583333333334" />
         <entry key="..\:/Users/practicas/AndroidStudioProjects/MeetFever_Mobile_App/app/src/main/res/menu/tabs.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/practicas/Desktop/MeetFever_Mobile_App/app/src/main/res/drawable/ic_back_button.xml" value="0.2795" />
         <entry key="..\:/Users/practicas/Desktop/MeetFever_Mobile_App/app/src/main/res/layout/activity_login.xml" value="0.33" />
         <entry key="..\:/Users/practicas/Desktop/MeetFever_Mobile_App/app/src/main/res/layout/activity_main.xml" value="0.27219202898550726" />
         <entry key="..\:/Users/practicas/Desktop/MeetFever_Mobile_App/app/src/main/res/layout/fragment_barcode.xml" value="0.3359375" />
@@ -136,6 +137,8 @@
         <entry key="..\:/Users/practicas/Desktop/MeetFever_Mobile_App/app/src/main/res/layout/fragment_redactar_fever.xml" value="0.3463541666666667" />
         <entry key="..\:/Users/practicas/Desktop/MeetFever_Mobile_App/app/src/main/res/layout/fragment_trendings.xml" value="0.2989583333333333" />
         <entry key="..\:/Users/practicas/Desktop/MeetFever_Mobile_App/app/src/main/res/layout/fragment_user_settings.xml" value="0.1707193515704154" />
+        <entry key="..\:/Users/practicas/Desktop/MeetFever_Mobile_App/app/src/main/res/layout/viewholder_empresa_busqueda.xml" value="0.317481884057971" />
+        <entry key="..\:/Users/practicas/Desktop/MeetFever_Mobile_App/app/src/main/res/layout/viewholder_experiencia_busqueda.xml" value="0.317481884057971" />
         <entry key="..\:/Users/practicas/Desktop/MeetFever_Mobile_App/app/src/main/res/layout/viewholder_opinion.xml" value="0.6269230769230769" />
         <entry key="..\:/Users/practicas/Desktop/MeetFever_Mobile_App/app/src/main/res/layout/viewholder_persona.xml" value="0.9" />
         <entry key="..\:/Users/practicas/Desktop/MeetFever_Mobile_App/app/src/main/res/layout/viewholder_seguidor_seguido.xml" value="0.5" />
