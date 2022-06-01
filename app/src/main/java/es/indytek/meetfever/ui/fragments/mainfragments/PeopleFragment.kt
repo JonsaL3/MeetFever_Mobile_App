@@ -1,8 +1,6 @@
 package es.indytek.meetfever.ui.fragments.mainfragments
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -20,12 +18,10 @@ import es.indytek.meetfever.models.persona.PersonaWrapper
 import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.ui.fragments.secondaryfragments.persona.AllPeopleFragment
 import es.indytek.meetfever.ui.fragments.secondaryfragments.persona.AllRelatedPeopleFragment
-import es.indytek.meetfever.ui.recyclerviews.adapters.OpinionRecyclerViewAdapter
 import es.indytek.meetfever.ui.recyclerviews.adapters.PersonaRecyclerViewAdapter
 import es.indytek.meetfever.utils.Animations
 import es.indytek.meetfever.utils.Utils
 import nl.joery.animatedbottombar.AnimatedBottomBar
-import java.time.LocalTime
 
 private const val ARG_PARAM1 = "usuario"
 
@@ -74,11 +70,7 @@ class PeopleFragment : Fragment() {
 
         val textWatcher = object: TextWatcher {
 
-            override fun afterTextChanged(s: Editable?) {}
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            override fun afterTextChanged(s: Editable?) {
 
                 if (s.toString().isEmpty()) {
                     mostrarContenido()
@@ -88,7 +80,7 @@ class PeopleFragment : Fragment() {
                         override fun callback(any: Any) {
 
                             if (any == 0) {
-                                // TODO ERROR
+                                Animations.ocultarVistaSuavemente(binding.busquedaPersonasRecyclerView)
                             } else {
                                 val personas = any as PersonaWrapper
                                 //ocultarContenido()
@@ -117,6 +109,10 @@ class PeopleFragment : Fragment() {
                 }
 
             }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         }
 
         binding.inputMainActivityPeople.addTextChangedListener(textWatcher)
@@ -132,9 +128,11 @@ class PeopleFragment : Fragment() {
     }
 
     private fun mostrarContenido() {
-        contenidoOculto = false
-        Animations.ocultarVistaSuavemente(binding.customPeople)
-        Animations.mostrarVistaSuavemente(binding.defaultPeople)
+        if (contenidoOculto) {
+            contenidoOculto = false
+            Animations.ocultarVistaSuavemente(binding.customPeople)
+            Animations.mostrarVistaSuavemente(binding.defaultPeople)
+        }
     }
 
     // listeners que necesito
@@ -170,10 +168,7 @@ class PeopleFragment : Fragment() {
             override fun callback(any: Any) {
 
                 if (any == 0) {
-                    // TODO ERROR
-
-                        Utils.terminarCargaOnError(binding.loadingAnimationTopInfluencers,binding.topInfluencersNone)
-
+                    Utils.terminarCargaOnError(binding.loadingAnimationTopInfluencers,binding.topInfluencersNone)
                 } else {
                     val personas = any as PersonaWrapper
                     Utils.terminarCarga(requireContext(), binding.loadingAnimationTopInfluencers){
@@ -198,7 +193,6 @@ class PeopleFragment : Fragment() {
             override fun callback(any: Any) {
 
                 if (any == 0) {
-                    // TODO ERROR
                     Utils.terminarCargaOnError(binding.loadingAnimationPersonasQueQuizasConoczcas, binding.personasQueNone)
                 }
                 else {
@@ -227,6 +221,7 @@ class PeopleFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         setBottomBarColorAndPosition()
+        binding.inputMainActivityPeople.setText("")
     }
 
     private fun setBottomBarColorAndPosition() {

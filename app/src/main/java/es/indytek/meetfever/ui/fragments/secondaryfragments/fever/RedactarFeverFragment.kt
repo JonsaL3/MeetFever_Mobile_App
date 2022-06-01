@@ -5,8 +5,8 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
-import android.text.Spannable
-import android.text.style.ForegroundColorSpan
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,32 +14,29 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import es.indytek.meetfever.R
-import es.indytek.meetfever.data.webservice.WebServiceEmoticono
-import es.indytek.meetfever.data.webservice.WebServiceEmpresa
-import es.indytek.meetfever.data.webservice.WebServiceExperiencia
-import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
+import es.indytek.meetfever.data.webservice.*
 import es.indytek.meetfever.databinding.FragmentRedactarFeverBinding
 import es.indytek.meetfever.models.emoticono.Emoticono
 import es.indytek.meetfever.models.emoticono.EmoticonoWrapper
-import es.indytek.meetfever.models.empresa.Empresa
-import es.indytek.meetfever.models.experiencia.Experiencia
+import es.indytek.meetfever.models.empresa.EmpresaWrapper
 import es.indytek.meetfever.models.experiencia.ExperienciaWrapper
 import es.indytek.meetfever.models.opinion.Opinion
+import es.indytek.meetfever.models.opinion.OpinionWrapper
 import es.indytek.meetfever.models.usuario.Usuario
-import es.indytek.meetfever.utils.Animations
-import es.indytek.meetfever.utils.Utils
-import java.lang.String
-import java.util.*
+import es.indytek.meetfever.ui.fragments.mainfragments.TrendingsFragment
+import es.indytek.meetfever.ui.recyclerviews.adapters.EmpresaBusquedaRecyclerViewAdapter
+import es.indytek.meetfever.ui.recyclerviews.adapters.ExperienciaBusquedaRecyclerViewAdapter
+import es.indytek.meetfever.ui.recyclerviews.adapters.OpinionRecyclerViewAdapter
+import es.indytek.meetfever.utils.*
+import java.time.LocalDateTime
 import kotlin.Any
 import kotlin.Boolean
 import kotlin.ByteArray
-import kotlin.CharArray
 import kotlin.Exception
 import kotlin.Int
 import kotlin.also
@@ -47,7 +44,6 @@ import kotlin.apply
 import kotlin.collections.ArrayList
 import kotlin.collections.LinkedHashMap
 import kotlin.let
-import kotlin.run
 import kotlin.toString
 
 private const val ARG_PARAM1 = "currentUsuario"
@@ -58,19 +54,15 @@ class RedactarFeverFragment : Fragment() {
     private lateinit var currentUsuario: Usuario
     private lateinit var emoticonos: ArrayList<Emoticono>
     private lateinit var imageViews: LinkedHashMap<ImageView, Boolean>
-    private var idEmpresa: Int = 0
-    private var idExperiencia: Int = 0
 
-    /*private var atCount: Int = 0
-    private var padCount: Int = 0*/
-
+    private var selectedEmpresaId: Int = -1
+    private var selectedExperiencia: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             currentUsuario = it.getSerializable(ARG_PARAM1) as Usuario
         }
-
         emoticonos = ArrayList()
         imageViews = linkedMapOf()
     }
@@ -79,10 +71,7 @@ class RedactarFeverFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentRedactarFeverBinding.inflate(inflater, container, false)
-
-
         return binding.root
     }
 
@@ -95,331 +84,234 @@ class RedactarFeverFragment : Fragment() {
         // arranco el contador de caracteres y lo limito a 250
         procesadorDeTextoYCaracteres()
 
-        loadListeners()
+        // arranco los listeners
+        arrancarListeners()
 
         Utils.ocultarElementosUI(requireActivity())
     }
 
-    private fun loadListeners(){
-        binding.botonSendFever.setOnClickListener { sendFeverToServer() }
-    }
+    private fun publicarFever() {
+        val descripcion = binding.opinionContainer.text.toString()
+        val fecha = LocalDateTime.now()
+        val idAutor = currentUsuario.id
+        val idEmpresa = selectedEmpresaId
+        val idExperiencia = selectedExperiencia
+        var idEmoji = -1
 
-    fun removeDuplicate(str: CharArray, length: Int): kotlin.String {
-        //Creating index variable to use it as index in the modified string
-        var index = 0
-
-        // Traversing character array
-        for (i in 0 until length) {
-
-            // Check whether str[i] is present before or not
-            var j: Int = 0
-            while (j < i) {
-                if (str[i] == str[j] && str[i] == '@') {
-                    break
-                }
-                j++
-            }
-
-            // If the character is not present before, add it to resulting string
-            if (j == i) {
-                str[index++] = str[i]
-            }
+        try {
+            val posEmoticono = imageViews.filter { it.value }.toList()[0]
+            val emoticono = emoticonos[imageViews.toList().indexOf(posEmoticono)]
+            idEmoji = emoticono.id
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
         }
-        println(String.valueOf(Arrays.copyOf(str, index)))
-        return String.valueOf(Arrays.copyOf(str, index))
+
+        if (descripcion.isEmpty()) {
+            Toast.makeText(requireContext(), "Debes escribir una opinión...", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (idEmoji == -1) {
+            Toast.makeText(requireContext(), "Debes seleccionar un emoticono...", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (selectedEmpresaId == -1) {
+            Toast.makeText(requireContext(), "Debes seleccionar una empresa...", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // La experiencia es opcional....
+
+        WebServiceOpinion.insertarOpinion(
+            descripcion,
+            fecha,
+            idEmoji,
+            idAutor,
+            idEmpresa,
+            idExperiencia,
+            requireContext(),
+            object: WebServiceGenericInterface {
+                override fun callback(any: Any) {
+
+                    if (any == 0) {
+
+                    } else {
+                        DialogMaker(requireContext(), "Exito", "Fever publicado con éxito").infoCustomAccept("Aceptar", object: DialogAcceptCustomActionInterface {
+                            override fun acceptButton() {
+                                requireActivity().supportFragmentManager.popBackStackImmediate()
+                            }
+                        })
+                    }
+
+                }
+            })
+
+
     }
 
+    private fun arrancarListeners() {
 
+        binding.selectorEmpresa.setOnClickListener {
+            Animations.ocultarVistaSuavemente(binding.selectorEmpresa)
+        }
+
+        binding.selectorExperiencia.setOnClickListener {
+            Animations.ocultarVistaSuavemente(binding.selectorExperiencia)
+        }
+
+        binding.botonSeleccionarExperiencia.setOnClickListener {
+            Animations.mostrarVistaSuavemente(binding.selectorExperiencia)
+            motorBusquedaExperiencia()
+        }
+
+        binding.botonBuscarEmpresa.setOnClickListener {
+
+            Animations.mostrarVistaSuavemente(binding.selectorEmpresa)
+            motorBusquedaEmpresa()
+
+        }
+
+        binding.botonSendFever.setOnClickListener {
+            publicarFever()
+        }
+
+    }
+
+    private fun motorBusquedaExperiencia() {
+
+        val textWatcher = object: TextWatcher {
+
+            override fun afterTextChanged(s: Editable?) {
+
+                Log.d(":::B", s.toString())
+
+                if (s.toString().isEmpty()) {
+                    Animations.mostrarVistaSuavemente(binding.textoErrorBusquedaExperiencia)
+                    Animations.ocultarVistaSuavemente(binding.recyclerSelectorExperiencias)
+                } else {
+                    WebServiceExperiencia.buscarExperiencia(s.toString(), requireContext(), object: WebServiceGenericInterface {
+                        override fun callback(any: Any) {
+
+                            if (any == 0) {
+                                Animations.mostrarVistaSuavemente(binding.textoErrorBusquedaExperiencia)
+                                Animations.ocultarVistaSuavemente(binding.recyclerSelectorExperiencias)
+                            } else {
+                                val experiencias = any as ExperienciaWrapper
+                                Animations.ocultarVistaSuavemente(binding.textoErrorBusquedaExperiencia)
+                                //ocultarContenido()
+                                try {
+                                    Animations.pintarLinearRecyclerViewSuavemente(
+                                        linearLayoutManager = LinearLayoutManager(requireContext()),
+                                        recyclerView = binding.recyclerSelectorExperiencias,
+                                        adapter = ExperienciaBusquedaRecyclerViewAdapter(experiencias, currentUsuario, object: FromViewHolderToParent {
+                                            override fun passthroughData(any: Any) {
+                                                val idExperiencia = any as Int
+                                                selectedExperiencia = idExperiencia
+                                            }
+                                        }),
+                                        orientation = LinearLayoutManager.VERTICAL
+                                    )
+                                } catch (e: IllegalStateException) {
+                                    Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
+                                    Utils.enviarRegistroDeErrorABBDD(
+                                        context = requireContext(),
+                                        stacktrace = e.message.toString(),
+                                    )
+                                }
+                            }
+
+                        }
+                    })
+
+                }
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        }
+
+        binding.inputTituloExperiencia.addTextChangedListener(textWatcher)
+
+    }
+
+    private fun motorBusquedaEmpresa() {
+
+        val textWatcher = object: TextWatcher {
+
+            override fun afterTextChanged(s: Editable?) {
+
+                Log.d(":::B", s.toString())
+
+                if (s.toString().isEmpty()) {
+                    Animations.mostrarVistaSuavemente(binding.textoErrorBusquedaEmpresa)
+                    Animations.ocultarVistaSuavemente(binding.recyclerSelectorEmpresas)
+                } else {
+                    WebServiceEmpresa.buscarEmpresa(s.toString(), requireContext(), object: WebServiceGenericInterface {
+                        override fun callback(any: Any) {
+
+                            if (any == 0) {
+                                Animations.mostrarVistaSuavemente(binding.textoErrorBusquedaEmpresa)
+                                Animations.ocultarVistaSuavemente(binding.recyclerSelectorEmpresas)
+                            } else {
+                                val empresas = any as EmpresaWrapper
+                                Log.d(":::::", any.toString())
+                                Animations.ocultarVistaSuavemente(binding.textoErrorBusquedaEmpresa)
+                                //ocultarContenido()
+                                try {
+                                    Animations.pintarLinearRecyclerViewSuavemente(
+                                        linearLayoutManager = LinearLayoutManager(requireContext()),
+                                        recyclerView = binding.recyclerSelectorEmpresas,
+                                        adapter = EmpresaBusquedaRecyclerViewAdapter(empresas, currentUsuario, object: FromViewHolderToParent {
+                                            override fun passthroughData(any: Any) {
+                                                val idEmpresa = any as Int
+                                                selectedEmpresaId = idEmpresa
+                                            }
+                                        }),
+                                        orientation = LinearLayoutManager.VERTICAL
+                                    )
+                                } catch (e: IllegalStateException) {
+                                    Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
+                                    Utils.enviarRegistroDeErrorABBDD(
+                                        context = requireContext(),
+                                        stacktrace = e.message.toString(),
+                                    )
+                                }
+                            }
+
+                        }
+                    })
+
+                }
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        }
+
+        binding.inputNickEmpresa.addTextChangedListener(textWatcher)
+
+    }
     // cuento que el usuario no supere los 250 caracteres
     private fun procesadorDeTextoYCaracteres() {
 
-        var empresaEncontrada = false
-        var experienciaEncontrada = false
-
         binding.opinionContainer.addTextChangedListener { text ->
 
+            // Primero actualizo el contador de caracteres
             Utils.setTextColorAsResource(binding.numeroCaracteresOpinion, R.color.gris_textos, requireContext())
             if (text.toString().length > 250) {
                 binding.numeroCaracteresOpinion.setTextColor(Color.RED)
             }
-
             "${text.toString().length}/250 Caracteres".also {
                 binding.numeroCaracteresOpinion.text = it
             }
 
-            text?.let {
-
-                if (text.contains("@")) {
-
-                    Log.d(":::", "ME ACTUALIZO")
-
-                    // obtengo las palabras que empiezan por @
-                    val split =  text.toString().split(" ")
-                    val empresas = split.filter {
-                        it.startsWith("@")
-                    }
-
-                    try {
-                        var empresa = empresas[0]
-
-                        // si una palabra empieza por @...
-                        val empresaCortada = empresa.substring(1, empresa.length)
-
-                        Log.d(":::", "EMPRESA ENCONTRADA -> $empresaEncontrada")
-                        Log.d(":::", "EMPRESA CORTADA -> $empresaCortada")
-
-                        if (!empresaEncontrada) {
-
-                            WebServiceEmpresa.findEmpresaByNickname(empresaCortada, requireContext(), object: WebServiceGenericInterface {
-                                override fun callback(any: Any) {
-
-                                    if (any == 0) {
-                                        // TODO ERROR
-                                    } else {
-                                        empresaEncontrada = true
-                                        val empresaDescargada = any as Empresa
-
-                                        // pongo la foto en la preview
-                                        val foto = empresaDescargada.fotoPerfil
-                                        this@RedactarFeverFragment.idEmpresa = empresaDescargada.id
-
-                                        foto?.let {
-                                            Utils.putBase64ImageIntoImageViewWithPlaceholder(binding.previewEnterprise, foto, requireContext(), R.drawable.ic_default_enterprise_black_and_white)
-                                        } ?: run {
-                                            Utils.putResourceImageIntoImageView(binding.previewEnterprise, R.drawable.ic_default_enterprise_black_and_white, requireContext())
-                                        }
-
-                                        // oculto los mensajes de que no se encontró ninguna empresa
-                                        binding.noSeleccionadoPreview.visibility = View.GONE
-                                        binding.elLocalQueSeleccione.visibility = View.GONE
-
-                                        // muestro el nombre de la empresa y su frase
-                                        binding.nombreEmpresa.visibility = View.VISIBLE
-                                        binding.nombreEmpresa.text = empresaDescargada.nick
-
-                                        binding.descripcionEmpresa.visibility = View.VISIBLE
-                                        binding.descripcionEmpresa.text = empresaDescargada.frase
-
-                                        binding.degradado.visibility = View.VISIBLE
-                                        binding.previewEnterprise.visibility = View.VISIBLE
-
-                                        // marco esa palabra en el edit text de otro color
-                                        val start = text.indexOf(empresa)
-                                        val end = start + empresa.length
-                                        binding.opinionContainer.text?.setSpan(ForegroundColorSpan(requireContext().getColor(R.color.rosa_meet)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-                                    }
-
-                                }
-                            })
-
-                        } else if (empresaCortada != binding.nombreEmpresa.text.toString()) {
-
-                            empresaEncontrada = false
-
-                            // oculto la foto etc
-                            binding.nombreEmpresa.visibility = View.GONE
-                            binding.descripcionEmpresa.visibility = View.GONE
-                            binding.previewEnterprise.visibility = View.GONE
-                            binding.degradado.visibility = View.GONE
-                            binding.previewEnterprise.setImageDrawable(null)
-
-                            // Vuelvo a mostrar lo de por defecto
-                            binding.noSeleccionadoPreview.visibility = View.VISIBLE
-                            binding.elLocalQueSeleccione.visibility = View.VISIBLE
-
-
-                            // vuelvo a poner el color en su sitio
-                            val start = text.indexOf(empresa)
-                            val end = start + empresa.length
-                            binding.opinionContainer.text?.setSpan(ForegroundColorSpan(requireContext().getColor(R.color.gris_textos)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-                        // Vuelvo a mostrar lo de por defecto
-                        binding.noSeleccionadoPreview.visibility = View.VISIBLE
-
-                            binding.opinionContainer.setTextColor(requireContext().getColor(R.color.gris_textos))
-                        }
-
-                    } catch(e: Exception) {
-                        Log.e(":::", "No se puede buscar una empresa vacia")
-                        Utils.enviarRegistroDeErrorABBDD(
-                            context = requireContext(),
-                            stacktrace = e.message.toString(),
-                        )
-                    }
-
-                    //si el texto contiene ese patron, hará la busqueda.
-                }else if(text.matches(Regex("#.* "))) {
-
-                    // obtengo las palabras que empiezan por #
-                    val experiencias = text.toString().split(" ").filter {
-                        it.startsWith("#")
-                    }
-
-                    val experiencia = experiencias[0]
-
-                    val experienciaCortada = experiencia.substring(1, experiencia.length)
-
-                    Log.d(":::", "EXPERIENCIA ENCONTRADA -> $experienciaEncontrada")
-                    Log.d(":::", "EXPERIENCIA CORTADA -> $experienciaCortada")
-
-                    if (!experienciaEncontrada) {
-
-                        WebServiceExperiencia.findExperienciaByTitulo(experienciaCortada, requireContext(), object: WebServiceGenericInterface {
-                            override fun callback(any: Any) {
-
-                                if (any == 0) {
-                                    // TODO ERROR
-                                } else {
-                                    experienciaEncontrada = true
-                                    val experienciasDescargadas = any as ExperienciaWrapper
-
-                                    selectExperience(experienciasDescargadas)
-
-                                    // marco esa palabra en el edit text de otro color
-                                    val start = text.indexOf(experiencia)
-                                    val end = start + experiencia.length
-                                    binding.opinionContainer.text?.setSpan(ForegroundColorSpan(requireContext().getColor(R.color.rosa_meet)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-                                }
-
-                            }
-                        })
-
-                    } else if (experienciaCortada != binding.nombreEmpresa.text.toString()) {
-
-                        experienciaEncontrada = false
-
-                        // oculto la foto etc
-                        binding.experienciaNombre.visibility = View.GONE
-                        binding.experienciaDescripcion.visibility = View.GONE
-                        binding.experienciaPreview.visibility = View.GONE
-                        binding.experienciaPreviewDegradado.visibility = View.GONE
-                        binding.experienciaPreview.setImageDrawable(null)
-
-                        // Vuelvo a mostrar lo de por defecto
-                        binding.noSeleccionadoExperienciaPreview.visibility = View.VISIBLE
-
-                        // vuelvo a poner el color en su sitio
-                        val start = text.indexOf(experiencia)
-                        val end = start + experiencia.length
-                        binding.opinionContainer.text?.setSpan(ForegroundColorSpan(requireContext().getColor(R.color.gris_textos)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-                        binding.opinionContainer.setTextColor(requireContext().getColor(R.color.gris_textos))
-                    }
-
-
-                } else {
-
-                    empresaEncontrada = false
-
-                    binding.opinionContainer.text?.setSpan(ForegroundColorSpan(requireContext().getColor(R.color.gris_textos)), 0, text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-                    // oculto la foto etc
-                    binding.nombreEmpresa.visibility = View.GONE
-                    binding.descripcionEmpresa.visibility = View.GONE
-                    binding.previewEnterprise.visibility = View.GONE
-                    binding.degradado.visibility = View.GONE
-                    binding.previewEnterprise.setImageDrawable(null)
-
-                    // Vuelvo a mostrar lo de por defecto
-                    binding.noSeleccionadoPreview.visibility = View.VISIBLE
-                    binding.elLocalQueSeleccione.visibility = View.VISIBLE
-
-                }
-
-            }
-
         }
 
-    }
-
-    private fun selectExperience(experiencias: ExperienciaWrapper){
-
-        experiencias.forEach {
-            Log.d(":::","XD")
-            //creo la caja de experiencia
-            val linearLayout = LinearLayout(requireContext())
-            linearLayout.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            linearLayout.orientation = LinearLayout.HORIZONTAL
-
-            //creo sufoto
-            val imageView = ImageView(requireContext())
-            imageView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-
-            it.foto?.let {foto ->
-                Utils.putBase64ImageIntoImageViewWithPlaceholder(binding.previewEnterprise, foto, requireContext(), R.drawable.ic_default_enterprise_black_and_white)
-            } ?: run {
-                Utils.putResourceImageIntoImageView(binding.previewEnterprise, R.drawable.ic_default_enterprise_black_and_white, requireContext())
-            }
-
-            //anado la foto al linear layout
-            linearLayout.addView(imageView)
-
-            //creo el linearlayout que contiene a la descripcion y el titulo
-            val linearLayout2 = LinearLayout(requireContext())
-            linearLayout2.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            linearLayout2.orientation = LinearLayout.VERTICAL
-
-            //creo el titulo
-            val textView = TextView(requireContext())
-            textView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            textView.text = it.titulo
-
-            //creo la descripcion
-            val textView2 = TextView(requireContext())
-            textView2.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            textView2.text = it.descripcion
-
-            //por ultimo lo aniado al papa
-            binding.experienciasLayout.addView(linearLayout)
-
-            //creo un imageview
-            val view = View(requireContext())
-            view.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1)
-
-            //le asigno un color
-            view.setBackgroundColor(requireContext().getColor(R.color.gris_textos))
-
-            //le asigno un padding
-            view.setPadding(10, 0, 10, 0)
-
-            //lo aniado a su papa
-            binding.experienciasLayout.addView(view)
-
-        }
-
-    }
-
-    private fun loadExperienceOnUI(experiencia: Experiencia){
-        // pongo la foto en la preview
-        val foto = experiencia.foto
-        this@RedactarFeverFragment.idExperiencia = experiencia.id
-
-
-        foto?.let {
-            Utils.putBase64ImageIntoImageViewWithPlaceholder(binding.experienciaPreview, foto, requireContext(), R.drawable.ic_default_enterprise_black_and_white)
-        } ?: run {
-            Utils.putResourceImageIntoImageView(binding.experienciaPreview, R.drawable.ic_default_enterprise_black_and_white, requireContext())
-        }
-
-        // oculto los mensajes de que no se encontró ninguna empresa
-        binding.noSeleccionadoPreview.visibility = View.GONE
-
-        // muestro el nombre de la empresa y su frase
-        binding.experienciaNombre.visibility = View.VISIBLE
-        binding.experienciaNombre.text = experiencia.titulo
-
-        binding.experienciaDescripcion.visibility = View.VISIBLE
-        val wordsDescription = experiencia.descripcion?.split(" ")
-        binding.experienciaDescripcion.text =
-            wordsDescription?.get(0) ?: " " +
-                    wordsDescription?.get(1) ?: " " +
-                    wordsDescription?.get(2) ?: " " +
-                    wordsDescription?.get(3) ?: "" + "..."
-
-        binding.experienciaPreviewDegradado.visibility = View.VISIBLE
-        binding.experienciaPreview.visibility = View.VISIBLE
     }
 
     // pintar todzxo
@@ -488,6 +380,8 @@ class RedactarFeverFragment : Fragment() {
 
             imageView.setOnClickListener {
 
+                binding.noSeleccionado.text = getString(R.string.meetmoji_seleccionado)
+
                 imageView.startAnimation(AnimationUtils.loadAnimation(requireContext(), androidx.appcompat.R.anim.abc_popup_enter))
 
                 imageView.clearColorFilter()
@@ -527,28 +421,6 @@ class RedactarFeverFragment : Fragment() {
             animTime+= 100L
 
         }
-    }
-
-    private fun sendFeverToServer(){
-
-        val imageView = imageViews.filter { (_,v) -> !v }.toList()[0]
-        val emoticono = emoticonos[imageViews.toList().indexOf(imageView)]
-
-        val opinion =  Opinion(
-            descripcion = binding.opinionContainer.text.toString(),
-            eMOTICONO = emoticono,
-            autor = currentUsuario,
-            idEmpresa = idEmpresa,
-            idExperiencia = idExperiencia,
-            titulo = ""
-
-        )
-
-        Log.d(":::", opinion.toString())
-
-        binding.opinionContainer.setText(removeDuplicate(binding.opinionContainer.text.toString().toCharArray(), binding.opinionContainer.text.toString().length))
-        Toast.makeText(requireContext(), binding.opinionContainer.text.toString(), Toast.LENGTH_SHORT).show()
-
     }
 
     override fun onResume() {

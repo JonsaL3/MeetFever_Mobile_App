@@ -26,15 +26,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MeetFever">
         <activity
+            android:screenOrientation="portrait"
             android:name=".ui.activities.QrActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".ui.activities.RegistroActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".ui.activities.MainActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".ui.activities.LoginActivity"
             android:exported="true">
             <intent-filter>

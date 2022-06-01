@@ -1,19 +1,15 @@
 package es.indytek.meetfever.ui.activities
 
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.core.view.GravityCompat
-import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import es.indytek.meetfever.R
 import es.indytek.meetfever.databinding.ActivityMainBinding
@@ -25,9 +21,7 @@ import es.indytek.meetfever.ui.fragments.secondaryfragments.fever.RedactarFeverF
 import es.indytek.meetfever.ui.fragments.secondaryfragments.perfil.PerfilFragment
 import es.indytek.meetfever.ui.fragments.secondaryfragments.usersettings.UserSettingsFragment
 import es.indytek.meetfever.ui.fragments.utilityfragments.BarcodeFragment
-import es.indytek.meetfever.utils.Animations
-import es.indytek.meetfever.utils.Constantes
-import es.indytek.meetfever.utils.Utils
+import es.indytek.meetfever.utils.*
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter
 import nl.joery.animatedbottombar.AnimatedBottomBar
 import java.time.LocalTime
@@ -135,7 +129,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun desactivarBottomBarTemporalmente() {
         desactivarBottomBar()
-        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+        Handler(Looper.getMainLooper()).postDelayed({
             reactivarBottomBar()
         },Constantes.TIEMPO_DE_ANIMACIONES * 2)
     }
@@ -212,34 +206,6 @@ class MainActivity : AppCompatActivity() {
         //asigno a la actionbar un logo personalizado.
         //pracambiarlo ir a layout action_bar
         supportActionBar?.setDisplayShowCustomEnabled(true)
-        val inflater = this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-
-        //listeners en los items del nav y asignar los fragmentos a cda boton
-
-        binding.navView.setNavigationItemSelectedListener {
-
-            when(it.itemId){
-
-//                R.id.nav_invoice -> {
-//
-//
-//
-//                }
-//
-//                R.id.nav_support -> {
-//
-//                }
-//                R.id.nav_add_log_out -> {
-//
-//                }
-
-            }
-
-
-            binding.drawerLayout.closeDrawer(GravityCompat.START)
-
-            true
-        }
     }
 
     private fun loadDataToDrawer(){
@@ -271,6 +237,17 @@ class MainActivity : AppCompatActivity() {
         header.findViewById<TextView>(R.id.frase).apply {
             this.text = currentUsuario.frase
         }
+
+        binding.botonLogOut.setOnClickListener {
+            DialogMaker(this, "Cerrar sesión", "¿Realmente desea cerrar la sesión?").warningAcceptCustomAction("Cerrar sesión.", "Cancelar.", object: DialogAcceptCustomActionInterface {
+                override fun acceptButton() {
+                    val intent = Intent(this@MainActivity, LoginActivity::class.java)
+                    this@MainActivity.startActivity(intent)
+                    (this@MainActivity as AppCompatActivity).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                }
+            })
+        }
+
     }
 
     // Funciones de carga de fragmentos ############################################################

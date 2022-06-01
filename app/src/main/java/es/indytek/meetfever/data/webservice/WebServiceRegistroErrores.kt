@@ -1,17 +1,8 @@
 package es.indytek.meetfever.data.webservice
 
 import android.content.Context
-import android.util.Log
-import com.google.gson.GsonBuilder
-import es.indytek.meetfever.models.empresa.Empresa
-import es.indytek.meetfever.models.empresa.EmpresaWrapper
-import es.indytek.meetfever.models.typeAdapters.LocalDateTimeTypeAdapter
-import es.indytek.meetfever.models.typeAdapters.LocalDateTypeAdapter
-import es.indytek.meetfever.utils.Utils
 import org.json.JSONObject
 import java.lang.Exception
-import java.time.LocalDate
-import java.time.LocalDateTime
 
 object WebServiceRegistroErrores {
 
@@ -39,10 +30,10 @@ object WebServiceRegistroErrores {
 
         } catch (e: Exception) {
             e.printStackTrace()
-            Utils.enviarRegistroDeErrorABBDD(
-                context = context,
-                stacktrace = e.message.toString(),
-            )
+//            Utils.enviarRegistroDeErrorABBDD(
+//                context = context,
+//                stacktrace = e.message.toString(),
+//            )
         }
     }
 

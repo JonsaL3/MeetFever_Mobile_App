@@ -9,12 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import es.indytek.meetfever.R
 import es.indytek.meetfever.databinding.FragmentFollowedFollowingBinding
 import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.models.usuario.UsuarioWrapper
-import es.indytek.meetfever.ui.fragments.mainfragments.TrendingsFragment
-import es.indytek.meetfever.ui.recyclerviews.adapters.OpinionRecyclerViewAdapter
 import es.indytek.meetfever.ui.recyclerviews.adapters.SeguidorSeguidoRecyclerViewAdapter
 import es.indytek.meetfever.utils.Animations
 import es.indytek.meetfever.utils.Utils

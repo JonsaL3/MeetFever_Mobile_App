@@ -3,6 +3,7 @@ package es.indytek.meetfever.ui.recyclerviews.viewholders
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -46,6 +47,8 @@ class EmpresaViewHolder(
             onClick(objeto)
         }
 
+        Log.d(":::", "EmpresaViewHolder: bind: objeto: ${objeto.id}")
+
     }
 
     private fun onClick(empresa: Empresa) {
@@ -57,14 +60,15 @@ class EmpresaViewHolder(
         WebServiceOpinion.obtenerOpinionPorIdAutor(empresa, currentUsuario, itemView.context, object: WebServiceGenericInterface {
             override fun callback(any: Any) {
 
-                if (any == 0) {
-                    opiniones = OpinionWrapper()
+                opiniones = if (any == 0) {
+                    OpinionWrapper()
                 } else {
-                    opiniones = any as OpinionWrapper
+                    any as OpinionWrapper
                 }
 
                 val fragmento = PerfilFragment.newInstance(empresa, currentUsuario)
                 Utils.cambiarDeFragmentoGuardandoElAnterior(activity.supportFragmentManager,fragmento, "", R.id.frame_layout)
+
             }
         })
 
