@@ -30,13 +30,14 @@ object WebServiceEmpresa {
 
                     if (any.toString().isNotEmpty()) {
                         // Obtengo el response
-                        val opiniones = GsonBuilder()
+                        val empresas = GsonBuilder()
                             .registerTypeAdapter(LocalDate::class.java, LocalDateTypeAdapter())
                             .create()
                             .fromJson(any.toString(), EmpresaWrapper::class.java)
-                        if (opiniones.size > 0)
-                            callback.callback(opiniones)
-                        else
+                        if (empresas.isNotEmpty()){
+
+                            callback.callback(empresas)
+                        }else
                             callback.callback(0)
                     } else {
                         callback.callback(0)

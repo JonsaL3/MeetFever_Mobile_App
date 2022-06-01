@@ -1,5 +1,6 @@
 package es.indytek.meetfever.ui.recyclerviews.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +25,7 @@ class EmpresaBusquedaRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: EmpresaBusquedaViewHolder, position: Int) {
         val valor: Empresa = lista[position]
+        Log.d(":::", "VALOR EN EL VH -> " + valor.toString())
         holder.bind(valor)
     }
 

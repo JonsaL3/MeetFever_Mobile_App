@@ -137,7 +137,7 @@
     <string name="seleccionar_la_empresa_que_te_proporcion_la_vivencia">Seleccionar la empresa que te proporcionó la vivencia:</string>
     <string name="selecciona_la_experiencia_opcional">Selecciona la experiencia (opcional):</string>
     <string name="buscar_experiencia">Buscar Experiencia</string>
-    <string name="escriba_aqui_su_opini_n_acerca_de_una_empresa_o_servicio">Escriba aqui su opinión acerca de una empresa o servicio...</string>
+    <string name="escriba_aqui_su_opini_n_acerca_de_una_empresa_o_servicio">Escriba aqui su opinión acerca de una empresa o experiencia...</string>
     <string name="buscar_empresa">Buscar Empresa</string>
     <string name="buscar_empresa_por_nick">Buscar empresa por nick...</string>
     <string name="buscar_empresa_local">Buscar empresa/local...</string>
@@ -157,7 +157,7 @@
     <string name="solo_queda_un_paso_m_s">¡Solo queda un paso más!</string>
     <string name="pulsa_en_el_boton_de_paypal_para_completar_el_pago">Pulsa en el boton de paypal para completar el pago.</string>
 
-<!--    DIALOG-->
+    <!--    DIALOG-->
     <string name="data_error_profile_message">Termina de rellenar tus datos en ajustes.</string>
     <string name="data_error_message">Error al cargar datos, inténtelo de nuevo más tarde.</string>
     <string name="error_no_entradas">Lo sentimos, no quedan entradas para esta experiencia. 😔</string>
@@ -169,7 +169,7 @@
     <string name="purcharse_ok_tittle">¡Gracias!</string>
     <string name="purchase_ok_message">Compra realizada correctamente ❤</string>
     <string name="error_purchase">Error al registrar la compra, la compra se ha realizado, contacte con soporte y adjunte el siguiente código: %1$s</string>
-
+    <string name="Aforo">%1$s / %2$s</string>
 
 
 </resources>

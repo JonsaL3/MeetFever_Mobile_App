@@ -142,7 +142,7 @@ object WebServiceOpinion {
         context: Context,
         callback : WebServiceGenericInterface) {
 
-        val url = "interface/api/meetfever/opinion/ObtenerOpinionPorIdAutor"
+        val url = "interface/api/meetfever/opinion/InsertarOpinion"
         val jsonObject = JSONObject().apply {
             put("Titulo", "")
             put("Descripcion", descripcion)

@@ -42,6 +42,7 @@ class EmpresaBusquedaViewHolder(
         val nombreEmpresaSeleccinada = (view.context as AppCompatActivity).findViewById<TextView>(R.id.nick_empresa_seleccionada)
         val testo = (view.context as AppCompatActivity).findViewById<TextView>(R.id.testo_empresa_seleccionada)
 
+        Log.d(":::","ABBBBB->" +  empresa.id)
         passData.passthroughData(empresa.id)
 
         nombreEmpresaSeleccinada.text = empresa.nick

@@ -137,7 +137,12 @@ class RedactarFeverFragment : Fragment() {
                     if (any == 0) {
 
                     } else {
-                        DialogMaker(requireContext(), "Exito", "Fever publicado con éxito").infoCustomAccept("Aceptar", object: DialogAcceptCustomActionInterface {
+                        DialogMaker(requireContext(),
+                            "Exito",
+                            "Fever publicado con éxito"
+                        ).infoCustomAccept(
+                            "Aceptar",
+                            object: DialogAcceptCustomActionInterface {
                             override fun acceptButton() {
                                 requireActivity().supportFragmentManager.popBackStackImmediate()
                             }
@@ -257,7 +262,6 @@ class RedactarFeverFragment : Fragment() {
                                 Animations.ocultarVistaSuavemente(binding.recyclerSelectorEmpresas)
                             } else {
                                 val empresas = any as EmpresaWrapper
-                                Log.d(":::::", any.toString())
                                 Animations.ocultarVistaSuavemente(binding.textoErrorBusquedaEmpresa)
                                 //ocultarContenido()
                                 try {
@@ -268,6 +272,7 @@ class RedactarFeverFragment : Fragment() {
                                             override fun passthroughData(any: Any) {
                                                 val idEmpresa = any as Int
                                                 selectedEmpresaId = idEmpresa
+
                                             }
                                         }),
                                         orientation = LinearLayoutManager.VERTICAL
