@@ -296,7 +296,6 @@ class RedactarFeverFragment : Fragment() {
         binding.inputNickEmpresa.addTextChangedListener(textWatcher)
 
     }
-
     // cuento que el usuario no supere los 250 caracteres
     private fun procesadorDeTextoYCaracteres() {
 

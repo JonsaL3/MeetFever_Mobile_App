@@ -1,25 +1,70 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+//DEPRECATED
+//buildscript {
+//
+//    repositories {
+//        mavenCentral()
+//        maven { url 'https://jitpack.io' }
+//        google()  // Google's Maven repository
+//    }
+//
+//    dependencies {
+//        // Add this line
+//        classpath 'com.google.gms:google-services:4.3.10'
+//        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.8.1'
+//
+//    }
+//
+//}
+
+//DEPRECATED
+//plugins {
+//    id 'com.android.application' version '7.1.2' apply false
+//    id 'com.android.library' version '7.1.2' apply false
+//    id 'org.jetbrains.kotlin.android' version '1.6.20' apply false
+//}
 buildscript {
-
+    ext.kotlin_version = "1.6.10"
     repositories {
+        google()
         mavenCentral()
-        maven { url 'https://jitpack.io' }
-        google()  // Google's Maven repository
     }
-
     dependencies {
-        // Add this line
+        classpath 'com.android.tools.build:gradle:7.1.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.20"
+        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
         classpath 'com.google.gms:google-services:4.3.10'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.8.1'
 
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
     }
-
 }
 
-plugins {
-    id 'com.android.application' version '7.1.2' apply false
-    id 'com.android.library' version '7.1.2' apply false
-    id 'org.jetbrains.kotlin.android' version '1.6.20' apply false
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        jcenter()
+        maven {
+            url 'https://oss.sonatype.org/content/repositories/snapshots/'
+        }
+        maven {
+            url  "https://cardinalcommerceprod.jfrog.io/artifactory/android"
+            credentials {
+                // Be sure to add these non-sensitive credentials in order to retrieve dependencies from
+                // the private repository.
+                username 'paypal_sgerritz'
+                password 'AKCp8jQ8tAahqpT5JjZ4FRP2mW7GMoFZ674kGqHmupTesKeAY2G8NcmPKLuTxTGkKjDLRzDUQ'
+            }
+        }
+        mavenLocal()
+    }
+
+    configurations.all {
+        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+    }
 }
 
 task clean(type: Delete) {

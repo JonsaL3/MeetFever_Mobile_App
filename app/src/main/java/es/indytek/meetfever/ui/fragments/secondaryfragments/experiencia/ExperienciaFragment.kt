@@ -1,28 +1,34 @@
 package es.indytek.meetfever.ui.fragments.secondaryfragments.experiencia
 
+import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.paypal.android.sdk.payments.PayPalConfiguration
-import com.paypal.android.sdk.payments.PayPalPayment
-import com.paypal.android.sdk.payments.PayPalService
-import com.paypal.android.sdk.payments.PaymentActivity
+import com.paypal.checkout.paymentbutton.PayPalButton
 import es.indytek.meetfever.R
+import es.indytek.meetfever.data.webservice.WebServiceExperiencia
+import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
 import es.indytek.meetfever.databinding.FragmentExperienciaBinding
 import es.indytek.meetfever.models.experiencia.Experiencia
+import es.indytek.meetfever.models.persona.Persona
 import es.indytek.meetfever.models.usuario.Usuario
+import es.indytek.meetfever.ui.fragments.mainfragments.ExplorerFragment
 import es.indytek.meetfever.ui.fragments.secondaryfragments.perfil.PerfilFragment
 import es.indytek.meetfever.utils.Constantes
+import es.indytek.meetfever.utils.DialogAcceptCustomActionInterface
+import es.indytek.meetfever.utils.DialogMaker
 import es.indytek.meetfever.utils.Utils
-import java.math.BigDecimal
 import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 
 
 private const val ARG_PARAM1 = "usuario"
@@ -37,15 +43,9 @@ class ExperienciaFragment : Fragment() {
     private lateinit var usuario: Usuario
     private lateinit var experiencia: Experiencia
 
+    private var entradasVendidas: Int = 0
 
-    // Datos relacionados con paypal
-    val clientKey: String = "AQkdu2M1YNJLU-M13rYdku9FcWHdam7ELImmxDyAJBVUCFUzYbB-bHcW7izS_RfNrv-ZW49uvOPNrR9F"
-    val PAYPAL_REQUEST_CODE = 123
-
-    // Paypal Configuration Object
-    private val config = PayPalConfiguration()
-        .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX) // on below line we are passing a client id.
-        .clientId(clientKey)
+    private lateinit var dialog: Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +53,10 @@ class ExperienciaFragment : Fragment() {
             usuario = it.getSerializable(ARG_PARAM1) as Usuario
             experiencia = it.getSerializable(ARG_PARAM2) as Experiencia
         }
+
+        entradasVendidas = experiencia.numeroEntradas
+
+        getNumeroEntradas()
     }
 
     override fun onCreateView(
@@ -65,7 +69,6 @@ class ExperienciaFragment : Fragment() {
         pintar()
 
         // arranco los listeners
-        arrancarListeners()
 
         return binding.root
     }
@@ -73,9 +76,16 @@ class ExperienciaFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Utils.ocultarElementosUI(requireActivity())
+
+        binding.nEntradas.text = "1"
+
+        arrancarListeners()
+
+        dialog = DialogMaker(requireContext()).infoLoading()
     }
 
     // arranco los listeners
+    @SuppressLint("SetTextI18n")
     private fun arrancarListeners() {
         binding.botonVerEmpresaTexto.setOnClickListener {
             val fragmento = PerfilFragment.newInstance (
@@ -86,8 +96,59 @@ class ExperienciaFragment : Fragment() {
         }
 
         binding.botonPagar.setOnClickListener {
-            obtenerPago()
+
+            //TODO, falta verificar que una empresa no pueda comprar entradas.
+
+            if (usuario is Persona){
+
+                if(!(usuario as Persona).nombre.isNullOrEmpty() ||
+                    !(usuario as Persona).apellido1.isNullOrEmpty() ||
+                    !(usuario as Persona).apellido2.isNullOrEmpty() ||
+                    !(usuario as Persona).dni.isNullOrEmpty()
+                ){
+                    if(
+                        (binding.nEntradas.text.toString().toInt() + entradasVendidas) <= (experiencia.numeroEntradas - entradasVendidas)
+                    ){
+                        val fragmento = PasarelaDePagoFragment.newInstance(usuario as Persona, binding.nEntradas.text.toString().toInt(), experiencia)
+                        Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager,fragmento, "", R.id.frame_layout)
+                    }else{
+
+                        DialogMaker(
+                            requireContext(),
+                            getString(R.string.error_tittle),
+                            getString(R.string.error_no_entradas)
+                        ).infoNoCustomActions()
+                    }
+                }else{
+
+                    DialogMaker(
+                        requireContext(),
+                        getString(R.string.error_tittle),
+                        getString(R.string.data_error_profile_message)
+                    ).infoNoCustomActions()
+                }
+            }else{
+                DialogMaker(
+                    requireContext(),
+                    getString(R.string.error_tittle),
+                    getString(R.string.account_with_no_permission)
+                ).infoNoCustomActions()
+            }
+
         }
+
+        binding.botonRestarEntradas.setOnClickListener {
+            if(binding.nEntradas.text.toString().toInt() != 1){
+                binding.nEntradas.text = (binding.nEntradas.text.toString().toInt() - 1).toString()
+                binding.precioCifra.text = ((experiencia.precio * Constantes.COMISION_MEET_FEVER * Constantes.IVA).roundToInt() * binding.nEntradas.text.toString().toInt()).toString() + " €"
+            }
+        }
+
+        binding.botonSumarEntradas.setOnClickListener {
+                binding.nEntradas.text = (binding.nEntradas.text.toString().toInt() + 1).toString()
+                binding.precioCifra.text = ((experiencia.precio * Constantes.COMISION_MEET_FEVER * Constantes.IVA).roundToInt() * binding.nEntradas.text.toString().toInt()).toString() + " €"
+        }
+
 
     }
 
@@ -104,7 +165,7 @@ class ExperienciaFragment : Fragment() {
         binding.fechaExperiencia.text = experiencia.fechaCelebracion.format(DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm")).toString()
 
         // calculo el precio mas el iba mas la comisión
-        ((experiencia.precio * Constantes.COMISION_MEET_FEVER * Constantes.IVA).roundToInt().toString() + "€").also { binding.precioCifra.text = it }
+        ((experiencia.precio * Constantes.COMISION_MEET_FEVER * Constantes.IVA).roundToInt().toString() + " €").also { binding.precioCifra.text = it }
 
         // pinto la imagen de la experiencia
         val foto = experiencia.foto
@@ -140,37 +201,51 @@ class ExperienciaFragment : Fragment() {
 
     }
 
-    private fun obtenerPago() {
+    private fun getNumeroEntradas(){
 
-        // Creating a paypal payment on below line.
+        WebServiceExperiencia.conseguirNumeroEntradas(
+            experiencia,
+            requireContext(),
+            object: WebServiceGenericInterface{
+                override fun callback(any: Any) {
 
-        // Creating a paypal payment on below line.
-        val payment = PayPalPayment(
-            BigDecimal(10), "USD", "Course Fees",
-            PayPalPayment.PAYMENT_INTENT_SALE
+                    if (any !is Int){
+
+                        dialog.dismiss()
+
+                        entradasVendidas = any.toString().split(":")[1].split("}")[0].toInt()
+                    }else{
+
+                        DialogMaker(
+                            requireContext(),
+                            getString(R.string.error_tittle),
+                            getString(R.string.data_error_message)
+                        ).infoCustomAccept(
+                            customAcceptText = getString(R.string.back_to_home),
+                            customAccept = object: DialogAcceptCustomActionInterface{
+                                override fun acceptButton() {
+
+                                    val fragmento = ExplorerFragment.newInstance(usuario)
+                                    Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager,fragmento, "", R.id.frame_layout)
+
+                                    val fragmentTransaction = fragmentManager?.beginTransaction()
+                                    fragmentTransaction?.setCustomAnimations(
+                                        R.anim.anim_fade_in,
+                                        R.anim.anim_fade_out,
+                                    )
+                                    fragmentTransaction?.replace(R.id.frame_layout, fragmento, "")
+                                    fragmentTransaction?.commit()
+
+                                }
+                            }
+                        )
+
+                    }
+
+                }
+            }
         )
 
-        // Creating Paypal Payment activity intent
-
-        // Creating Paypal Payment activity intent
-        val intent = Intent(requireContext(), PaymentActivity::class.java)
-
-        //putting the paypal configuration to the intent
-
-        //putting the paypal configuration to the intent
-        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config)
-
-        // Putting paypal payment to the intent
-
-        // Putting paypal payment to the intent
-        intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payment)
-
-        // Starting the intent activity for result
-        // the request code will be used on the method onActivityResult
-
-        // Starting the intent activity for result
-        // the request code will be used on the method onActivityResult
-        startActivityForResult(intent, PAYPAL_REQUEST_CODE)
     }
 
     override fun onResume() {

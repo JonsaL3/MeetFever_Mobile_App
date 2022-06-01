@@ -213,7 +213,6 @@ class QrActivity : AppCompatActivity() {
             },500)
             Handler(Looper.getMainLooper()).postDelayed(Runnable {
 
-                binding.fireWorks2.playAnimation()
                 binding.dots.playAnimation()
 
             },800)
@@ -225,7 +224,6 @@ class QrActivity : AppCompatActivity() {
             Handler(Looper.getMainLooper()).postDelayed(Runnable {
 
                 binding.fireWorks5.playAnimation()
-                binding.dots2.playAnimation()
 
             },1400)
             Handler(Looper.getMainLooper()).postDelayed(Runnable {

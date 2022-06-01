@@ -130,39 +130,6 @@
         app:lottie_rawRes="@raw/fireworks_rosa_amarillo" />
 
     <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/fireWorks2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:rotation="-74"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.42000002"
-        app:lottie_autoPlay="false"
-        app:lottie_loop="true"
-        app:lottie_rawRes="@raw/fireworks_rosa_amarillo" />
-
-
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/dots2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:rotation="-17"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.25"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.51"
-        app:lottie_autoPlay="false"
-        app:lottie_loop="true"
-        app:lottie_rawRes="@raw/dots_anim" />
-
-    <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/fireWorks"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
