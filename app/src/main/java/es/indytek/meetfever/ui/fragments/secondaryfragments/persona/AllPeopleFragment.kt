@@ -1,13 +1,11 @@
 package es.indytek.meetfever.ui.fragments.secondaryfragments.persona
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
-import es.indytek.meetfever.R
 import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
 import es.indytek.meetfever.data.webservice.WebServicePersona
 import es.indytek.meetfever.databinding.FragmentAllPeopleBinding
@@ -63,10 +61,7 @@ class AllPeopleFragment : Fragment() {
             override fun callback(any: Any) {
 
                 if (any == 0) {
-                    //TODO ERROR
-
                     Utils.terminarCargaOnError(binding.loadingAnimation, binding.topInfluencersNone)
-
                 } else {
                     val personas = any as PersonaWrapper
                     Utils.terminarCarga(requireContext(), binding.loadingAnimation){

@@ -1,15 +1,11 @@
 package es.indytek.meetfever.ui.fragments.secondaryfragments.empresa
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
-import es.indytek.meetfever.R
 import es.indytek.meetfever.data.webservice.WebServiceExperiencia
 import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
 import es.indytek.meetfever.databinding.FragmentAllExperiencesBinding
@@ -65,10 +61,7 @@ class AllExperiencesFragment : Fragment() {
             override fun callback(any: Any) {
 
                 if (any == 0) {
-                    // TODO ERROR
-
                     Utils.terminarCargaOnError(binding.loadingAnimation,binding.experiencesNone)
-
                 } else {
                     val experiencias = any as ExperienciaWrapper
                     Utils.terminarCarga(requireContext(), binding.loadingAnimation) {

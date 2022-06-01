@@ -6,7 +6,6 @@ import com.google.gson.GsonBuilder
 import es.indytek.meetfever.models.empresa.Empresa
 import es.indytek.meetfever.models.mesigue.MeSigue
 import es.indytek.meetfever.models.persona.Persona
-import es.indytek.meetfever.models.sexo.Sexo
 import es.indytek.meetfever.models.typeAdapters.LocalDateTimeTypeAdapter
 import es.indytek.meetfever.models.typeAdapters.LocalDateTypeAdapter
 import es.indytek.meetfever.models.usuario.Usuario

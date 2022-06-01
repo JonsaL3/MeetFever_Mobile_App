@@ -39,6 +39,15 @@
                 android:layout_marginEnd="10dp"
                 android:layout_height="45dp" />
 
+            <ImageView
+                android:layout_gravity="center"
+                android:id="@+id/famous_rectangle"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@drawable/ic_famous_edges"
+                android:visibility="gone"
+                />
+
         </FrameLayout>
 
         <TextView
@@ -52,6 +61,21 @@
             tools:text="Juan carlos palomo sanchex" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/fecha_opinion"
+        android:layout_width="157dp"
+        android:layout_height="20dp"
+        android:fontFamily="@font/montserrat_light"
+        android:gravity="center"
+        android:textColor="@color/gris_hint"
+        android:textSize="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.04000002"
+        tools:text="Pepote sanchez" />
 
     <TextView
         android:id="@+id/opinion_text"

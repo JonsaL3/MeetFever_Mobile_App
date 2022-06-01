@@ -26,7 +26,6 @@ import es.indytek.meetfever.ui.recyclerviews.adapters.ExperienciaRecyclerViewAda
 import es.indytek.meetfever.utils.Animations
 import es.indytek.meetfever.utils.Utils
 import nl.joery.animatedbottombar.AnimatedBottomBar
-import java.lang.Exception
 
 private const val ARG_PARAM1 = "usuario"
 
@@ -89,11 +88,7 @@ class ExplorerFragment : Fragment() {
 
         val textWatcher = object: TextWatcher {
 
-            override fun afterTextChanged(s: Editable?) {}
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            override fun afterTextChanged(s: Editable?) {
 
                 if (s.toString().isEmpty()) {
                     mostrarContenido()
@@ -103,7 +98,7 @@ class ExplorerFragment : Fragment() {
                         override fun callback(any: Any) {
 
                             if (any == 0) {
-                                // TODO ERROR
+                                Animations.ocultarVistaSuavemente(binding.localesEncontradosRecycler)
                             } else {
                                 val empresas = any as EmpresaWrapper
                                 //ocultarContenido()
@@ -114,7 +109,7 @@ class ExplorerFragment : Fragment() {
                                         adapter = EmpresaRecyclerViewAdapter(empresas, currentUsuario),
                                     )
                                 } catch (e: IllegalStateException) {
-                                    Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
+                                    Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context.")
                                     Utils.enviarRegistroDeErrorABBDD(
                                         context = requireContext(),
                                         stacktrace = e.message.toString(),
@@ -129,13 +124,13 @@ class ExplorerFragment : Fragment() {
                         override fun callback(any: Any) {
 
                             if (any == 0) {
-                                // TODO ERROR
+                                Animations.ocultarVistaSuavemente(binding.experienciasEncontradasRecycler)
                             } else {
                                 val experiencias = any as ExperienciaWrapper
                                 //ocultarContenido()
                                 try {
                                     Animations.pintarGridRecyclerViewSuavemente(
-                                        gridLayoutManager = GridLayoutManager(requireContext(), 3),
+                                        gridLayoutManager = GridLayoutManager(requireContext(), 2),
                                         recyclerView = binding.experienciasEncontradasRecycler,
                                         adapter = ExperienciaRecyclerViewAdapter(experiencias, currentUsuario)
                                     )
@@ -154,6 +149,10 @@ class ExplorerFragment : Fragment() {
                 }
 
             }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         }
 
         binding.inputMainActivityExplorer.addTextChangedListener(textWatcher)
@@ -208,9 +207,7 @@ class ExplorerFragment : Fragment() {
             override fun callback(any: Any) {
 
                 if (any == 0) {
-                    // TODO ERROR
                     Utils.terminarCargaOnError(binding.loadingAnimationExperienciasDestacadas, binding.experienciasDestacadasTextoNone)
-
                 }
                 else {
                     // Una vez encontradas las pinto suavemente
@@ -237,7 +234,6 @@ class ExplorerFragment : Fragment() {
             WebServiceGenericInterface {
             override fun callback(any: Any) {
                 if (any == 0) {
-                    // TODO ERROR
                     Utils.terminarCargaOnError(binding.loadingAnimationTopLocales, binding.localesTrendingTextoNone)
                 }
                 else {
@@ -266,6 +262,7 @@ class ExplorerFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         setBottomBarColorAndPosition()
+        binding.inputMainActivityExplorer.setText("")
     }
 
     private fun setBottomBarColorAndPosition() {

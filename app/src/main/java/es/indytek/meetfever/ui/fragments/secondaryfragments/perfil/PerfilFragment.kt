@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidmads.library.qrgenearator.QRGContents
 import androidmads.library.qrgenearator.QRGEncoder
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +20,7 @@ import es.indytek.meetfever.data.webservice.WebServiceUsuario
 import es.indytek.meetfever.databinding.FragmentPerfilBinding
 import es.indytek.meetfever.models.mesigue.MeSigue
 import es.indytek.meetfever.models.opinion.OpinionWrapper
+import es.indytek.meetfever.models.persona.Persona
 import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.models.usuario.UsuarioWrapper
 import es.indytek.meetfever.ui.fragments.secondaryfragments.follow.FollowedFollowingFragment
@@ -121,9 +123,8 @@ class PerfilFragment : Fragment() {
         WebServiceUsuario.obtenerSeguidores(usuario.id, requireContext(), object: WebServiceGenericInterface {
             override fun callback(any: Any) {
 
-                if (any == 0) {
-                    // TODO ERROR
-                } else {
+                if (any != 0) {
+
                     val seguidores = any as UsuarioWrapper
                     binding.tvNSeguidores.text = seguidores.size.toString()
                     Animations.mostrarVistaSuavemente(binding.seguidoresLayout)
@@ -141,9 +142,7 @@ class PerfilFragment : Fragment() {
         WebServiceUsuario.obtenerSeguidos(usuario.id, requireContext(), object: WebServiceGenericInterface {
             override fun callback(any: Any) {
 
-                if (any == 0) {
-                    // TODO ERROR
-                } else {
+                if (any != 0) {
                     val seguidos = any as UsuarioWrapper
                     binding.tvNseguidos.text = seguidos.size.toString()
                     Animations.mostrarVistaSuavemente(binding.seguidosLayout)
@@ -172,9 +171,7 @@ class PerfilFragment : Fragment() {
 
                     Log.w(":::", "isSeguidoPorUser: $any")
 
-                    if (any == 0) {
-                        // todo error
-                    } else {
+                    if (any != 0) {
                         meSigue = any as MeSigue
                         if (meSigue.mesigue) {
                             Log.d(":::", "LO SIGO -> $meSigue")
@@ -198,7 +195,7 @@ class PerfilFragment : Fragment() {
             override fun callback(any: Any) {
 
                 if (any == 0) {
-                    // todo error
+                    Toast.makeText(requireContext(), "No se ha podido seguir al usuario.", Toast.LENGTH_SHORT).show()
                 } else {
 
                     if (meSigue.mesigue) {
@@ -235,6 +232,10 @@ class PerfilFragment : Fragment() {
     }
 
     private fun pintarDatosUsuario() {
+
+        if (Utils.isFamous(usuario) && currentUsuario is Persona) { // solo puede considerarse influencer una persona
+            Animations.mostrarVistaSuavemente(binding.famousRectangle)
+        }
 
         // textos
         binding.tvNombre.text = usuario.nick
@@ -276,10 +277,7 @@ class PerfilFragment : Fragment() {
             override fun callback(any: Any) {
 
                 if (any == 0) {
-                    // TODO ERROR
-
-                        Utils.terminarCargaOnError(binding.loadingAnimationOpinionesPerfil, binding.feversByUserNone)
-
+                    Utils.terminarCargaOnError(binding.loadingAnimationOpinionesPerfil, binding.feversByUserNone)
                 } else {
                     val opiniones = any as OpinionWrapper
                     Utils.terminarCarga(requireContext(), binding.loadingAnimationOpinionesPerfil){

@@ -430,7 +430,7 @@ object Utils {
     fun terminarCargaOnError(loadningAnimation: View, noDataFoundTextView: View) {
 
         Animations.ocultarVistaSuavemente(loadningAnimation, 500)
-        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+        Handler(Looper.getMainLooper()).postDelayed({
             noDataFoundTextView.visibility = View.VISIBLE
             Animations.mostrarVistaSuavemente(noDataFoundTextView,500)
 
@@ -445,6 +445,10 @@ object Utils {
     fun hideKeyboard(context: Context, view: View) {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
+        
+    // aqui deberia contar el numero de seguidores pero por la prueba simplemente badbunny será famoso
+    fun isFamous(usuario: Usuario): Boolean {
+        return usuario.correo == "badbunny@gmail.com"
     }
 
 }

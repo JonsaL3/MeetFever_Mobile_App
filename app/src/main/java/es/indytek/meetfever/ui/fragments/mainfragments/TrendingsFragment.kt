@@ -63,11 +63,7 @@ class TrendingsFragment : Fragment() {
 
         val textWatcher = object: TextWatcher {
 
-            override fun afterTextChanged(s: Editable?) {}
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            override fun afterTextChanged(s: Editable?) {
 
                 if (s.toString().isEmpty()) {
                     mostrarContenido()
@@ -77,7 +73,7 @@ class TrendingsFragment : Fragment() {
                         override fun callback(any: Any) {
 
                             if (any == 0) {
-                                // TODO ERROR
+                                Animations.ocultarVistaSuavemente(binding.busquedaOpinionesRecyclerView)
                             } else {
                                 val opiniones = any as OpinionWrapper
                                 //ocultarContenido()
@@ -103,6 +99,10 @@ class TrendingsFragment : Fragment() {
                 }
 
             }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         }
 
         binding.inputMainActivityTrendings.addTextChangedListener(textWatcher)
@@ -136,10 +136,7 @@ class TrendingsFragment : Fragment() {
             override fun callback(any: Any) {
 
                 if (any == 0) {
-                    // TODO ERROR
-
-                        Utils.terminarCargaOnError(binding.loadingAnimationOpiniones, binding.opinionesNone)
-
+                    Utils.terminarCargaOnError(binding.loadingAnimationOpiniones, binding.opinionesNone)
                 } else {
                     val top100OpinionesMasGustadas24H = any as OpinionWrapper
                     top100OpinionesMasGustadas24H.forEach {
@@ -163,6 +160,7 @@ class TrendingsFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         setBottomBarColorAndPosition()
+        binding.inputMainActivityTrendings.setText("")
     }
 
     private fun setBottomBarColorAndPosition() {

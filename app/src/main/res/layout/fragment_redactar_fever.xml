@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,378 +8,519 @@
     android:orientation="vertical"
     >
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/enterprise_viewer"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="0dp"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
         <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:gravity="end">
+            android:layout_height="wrap_content">
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/botonSendFever"
-                android:layout_width="150dp"
-                android:layout_height="40dp"
-                android:background="@drawable/anim_button_pressed"
-                android:fontFamily="@font/montserrat_light"
-                android:text="@string/publicar_fever"
-                android:textAllCaps="false"
-
-                android:textColor="@color/white" />
-
-        </LinearLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
-                android:gravity="center">
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="0dp"
+                android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/foto_perfil"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:adjustViewBounds="true"
-                    android:scaleType="centerCrop"
-                    app:shapeAppearanceOverlay="@style/circular"
-                    tools:background="@tools:sample/avatars" />
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/opinion_container"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
+                    android:layout_margin="10dp"
+                    android:gravity="end">
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/botonSendFever"
+                        android:layout_width="150dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/anim_button_pressed"
+                        android:fontFamily="@font/montserrat_light"
+                        android:text="@string/publicar_fever"
+                        android:textAllCaps="false"
+
+                        android:textColor="@color/white" />
+
+                </LinearLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:id="@+id/foto_perfil"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:adjustViewBounds="true"
+                            android:scaleType="centerCrop"
+                            app:shapeAppearanceOverlay="@style/circular"
+                            tools:background="@tools:sample/avatars" />
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/opinion_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="10dp"
+                            android:fontFamily="@font/montserrat_light"
+                            android:hint="@string/escriba_aqui_su_opini_n_acerca_de_una_empresa_o_servicio"
+                            android:maxHeight="100dp"
+                            android:textColor="@color/gris_textos"
+                            android:textColorHint="@color/gris_hint"
+                            android:textSize="15sp" />
+
+                    </LinearLayout>
+
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/numeroCaracteresOpinion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="15dp"
                     android:fontFamily="@font/montserrat_light"
-                    android:hint="Escriba aqui su opinión de una @empresa o #experiencia"
-                    android:maxHeight="100dp"
+                    android:text="@string/_0_250_caracteres"
                     android:textColor="@color/gris_textos"
-                    android:textColorHint="@color/gris_hint"
-                    android:textSize="15sp" />
+                    android:textSize="10sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/profilePicture"
+                    app:layout_constraintHorizontal_bias="0.571"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.8"
+                    tools:ignore="SmallSp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginBottom="30dp"
+                    android:background="@color/gris_textos" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="15dp"
+                    android:fontFamily="@font/montserrat_light"
+                    android:text="@string/meetmoji_emoji_que_represente_como_fu_tu_experiencia"
+                    android:textColor="@color/gris_textos"
+                    android:textSize="10sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/profilePicture"
+                    app:layout_constraintHorizontal_bias="0.571"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.8"
+                    tools:ignore="SmallSp" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/animationView"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:lottie_autoPlay="true"
+                        app:lottie_loop="true"
+                        app:lottie_rawRes="@raw/loading_animation_thin" />
+
+                    <GridLayout
+                        android:id="@+id/lechuga"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:columnCount="10"
+                        android:padding="15dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                    </GridLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/no_seleccionado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="15dp"
+                    android:fontFamily="@font/montserrat_light"
+                    android:text="@string/no_seleccionado"
+                    android:textColor="@color/gris_textos"
+                    android:textSize="10sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/profilePicture"
+                    app:layout_constraintHorizontal_bias="0.571"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.8"
+                    tools:ignore="SmallSp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginBottom="30dp"
+                    android:background="@color/gris_textos" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="15dp"
+                    android:fontFamily="@font/montserrat_light"
+                    android:text="@string/seleccionar_la_empresa_que_te_proporcion_la_vivencia"
+                    android:textColor="@color/gris_textos"
+                    android:textSize="10sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/profilePicture"
+                    app:layout_constraintHorizontal_bias="0.571"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.8"
+                    tools:ignore="SmallSp" />
+
+                <LinearLayout
+                    android:id="@+id/empresa_seleccionada"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/image_empresa_seleccionada"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="20dp"
+                        android:src="@drawable/ic_default_enterprise_black_and_white" />
+
+                    <TextView
+                        android:id="@+id/nick_empresa_seleccionada"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="20dp"
+                        android:fontFamily="@font/montserrat_light"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        tools:text="Empresa genérica" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/seleccionar_empresa"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:visibility="visible">
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/boton_buscar_empresa"
+                        android:layout_width="150dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/anim_button_pressed"
+                        android:fontFamily="@font/montserrat_light"
+                        android:text="@string/buscar_empresa"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/testo_empresa_seleccionada"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginEnd="15dp"
+                    android:fontFamily="@font/montserrat_light"
+                    android:text="@string/no_seleccionado"
+                    android:textColor="@color/gris_textos"
+                    android:textSize="10sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/profilePicture"
+                    app:layout_constraintHorizontal_bias="0.571"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.8"
+                    tools:ignore="SmallSp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginBottom="30dp"
+                    android:background="@color/gris_textos" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="15dp"
+                    android:fontFamily="@font/montserrat_light"
+                    android:text="@string/selecciona_la_experiencia_opcional"
+                    android:textColor="@color/gris_textos"
+                    android:textSize="10sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/profilePicture"
+                    app:layout_constraintHorizontal_bias="0.571"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.8"
+                    tools:ignore="SmallSp" />
+
+                <LinearLayout
+                    android:id="@+id/experiencia_seleccionada"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/titulo_experiencia_seleccionada"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="20dp"
+                        android:fontFamily="@font/montserrat_light"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        tools:text="Experiencia genérica"
+
+                        />
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/imagen_experiencia_seleccionada"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="20dp"
+                        android:src="@drawable/ic_default_experiencie_true_tone"
+                        android:scaleType="centerCrop"
+                        app:shapeAppearance="@style/roundCorners"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/seleccionar_experiencia"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:visibility="visible">
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/boton_seleccionar_experiencia"
+                        android:layout_width="150dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/anim_button_pressed"
+                        android:fontFamily="@font/montserrat_light"
+                        android:text="@string/buscar_experiencia"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginEnd="15dp"
+                    android:fontFamily="@font/montserrat_light"
+                    android:text="@string/no_seleccionado"
+                    android:textColor="@color/gris_textos"
+                    android:textSize="10sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/profilePicture"
+                    app:layout_constraintHorizontal_bias="0.571"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.8"
+                    tools:ignore="SmallSp"
+                    android:id="@+id/testo_experiencia_seleccionada"
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginBottom="30dp"
+                    android:background="@color/gris_textos" />
 
             </LinearLayout>
 
-        </FrameLayout>
-
-        <TextView
-            android:id="@+id/numeroCaracteresOpinion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="15dp"
-            android:fontFamily="@font/montserrat_light"
-            android:text="@string/_0_250_caracteres"
-            android:textColor="@color/gris_textos"
-            android:textSize="10sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/profilePicture"
-            app:layout_constraintHorizontal_bias="0.571"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.8"
-            tools:ignore="SmallSp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginBottom="30dp"
-            android:background="@color/gris_textos" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="15dp"
-            android:fontFamily="@font/montserrat_light"
-            android:text="@string/meetmoji_emoji_que_represente_como_fu_tu_experiencia"
-            android:textColor="@color/gris_textos"
-            android:textSize="10sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/profilePicture"
-            app:layout_constraintHorizontal_bias="0.571"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.8"
-            tools:ignore="SmallSp" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-
-            <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/animationView"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:lottie_autoPlay="true"
-                app:lottie_loop="true"
-                app:lottie_rawRes="@raw/loading_animation_thin" />
-
-            <GridLayout
-                android:id="@+id/lechuga"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:columnCount="10"
-                android:padding="15dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-            </GridLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <TextView
-            android:id="@+id/no_seleccionado"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="15dp"
-            android:fontFamily="@font/montserrat_light"
-            android:text="@string/no_seleccionado"
-            android:textColor="@color/gris_textos"
-            android:textSize="10sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/profilePicture"
-            app:layout_constraintHorizontal_bias="0.571"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.8"
-            tools:ignore="SmallSp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginBottom="30dp"
-            android:background="@color/gris_textos" />
-
-        <LinearLayout
-            android:id="@+id/experienciasLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="center">
-
         </LinearLayout>
 
-        <FrameLayout
+    </ScrollView>
+
+
+    <FrameLayout
+        android:id="@+id/selector_empresa"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#88000000"
+        android:clickable="true"
+        android:visibility="gone">
+
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/no_seleccionado_experiencia_preview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="15dp"
-                android:fontFamily="@font/montserrat_light"
-                android:text="@string/no_ha_seleccionado_ninguna_experiencia_opcional"
-                android:textColor="@color/gris_textos"
-                android:textSize="25sp"
-                android:layout_gravity="center"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/profilePicture"
-                app:layout_constraintHorizontal_bias="0.571"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.8"
-                android:gravity="center"
-                tools:ignore="SmallSp"
-                android:visibility="visible"
-                />
-
-
-            <ImageView
-                android:id="@+id/experiencia_preview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:background="@tools:sample/avatars"
-                android:visibility="gone"/>
-            <ImageView
-                android:id="@+id/experiencia_preview_degradado"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:background="@drawable/ic_degradado_experiencia_redactar"
-                android:visibility="gone"/>
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginVertical="100dp"
+            android:background="@drawable/ic_custom_boton"
+            android:padding="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:layout_marginTop="20dp">
+                android:orientation="vertical">
+
                 <TextView
-                    android:id="@+id/experiencia_nombre"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:text="CACA"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/montserrat_light"
                     android:gravity="center"
-                    android:layout_gravity="center"
+                    android:text="@string/buscar_empresa_local"
                     android:textColor="@color/white"
-                    android:visibility="gone"/>
+                    android:textSize="25sp" />
+
+                <EditText
+                    android:id="@+id/input_nick_empresa"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="50dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/ic_inputs_login"
+                    android:elevation="20dp"
+                    android:ems="10"
+                    android:fontFamily="@font/montserrat_light"
+                    android:gravity="center"
+                    android:hint="@string/buscar_empresa_por_nick"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/gris_textos"
+                    android:textColorHint="@color/gris_textos"
+                    android:textSize="15sp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_selector_empresas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:layout_marginTop="10dp" />
+
                 <TextView
-                    android:id="@+id/experiencia_descripcion"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/texto_error_busqueda_empresa"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:text="CACA"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/montserrat_light"
                     android:gravity="center"
-                    android:layout_gravity="center"
-                    android:textColor="@color/white"
-                    android:layout_marginTop="5dp"
-                    android:visibility="gone"/>
+                    android:text="@string/ninguna_empresa_coincide_con_la_b_suqueda"
+                    android:textColor="@color/gris_textos"
+                    android:textSize="20sp" />
+
             </LinearLayout>
 
-        </FrameLayout>
-
-    </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/enterprise_viewer"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="0dp"
-        android:layout_width="match_parent"
-        android:layout_height="250dp">
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/preview_enterprise"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            app:shapeAppearanceOverlay="@style/roundBottomCorners"
-            tools:background="@tools:sample/avatars"
-            android:visibility="gone"
-            />
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/degradado"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            app:shapeAppearanceOverlay="@style/roundBottomCorners"
-            android:src="@drawable/ic_degradado_empresa_redactar"
-            android:visibility="gone"
-            />
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:paddingHorizontal="15dp"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/no_seleccionado_preview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="15dp"
-                android:fontFamily="@font/montserrat_light"
-                android:text="@string/no_ha_seleccionado_ning_n_local_aun"
-                android:textColor="@color/gris_textos"
-                android:textSize="25sp"
-                android:layout_gravity="center"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/profilePicture"
-                app:layout_constraintHorizontal_bias="0.571"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.8"
-                android:gravity="center"
-                tools:ignore="SmallSp"
-                android:visibility="visible"
-                />
-
-            <TextView
-                android:id="@+id/el_local_que_seleccione"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="15dp"
-                android:fontFamily="@font/montserrat_light"
-                android:text="El local que mencione con @ delante del nombre aparecerá aqui abajo"
-                android:textColor="@color/gris_textos"
-                android:textSize="15sp"
-                android:layout_gravity="center"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/profilePicture"
-                app:layout_constraintHorizontal_bias="0.571"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.8"
-                android:gravity="center"
-                tools:ignore="SmallSp"
-                android:layout_marginTop="15dp"
-                android:visibility="visible"
-                />
-
-
-            <TextView
-                android:id="@+id/nombre_empresa"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="15dp"
-                android:fontFamily="@font/montserrat_light"
-                tools:text="CaniCars"
-                android:textColor="@color/white"
-                android:textSize="25sp"
-                android:layout_gravity="center"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/profilePicture"
-                app:layout_constraintHorizontal_bias="0.571"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.8"
-                android:gravity="center"
-                tools:ignore="SmallSp"
-                android:visibility="gone"
-                />
-
-            <TextView
-                android:id="@+id/descripcion_empresa"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="15dp"
-                android:fontFamily="@font/montserrat_light"
-                tools:text="Bua tu mi tienda es la leche"
-                android:textColor="@color/white"
-                android:textSize="15sp"
-                android:layout_gravity="center"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/profilePicture"
-                app:layout_constraintHorizontal_bias="0.571"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.8"
-                android:gravity="center"
-                tools:ignore="SmallSp"
-                android:layout_marginTop="15dp"
-                android:visibility="gone"
-                />
-
-        </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
 
     </FrameLayout>
 
-</RelativeLayout>
+    <FrameLayout
+        android:id="@+id/selector_experiencia"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#88000000"
+        android:clickable="true"
+        android:visibility="gone">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginVertical="100dp"
+            android:background="@drawable/ic_custom_boton"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/montserrat_light"
+                    android:gravity="center"
+                    android:text="@string/buscar_experiencia"
+                    android:textColor="@color/white"
+                    android:textSize="25sp" />
+
+                <EditText
+                    android:id="@+id/input_titulo_experiencia"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="50dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/ic_inputs_login"
+                    android:elevation="20dp"
+                    android:ems="10"
+                    android:fontFamily="@font/montserrat_light"
+                    android:gravity="center"
+                    android:hint="@string/buscar_experiencia_por_titulo"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/gris_textos"
+                    android:textColorHint="@color/gris_textos"
+                    android:textSize="15sp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_selector_experiencias"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/texto_error_busqueda_experiencia"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/montserrat_light"
+                    android:gravity="center"
+                    android:text="@string/ninguna_experiencia_coincide_con_la_b_squeda"
+                    android:textColor="@color/gris_textos"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </FrameLayout>
+
+
+</FrameLayout>

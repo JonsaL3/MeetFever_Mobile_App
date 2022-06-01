@@ -9,7 +9,6 @@ import es.indytek.meetfever.models.empresa.EmpresaWrapper
 import es.indytek.meetfever.models.entrada.Entrada
 import es.indytek.meetfever.models.experiencia.Experiencia
 import es.indytek.meetfever.models.experiencia.ExperienciaWrapper
-import es.indytek.meetfever.models.opinion.OpinionWrapper
 import es.indytek.meetfever.models.typeAdapters.LocalDateTimeTypeAdapter
 import es.indytek.meetfever.models.typeAdapters.LocalDateTypeAdapter
 import es.indytek.meetfever.utils.Utils
@@ -23,10 +22,12 @@ object WebServiceExperiencia {
     // busco una experiencia por cualquiera de sus campos
     fun buscarExperiencia(busqueda: String, context: Context, callback : WebServiceGenericInterface) {
 
-        val url = "interface/api/meetfever/experiencia/BUSQUEDAEXPERIENCIA" // TODO URL DE ALBERTO
+        val url = "interface/api/meetfever/experiencia/ObtenerExperienciaGeneral"
         val jsonObject = JSONObject().apply {
-            put("busqueda", busqueda)
+            put("Palabra", busqueda)
         }
+
+        Log.d(":::", jsonObject.toString())
 
         try {
 
@@ -36,7 +37,7 @@ object WebServiceExperiencia {
                     if (any.toString().isNotEmpty()) {
                         // Obtengo el response
                         val opiniones = GsonBuilder()
-                            .registerTypeAdapter(LocalDate::class.java, LocalDateTypeAdapter())
+                            .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeTypeAdapter())
                             .create()
                             .fromJson(any.toString(), ExperienciaWrapper::class.java)
                         if (opiniones.size > 0)
@@ -141,6 +142,8 @@ object WebServiceExperiencia {
         val jsonObject = JSONObject().apply {
             put("Titulo", nickname)
         }
+
+        Log.d(":::", "jsonObject: $jsonObject")
 
         try {
 

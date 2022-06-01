@@ -13,6 +13,7 @@
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
+
         <!--<ImageView
             android:id="@+id/enterpriseImageRecycler1"
             android:layout_width="110dp"
@@ -35,6 +36,15 @@
             android:layout_width="116dp"
             android:layout_height="116dp"
             android:src="@drawable/ic_blured_edges"
+            />
+
+        <ImageView
+            android:layout_gravity="center"
+            android:id="@+id/famous_rectangle"
+            android:layout_width="116dp"
+            android:layout_height="116dp"
+            android:src="@drawable/ic_famous_edges"
+            android:visibility="gone"
             />
 
     </FrameLayout>

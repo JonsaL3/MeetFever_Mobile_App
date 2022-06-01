@@ -1,25 +1,17 @@
 package es.indytek.meetfever.ui.fragments.secondaryfragments.empresa
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import es.indytek.meetfever.R
 import es.indytek.meetfever.data.webservice.WebServiceEmpresa
 import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
 import es.indytek.meetfever.databinding.FragmentAllEmpresasBinding
 import es.indytek.meetfever.models.empresa.EmpresaWrapper
 import es.indytek.meetfever.models.usuario.Usuario
-import es.indytek.meetfever.ui.fragments.mainfragments.TrendingsFragment
 import es.indytek.meetfever.ui.recyclerviews.adapters.EmpresaRecyclerViewAdapter
-import es.indytek.meetfever.ui.recyclerviews.adapters.OpinionRecyclerViewAdapter
-import es.indytek.meetfever.ui.recyclerviews.adapters.PersonaRecyclerViewAdapter
 import es.indytek.meetfever.utils.Animations
 import es.indytek.meetfever.utils.Utils
 
@@ -69,10 +61,7 @@ class AllEmpresasFragment : Fragment() {
             override fun callback(any: Any) {
 
                 if (any == 0) {
-                    // TODO ERROR
-
                     Utils.terminarCargaOnError(binding.loadingAnimation, binding.topLocalesNone)
-
                 } else {
                     val empresas = any as EmpresaWrapper
                     Utils.terminarCarga(requireContext(), binding.loadingAnimation){

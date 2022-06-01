@@ -36,7 +36,7 @@
 
 
                 <LinearLayout
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:id="@+id/seguidores_layout"
                     android:orientation="vertical"
                     android:layout_width="wrap_content"
@@ -74,7 +74,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:id="@+id/seguidos_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -158,6 +158,20 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="1.0"
                     tools:background="@tools:sample/avatars"
+                    />
+
+                <ImageView
+                    android:id="@+id/famous_rectangle"
+                    android:layout_width="171dp"
+                    android:layout_height="167dp"
+                    android:layout_marginBottom="80dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="1.0"
+                    tools:background="@drawable/ic_famous_edges"
+                    android:visibility="gone"
                     />
 
                 <TextView
