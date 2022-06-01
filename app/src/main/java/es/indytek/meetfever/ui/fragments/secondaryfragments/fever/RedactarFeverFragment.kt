@@ -337,6 +337,7 @@ class RedactarFeverFragment : Fragment() {
     private fun selectExperience(experiencias: ExperienciaWrapper){
 
         experiencias.forEach {
+            Log.d(":::","XD")
             //creo la caja de experiencia
             val linearLayout = LinearLayout(requireContext())
             linearLayout.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
