@@ -56,6 +56,7 @@ class ExperienciaFragment : Fragment() {
 
         entradasVendidas = experiencia.numeroEntradas
 
+        Log.d(":::", "CVVVV -> " + experiencia.aforo.toString())
         getNumeroEntradas()
     }
 
@@ -82,6 +83,7 @@ class ExperienciaFragment : Fragment() {
         arrancarListeners()
 
         dialog = DialogMaker(requireContext()).infoLoading()
+
     }
 
     // arranco los listeners
@@ -106,8 +108,12 @@ class ExperienciaFragment : Fragment() {
                     !(usuario as Persona).apellido2.isNullOrEmpty() ||
                     !(usuario as Persona).dni.isNullOrEmpty()
                 ){
+
+                    val entradasSeleccionadas = binding.nEntradas.text.toString().toInt()
+                    val entradasPosibles = entradasSeleccionadas + entradasVendidas
+
                     if(
-                        (binding.nEntradas.text.toString().toInt() + entradasVendidas) <= (experiencia.numeroEntradas - entradasVendidas)
+                        entradasPosibles <= experiencia.aforo
                     ){
                         val fragmento = PasarelaDePagoFragment.newInstance(usuario as Persona, binding.nEntradas.text.toString().toInt(), experiencia)
                         Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager,fragmento, "", R.id.frame_layout)
@@ -145,8 +151,14 @@ class ExperienciaFragment : Fragment() {
         }
 
         binding.botonSumarEntradas.setOnClickListener {
+
+            val entradasSeleccionadas = binding.nEntradas.text.toString().toInt()
+            val entradasPosibles = entradasSeleccionadas + entradasVendidas
+
+            if(entradasPosibles < experiencia.aforo){
                 binding.nEntradas.text = (binding.nEntradas.text.toString().toInt() + 1).toString()
                 binding.precioCifra.text = ((experiencia.precio * Constantes.COMISION_MEET_FEVER * Constantes.IVA).roundToInt() * binding.nEntradas.text.toString().toInt()).toString() + " €"
+            }
         }
 
 
@@ -214,6 +226,8 @@ class ExperienciaFragment : Fragment() {
                         dialog.dismiss()
 
                         entradasVendidas = any.toString().split(":")[1].split("}")[0].toInt()
+
+                        binding.entradasCifra.text = getString(R.string.Aforo, entradasVendidas.toString(), experiencia.aforo.toString())
                     }else{
 
                         DialogMaker(
@@ -251,6 +265,8 @@ class ExperienciaFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         Utils.ocultarBottomBar(requireActivity())
+
+        getNumeroEntradas()
     }
 
     companion object {

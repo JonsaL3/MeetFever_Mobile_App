@@ -77,7 +77,12 @@ object Utils {
 
     }
 
-    fun putBase64ImageIntoImageViewWithPlaceholder(imageView: ImageView, base64Image: String, context: Context, placeholder: Int) {
+    fun putBase64ImageIntoImageViewWithPlaceholder(
+        imageView: ImageView,
+        base64Image: String,
+        context: Context,
+        placeholder: Int
+    ) {
         var requestOptions = RequestOptions()
         requestOptions = requestOptions.transform(CenterCrop(), RoundedCorners(55))
 
@@ -88,7 +93,11 @@ object Utils {
             .into(imageView)
     }
 
-    fun putBase64ImageIntoImageViewWithoutCorners(imageView: ImageView, base64Image: String, context: Context) {
+    fun putBase64ImageIntoImageViewWithoutCorners(
+        imageView: ImageView,
+        base64Image: String,
+        context: Context
+    ) {
 
         var requestOptions = RequestOptions()
         requestOptions = requestOptions.transform(CenterCrop())
@@ -100,7 +109,12 @@ object Utils {
 
     }
 
-    fun putBase64ImageIntoImageViewWithoutCornersWithPlaceholder(imageView: ImageView, base64Image: String, context: Context, placeholder: Int) {
+    fun putBase64ImageIntoImageViewWithoutCornersWithPlaceholder(
+        imageView: ImageView,
+        base64Image: String,
+        context: Context,
+        placeholder: Int
+    ) {
         var requestOptions = RequestOptions()
         requestOptions = requestOptions.transform(CenterCrop())
 
@@ -112,7 +126,12 @@ object Utils {
 
     }
 
-    fun putBase64ImageIntoImageViewCircularWithPlaceholder(imageView: ImageView, base64Image: String, context: Context, placeholder: Int) {
+    fun putBase64ImageIntoImageViewCircularWithPlaceholder(
+        imageView: ImageView,
+        base64Image: String,
+        context: Context,
+        placeholder: Int
+    ) {
         var requestOptions = RequestOptions()
         requestOptions = requestOptions.transform(CenterCrop(), RoundedCorners(500))
 
@@ -123,7 +142,11 @@ object Utils {
             .into(imageView)
     }
 
-    fun putBase64ImageIntoImageViewCircular(imageView: ImageView, base64Image: String, context: Context) {
+    fun putBase64ImageIntoImageViewCircular(
+        imageView: ImageView,
+        base64Image: String,
+        context: Context
+    ) {
 
         var requestOptions = RequestOptions()
         requestOptions = requestOptions.transform(CenterCrop(), RoundedCorners(500))
@@ -142,11 +165,18 @@ object Utils {
 
     fun getDominantColorInImageFromBase64(base64Image: String): Int {
 
-        val image = BitmapFactory.decodeStream(ByteArrayInputStream(Base64.decode(base64Image, Base64.DEFAULT)))
+        val image = BitmapFactory.decodeStream(
+            ByteArrayInputStream(
+                Base64.decode(
+                    base64Image,
+                    Base64.DEFAULT
+                )
+            )
+        )
 
         image?.let {
             return getDominantColorInImage(image)
-        }?: kotlin.run {
+        } ?: kotlin.run {
             return Color.BLACK
         }
 
@@ -161,7 +191,11 @@ object Utils {
             .into(imageView)
     }
 
-    fun putResourceImageIntoImageViewCircular(imageView: ImageView, resourceImage: Int, context: Context) {
+    fun putResourceImageIntoImageViewCircular(
+        imageView: ImageView,
+        resourceImage: Int,
+        context: Context
+    ) {
         var requestOptions = RequestOptions()
         requestOptions = requestOptions.transform(CenterCrop(), RoundedCorners(500))
         Glide.with(context)
@@ -170,7 +204,11 @@ object Utils {
             .into(imageView)
     }
 
-    fun putResourceImageIntoImageViewWithoutCorners(imageView: ImageView, resourceImage: Int, context: Context) {
+    fun putResourceImageIntoImageViewWithoutCorners(
+        imageView: ImageView,
+        resourceImage: Int,
+        context: Context
+    ) {
         var requestOptions = RequestOptions()
         Glide.with(context)
             .load(resourceImage)
@@ -196,31 +234,64 @@ object Utils {
         foto?.let { // puede existir la foto pero no ser correcta
 
             if (usuario is Empresa) {
-                putBase64ImageIntoImageViewWithPlaceholder(imageView, it, context, R.drawable.ic_default_enterprise_black_and_white)
+                putBase64ImageIntoImageViewWithPlaceholder(
+                    imageView,
+                    it,
+                    context,
+                    R.drawable.ic_default_enterprise_black_and_white
+                )
             } else {
                 // por ejemplo en las opiniones no se si es una empresa o una persona, asique por defecto que la pinte circular ahi siempre
-                putBase64ImageIntoImageViewCircularWithPlaceholder(imageView, it, context, R.drawable.ic_default_user_image)
+                putBase64ImageIntoImageViewCircularWithPlaceholder(
+                    imageView,
+                    it,
+                    context,
+                    R.drawable.ic_default_user_image
+                )
             }
 
-        }?: kotlin.run { // si no tiene foto porque es null...
+        } ?: kotlin.run { // si no tiene foto porque es null...
 
             if (usuario is Empresa) {
-                putResourceImageIntoImageViewWithoutCorners(imageView, R.drawable.ic_default_enterprise_black_and_white, context)
+                putResourceImageIntoImageViewWithoutCorners(
+                    imageView,
+                    R.drawable.ic_default_enterprise_black_and_white,
+                    context
+                )
             } else {
-                putResourceImageIntoImageViewCircular(imageView, R.drawable.ic_default_user_image, context)
+                putResourceImageIntoImageViewCircular(
+                    imageView,
+                    R.drawable.ic_default_user_image,
+                    context
+                )
             }
 
         }
 
     }
 
-    fun pintarFotoDePerfilDirectamente(usuario: Usuario, nuevaFoto: String, imageView: ImageView, context: Context) {
+    fun pintarFotoDePerfilDirectamente(
+        usuario: Usuario,
+        nuevaFoto: String,
+        imageView: ImageView,
+        context: Context
+    ) {
 
         if (usuario is Empresa) {
-            putBase64ImageIntoImageViewWithPlaceholder(imageView, nuevaFoto, context, R.drawable.ic_default_enterprise_black_and_white)
+            putBase64ImageIntoImageViewWithPlaceholder(
+                imageView,
+                nuevaFoto,
+                context,
+                R.drawable.ic_default_enterprise_black_and_white
+            )
         } else {
             // por ejemplo en las opiniones no se si es una empresa o una persona, asique por defecto que la pinte circular ahi siempre
-            putBase64ImageIntoImageViewCircularWithPlaceholder(imageView, nuevaFoto, context, R.drawable.ic_default_user_image)
+            putBase64ImageIntoImageViewCircularWithPlaceholder(
+                imageView,
+                nuevaFoto,
+                context,
+                R.drawable.ic_default_user_image
+            )
         }
 
     }
@@ -248,6 +319,7 @@ object Utils {
         ocultarBotonMenu(activity)
         ocultarTextoBienvenida(activity)
     }
+
     fun mostrarElementosUI(activity: Activity) {
         mostrarBotonAjustes(activity)
         mostrarBottomBar(activity)
@@ -256,17 +328,17 @@ object Utils {
         mostrarTextoBienvenida(activity)
     }
 
-    fun transparentThemeOn(activity: Activity){
+    fun transparentThemeOn(activity: Activity) {
         val god = activity.findViewById<ConstraintLayout>(R.id.god)
 
-        god.fitsSystemWindows=true
+        god.fitsSystemWindows = true
     }
 
     fun mostrarBottomBar(activity: Activity) {
         val bottomBar = activity.findViewById<AnimatedBottomBar>(R.id.bottom_bar)
         Handler(Looper.getMainLooper()).postDelayed(Runnable {
             Animations.setLayoutHeightWithTopMargin(bottomBar, 200, 0)
-        },300)
+        }, 300)
     }
 
     fun ocultarBottomBar(activity: Activity) {
@@ -277,7 +349,7 @@ object Utils {
     fun mostrarFabSpeedDial(activity: Activity) {
         val fabSpeedDial = activity.findViewById<FabSpeedDial>(R.id.menu_accion_rapida)
 
-        if(fabSpeedDial.visibility == View.GONE) {
+        if (fabSpeedDial.visibility == View.GONE) {
 
             Handler(Looper.getMainLooper()).postDelayed(Runnable {
 
@@ -285,7 +357,7 @@ object Utils {
 
                 Animations.mostrarVistaSuavemente(fabSpeedDial)
 
-            },500)
+            }, 500)
 
         }
     }
@@ -293,7 +365,7 @@ object Utils {
     fun ocultarFabSpeedDial(activity: Activity) {
         val fabSpeedDial = activity.findViewById<FabSpeedDial>(R.id.menu_accion_rapida)
 
-        if(fabSpeedDial.visibility == View.VISIBLE) {
+        if (fabSpeedDial.visibility == View.VISIBLE) {
 
             Animations.ocultarVistaSuavemente(fabSpeedDial)
 
@@ -306,7 +378,7 @@ object Utils {
     fun mostrarBotonAjustes(activity: Activity) {
         val imageView = activity.findViewById<ImageView>(R.id.ir_a_ajustes)
 
-        if(imageView.visibility == View.GONE) {
+        if (imageView.visibility == View.GONE) {
 
             Handler(Looper.getMainLooper()).postDelayed(Runnable {
 
@@ -314,7 +386,7 @@ object Utils {
 
                 Animations.mostrarVistaSuavemente(imageView)
 
-            },500)
+            }, 500)
 
         }
     }
@@ -322,7 +394,7 @@ object Utils {
     fun ocultarBotonAjustes(activity: Activity) {
         val imageView = activity.findViewById<ImageView>(R.id.ir_a_ajustes)
 
-        if(imageView.visibility == View.VISIBLE) {
+        if (imageView.visibility == View.VISIBLE) {
 
             Animations.ocultarVistaSuavemente(imageView)
 
@@ -335,7 +407,7 @@ object Utils {
     fun mostrarBotonMenu(activity: Activity) {
         val imageView = activity.findViewById<ImageView>(R.id.openDrawer)
 
-        if(imageView.visibility == View.GONE) {
+        if (imageView.visibility == View.GONE) {
 
             Handler(Looper.getMainLooper()).postDelayed(Runnable {
 
@@ -343,7 +415,7 @@ object Utils {
 
                 Animations.mostrarVistaSuavemente(imageView)
 
-            },500)
+            }, 500)
 
         }
     }
@@ -351,7 +423,7 @@ object Utils {
     fun ocultarBotonMenu(activity: Activity) {
         val imageView = activity.findViewById<ImageView>(R.id.openDrawer)
 
-        if(imageView.visibility == View.VISIBLE) {
+        if (imageView.visibility == View.VISIBLE) {
 
             Animations.ocultarVistaSuavemente(imageView)
 
@@ -364,7 +436,7 @@ object Utils {
     fun mostrarTextoBienvenida(activity: Activity) {
         val imageView = activity.findViewById<TextView>(R.id.textoBuenosDias)
 
-        if(imageView.visibility == View.GONE) {
+        if (imageView.visibility == View.GONE) {
 
             Handler(Looper.getMainLooper()).postDelayed(Runnable {
 
@@ -372,7 +444,7 @@ object Utils {
 
                 Animations.mostrarVistaSuavemente(imageView)
 
-            },500)
+            }, 500)
 
         }
     }
@@ -380,7 +452,7 @@ object Utils {
     fun ocultarTextoBienvenida(activity: Activity) {
         val imageView = activity.findViewById<TextView>(R.id.textoBuenosDias)
 
-        if(imageView.visibility == View.VISIBLE) {
+        if (imageView.visibility == View.VISIBLE) {
 
             Animations.ocultarVistaSuavemente(imageView)
 
@@ -394,36 +466,43 @@ object Utils {
 
         Animations.ocultarVistaSuavemente(loadningAnimation)
 
-        Handler(Looper.getMainLooper()).postDelayed( {
+        Handler(Looper.getMainLooper()).postDelayed({
 
             loadningAnimation.visibility = View.GONE
 
             try {
                 acction()
             } catch (e: IllegalStateException) {
-                Log.e(":::", "¿Tienes un movil o una tostadora? No le dió tiempo a cargar al context")
+                Log.e(
+                    ":::",
+                    "¿Tienes un movil o una tostadora? No le dió tiempo a cargar al context"
+                )
                 enviarRegistroDeErrorABBDD(
                     context = context,
                     stacktrace = e.message.toString(),
                 )
             }
 
-        },500)
+        }, 500)
     }
 
     fun enviarRegistroDeErrorABBDD(stacktrace: String, appFuente: Int = 0, context: Context) {
 
-        WebServiceRegistroErrores.enviarError(stacktrace, appFuente, context, object: WebServiceGenericInterface {
-            override fun callback(any: Any) {
+        WebServiceRegistroErrores.enviarError(
+            stacktrace,
+            appFuente,
+            context,
+            object : WebServiceGenericInterface {
+                override fun callback(any: Any) {
 
-                if (any == 0) { // TODO por algun motivo llega un 0 a veces pero se inserta igualmente
-                    Log.e(":::", "No se pudo enviar el error al servidor.")
-                } else {
-                    Log.d(":::", "Log enviado correctamente a la base de datos.")
+                    if (any == 0) { // TODO por algun motivo llega un 0 a veces pero se inserta igualmente
+                        Log.e(":::", "No se pudo enviar el error al servidor.")
+                    } else {
+                        Log.d(":::", "Log enviado correctamente a la base de datos.")
+                    }
+
                 }
-
-            }
-        })
+            })
 
     }
 
@@ -432,20 +511,22 @@ object Utils {
         Animations.ocultarVistaSuavemente(loadningAnimation, 500)
         Handler(Looper.getMainLooper()).postDelayed({
             noDataFoundTextView.visibility = View.VISIBLE
-            Animations.mostrarVistaSuavemente(noDataFoundTextView,500)
+            Animations.mostrarVistaSuavemente(noDataFoundTextView, 500)
 
-        },500)
+        }, 500)
     }
 
     fun colorIsConsideredDark(color: Int): Boolean {
-        val darkness = 1 - (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255
+        val darkness =
+            1 - (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255
         return darkness >= 0.5
     }
 
     fun hideKeyboard(context: Context, view: View) {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
-        
+    }
+
     // aqui deberia contar el numero de seguidores pero por la prueba simplemente badbunny será famoso
     fun isFamous(usuario: Usuario): Boolean {
         return usuario.correo == "badbunny@gmail.com"

@@ -189,6 +189,7 @@ object WebServiceExperiencia {
             WebService.processRequestPost(context, url, jsonObject, object: WebServiceGenericInterface {
                 override fun callback(any: Any) {
 
+                    Log.d(":::", "ABBBB -> " + any.toString())
                     if (any.toString().isNotEmpty()) {
 
                         callback.callback(any)

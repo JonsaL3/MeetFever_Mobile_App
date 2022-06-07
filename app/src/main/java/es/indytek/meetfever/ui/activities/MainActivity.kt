@@ -1,7 +1,7 @@
 package es.indytek.meetfever.ui.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import es.indytek.meetfever.R
 import es.indytek.meetfever.databinding.ActivityMainBinding
@@ -76,6 +77,21 @@ class MainActivity : AppCompatActivity() {
         binding.openDrawer.setOnClickListener {
             Log.d(":::","XD")
             binding.drawerLayout.open()
+        }
+
+        binding.botonSoporte.setOnClickListener {
+            // preparlo lo que necesito para irme a la main activity
+            val bundle = Bundle()
+            val intent = Intent(this, WebActivity::class.java)
+
+            // guardo el usuario en el bundle
+            bundle.putSerializable("usuario", currentUsuario)
+            intent.putExtras(bundle)
+
+            // me voy a la otra actividad
+            startActivity(intent)
+            finish()
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }
     }
 

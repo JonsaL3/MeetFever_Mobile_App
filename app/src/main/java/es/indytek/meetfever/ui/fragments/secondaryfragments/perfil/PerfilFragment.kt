@@ -27,6 +27,7 @@ import es.indytek.meetfever.ui.fragments.secondaryfragments.follow.FollowedFollo
 import es.indytek.meetfever.ui.recyclerviews.adapters.OpinionRecyclerViewAdapter
 import es.indytek.meetfever.utils.Animations
 import es.indytek.meetfever.utils.Utils
+import java.lang.IllegalStateException
 
 private const val ARG_PARAM1 = "usuarioGenerico"
 private const val ARG_PARAM2 = "usuario"
@@ -276,18 +277,23 @@ class PerfilFragment : Fragment() {
         WebServiceOpinion.obtenerOpinionPorIdAutor(usuario, currentUsuario, requireContext() ,object : WebServiceGenericInterface {
             override fun callback(any: Any) {
 
-                if (any == 0) {
-                    Utils.terminarCargaOnError(binding.loadingAnimationOpinionesPerfil, binding.feversByUserNone)
-                } else {
-                    val opiniones = any as OpinionWrapper
-                    Utils.terminarCarga(requireContext(), binding.loadingAnimationOpinionesPerfil){
-                        Animations.pintarLinearRecyclerViewSuavemente(
-                            linearLayoutManager = LinearLayoutManager(requireContext()),
-                            recyclerView = binding.opinionesUsuarioRecycler,
-                            adapter = OpinionRecyclerViewAdapter(opiniones, PerfilFragment::class.java, currentUsuario),
-                            orientation = LinearLayoutManager.VERTICAL,
-                        )
+                try{
+                    if (any == 0) {
+                        Utils.terminarCargaOnError(binding.loadingAnimationOpinionesPerfil, binding.feversByUserNone)
+                    } else {
+                        val opiniones = any as OpinionWrapper
+                        Utils.terminarCarga(requireContext(), binding.loadingAnimationOpinionesPerfil){
+                            Animations.pintarLinearRecyclerViewSuavemente(
+                                linearLayoutManager = LinearLayoutManager(requireContext()),
+                                recyclerView = binding.opinionesUsuarioRecycler,
+                                adapter = OpinionRecyclerViewAdapter(opiniones, PerfilFragment::class.java, currentUsuario),
+                                orientation = LinearLayoutManager.VERTICAL,
+                            )
+                        }
                     }
+                }catch (e: IllegalStateException){
+                    //TODO XD
+                    //Este try hace que la app no explote al volver atras rapido del perfil
                 }
 
             }
