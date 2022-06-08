@@ -71,15 +71,16 @@
 
             <LinearLayout
                 android:id="@+id/explorer_normal"
-                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <!-- Las 4 experiencias mas mencionadas o que se yo -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal">
+
                     <TextView
                         android:id="@+id/experienciasDestacadasTexto"
                         android:layout_width="wrap_content"
@@ -88,15 +89,14 @@
                         android:fontFamily="@font/montserrat_light"
                         android:text="@string/experiencias_destacadas"
                         android:textColor="@color/white"
-                        android:textSize="22sp"
-                        />
+                        android:textSize="22sp" />
 
                     <com.airbnb.lottie.LottieAnimationView
-                        android:layout_marginTop="3dp"
                         android:id="@+id/arrow1"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_gravity="center"
+                        android:layout_marginTop="3dp"
                         android:rotation="-90"
                         app:lottie_autoPlay="true"
                         app:lottie_loop="true"
@@ -112,24 +112,22 @@
                     android:text="@string/experiencias_destacadas_none"
                     android:textColor="@color/gris_textos"
                     android:textSize="15sp"
-                    android:visibility="gone"
-                    />
+                    android:visibility="gone" />
 
                 <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/loadingAnimationExperienciasDestacadas"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_gravity="center"
-                    app:lottie_rawRes="@raw/loading_animation_thin"
                     app:lottie_autoPlay="true"
-                    app:lottie_loop="true"/>
+                    app:lottie_loop="true"
+                    app:lottie_rawRes="@raw/loading_animation_thin" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/experienciaDestacadasRecyclerView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    />
+                    android:layout_gravity="center" />
 
                 <!-- Horizontal scroll view con los locales con mas seguidores -->
                 <LinearLayout
@@ -145,15 +143,14 @@
                         android:fontFamily="@font/montserrat_light"
                         android:text="@string/top_locales"
                         android:textColor="@color/white"
-                        android:textSize="22sp"
-                        />
+                        android:textSize="22sp" />
 
                     <com.airbnb.lottie.LottieAnimationView
                         android:id="@+id/arrow2"
-                        android:layout_marginTop="3dp"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_gravity="center"
+                        android:layout_marginTop="3dp"
                         android:rotation="-90"
                         app:lottie_autoPlay="true"
                         app:lottie_loop="true"
@@ -169,24 +166,22 @@
                     android:text="@string/top_locales_none"
                     android:textColor="@color/gris_textos"
                     android:textSize="15sp"
-                    android:visibility="gone"
-                    />
+                    android:visibility="gone" />
 
                 <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/loadingAnimationTopLocales"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_gravity="center"
-                    app:lottie_rawRes="@raw/loading_animation_thin"
                     app:lottie_autoPlay="true"
-                    app:lottie_loop="true"/>
+                    app:lottie_loop="true"
+                    app:lottie_rawRes="@raw/loading_animation_thin" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/localesTrendingRecycler"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    />
+                    android:layout_marginEnd="10dp" />
 
             </LinearLayout>
 

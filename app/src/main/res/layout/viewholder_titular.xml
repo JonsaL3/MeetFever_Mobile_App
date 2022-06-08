@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:id="@+id/viewholder_entrada"
+    android:backgroundTintMode="multiply"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_light"
+            android:text="@string/nombre_beneficiario"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:maxLength="30"
+            android:layout_marginEnd="20dp"
+            />
+
+        <TextView
+            android:id="@+id/nombre_beneficirio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_light"
+            tools:text="Pepote SL."
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:maxLength="30"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_light"
+            android:text="@string/apellidos_beneficiario"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:maxLength="30"
+            android:layout_marginEnd="20dp"
+            />
+
+        <TextView
+            android:id="@+id/apellidos_beneficiario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_light"
+            tools:text="Pepote SL."
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:maxLength="30"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:id="@+id/viewholder_entrada"
+    android:backgroundTintMode="multiply"
+    android:orientation="vertical"
+    android:background="@drawable/anim_button_pressed"
+    android:padding="20dp"
+    >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_light"
+            android:text="@string/nombre_comprador"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:layout_marginEnd="20dp"
+
+            />
+
+        <TextView
+            android:id="@+id/nombre_comprador"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_light"
+            tools:text="Jose"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:maxLength="30"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_light"
+            android:text="@string/apellidos_comprador"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:layout_marginEnd="20dp"
+            />
+
+        <TextView
+            android:id="@+id/apellidos_comprador"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_light"
+            tools:text="Luis Sanchez"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:maxLength="30"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_light"
+            android:text="@string/experiencia"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:layout_marginEnd="20dp"
+            />
+
+        <TextView
+            android:id="@+id/titulo_experiencia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_light"
+            tools:text="Fiesta de la espuma."
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:maxLength="30"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_light"
+            android:text="@string/fecha_de_la_experiencia"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:layout_marginEnd="20dp"
+            />
+
+        <TextView
+            android:id="@+id/fecha_experiencia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_light"
+            tools:text="2022-01-01"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:maxLength="30"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_light"
+            android:text="@string/empresa_organizadora"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:layout_marginEnd="20dp"
+            />
+
+        <TextView
+            android:id="@+id/empresa_organizadora"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_light"
+            tools:text="Pepote SL."
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:maxLength="30"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_light"
+            android:text="@string/precio_unitario"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:layout_marginEnd="20dp"
+            />
+
+        <TextView
+            android:id="@+id/precio_unitario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_light"
+            tools:text="10 €"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:maxLength="30"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_light"
+            android:text="@string/precio_total"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:layout_marginEnd="20dp"
+            />
+
+        <TextView
+            android:id="@+id/precio_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_light"
+            tools:text="10 €"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:maxLength="30"
+            />
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_gravity="center"
+        android:id="@+id/lista_de_titulares"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_light"
+            android:text="@string/id_transacci_n"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:layout_marginEnd="20dp"
+            />
+
+        <TextView
+            android:id="@+id/id_transaccion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_light"
+            tools:text="ad´ljghasdilfgnjaoñkdfgñasdjgoñasnfgoñasdjgklasdgopñasngnjasd"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>
