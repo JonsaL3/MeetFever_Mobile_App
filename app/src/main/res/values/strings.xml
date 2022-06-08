@@ -170,6 +170,16 @@
     <string name="purchase_ok_message">Compra realizada correctamente ❤</string>
     <string name="error_purchase">Error al registrar la compra, la compra se ha realizado, contacte con soporte y adjunte el siguiente código: %1$s</string>
     <string name="Aforo">%1$s / %2$s</string>
+    <string name="nombre_comprador">Nombre comprador:</string>
+    <string name="apellidos_comprador">Apellidos comprador:</string>
+    <string name="experiencia">Experiencia:</string>
+    <string name="empresa_organizadora">Empresa organizadora:</string>
+    <string name="nombre_beneficiario">Nombre beneficiario:</string>
+    <string name="apellidos_beneficiario">Apellidos beneficiario:</string>
+    <string name="mis_facturas">Mis facturas</string>
+    <string name="precio_unitario">Precio unitario:</string>
+    <string name="precio_total">Precio total:</string>
+    <string name="id_transacci_n">Id Transacción: </string>
 
 
 </resources>
