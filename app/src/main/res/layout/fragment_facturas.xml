@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_background_gradient_shape"
+    tools:context=".ui.fragments.secondaryfragments.experiencia.PasarelaDePagoFragment"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="@font/montserrat_light"
+            android:text="@string/mis_facturas"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            />
+
+        <TextView
+            android:id="@+id/textoNone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="@font/montserrat_light"
+            android:text="@string/experiencias_destacadas_none"
+            android:textColor="@color/gris_textos"
+            android:textSize="15sp"
+            android:visibility="gone" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/loadingAnimation"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/loading_animation_thin" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_facturas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            />
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

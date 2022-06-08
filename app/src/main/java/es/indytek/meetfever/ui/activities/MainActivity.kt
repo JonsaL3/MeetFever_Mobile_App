@@ -18,6 +18,7 @@ import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.ui.fragments.mainfragments.ExplorerFragment
 import es.indytek.meetfever.ui.fragments.mainfragments.PeopleFragment
 import es.indytek.meetfever.ui.fragments.mainfragments.TrendingsFragment
+import es.indytek.meetfever.ui.fragments.secondaryfragments.facturas.FacturasFragment
 import es.indytek.meetfever.ui.fragments.secondaryfragments.fever.RedactarFeverFragment
 import es.indytek.meetfever.ui.fragments.secondaryfragments.perfil.PerfilFragment
 import es.indytek.meetfever.ui.fragments.secondaryfragments.usersettings.UserSettingsFragment
@@ -264,11 +265,21 @@ class MainActivity : AppCompatActivity() {
             })
         }
 
+        binding.botonMisFacturas.setOnClickListener {
+            binding.drawerLayout.close()
+            cargarFacturasFragment()
+        }
+
     }
 
     // Funciones de carga de fragmentos ############################################################
     private fun cargarExplorerFragment() {
         val fragmento = ExplorerFragment.newInstance(currentUsuario)
+        Utils.cambiarDeFragmentoGuardandoElAnterior(supportFragmentManager,fragmento, "", R.id.frame_layout)
+    }
+
+    private fun cargarFacturasFragment() {
+        val fragmento = FacturasFragment.newInstance(currentUsuario)
         Utils.cambiarDeFragmentoGuardandoElAnterior(supportFragmentManager,fragmento, "", R.id.frame_layout)
     }
 
