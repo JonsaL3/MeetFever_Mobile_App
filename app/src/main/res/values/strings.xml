@@ -180,6 +180,9 @@
     <string name="precio_unitario">Precio unitario:</string>
     <string name="precio_total">Precio total:</string>
     <string name="id_transacci_n">Id Transacción: </string>
+    <string name="error_creedenciales_duplicadas">Error, es posible que alguna de tus credenciales ya coincida con las de una cuenta existente.</string>
+    <string name="realizar_fotograf_a">Realizar fotografía</string>
+    <string name="empresa">Empresa:</string>
 
 
 </resources>

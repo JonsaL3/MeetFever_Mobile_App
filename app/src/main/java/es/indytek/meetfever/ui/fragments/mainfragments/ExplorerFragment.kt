@@ -1,6 +1,8 @@
 
 package es.indytek.meetfever.ui.fragments.mainfragments
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,6 +11,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import es.indytek.meetfever.R
@@ -33,6 +36,8 @@ class ExplorerFragment : Fragment() {
 
     // bindeo de las vistas
     private lateinit var binding: FragmentExplorerBinding
+    private lateinit var contexto: Context
+    private lateinit var actividad: Activity
 
     // datos que necesito
     private lateinit var currentUsuario: Usuario
@@ -44,6 +49,8 @@ class ExplorerFragment : Fragment() {
         arguments?.let {
             currentUsuario = it.getSerializable(ARG_PARAM1) as Usuario
         }
+        contexto = requireContext()
+        actividad = requireActivity()
     }
 
     override fun onCreateView (
@@ -69,7 +76,7 @@ class ExplorerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Utils.mostrarElementosUI(requireActivity())
+        Utils.mostrarElementosUI(actividad)
 
         /*try {
             throw Exception("Esto es una excepcion de prueba")
@@ -94,7 +101,7 @@ class ExplorerFragment : Fragment() {
                     mostrarContenido()
                 } else {
                     ocultarContenido()
-                    WebServiceEmpresa.buscarEmpresa(s.toString(), requireContext(), object: WebServiceGenericInterface {
+                    WebServiceEmpresa.buscarEmpresa(s.toString(), contexto, object: WebServiceGenericInterface {
                         override fun callback(any: Any) {
 
                             if (any == 0) {
@@ -104,14 +111,14 @@ class ExplorerFragment : Fragment() {
                                 //ocultarContenido()
                                 try {
                                     Animations.pintarGridRecyclerViewSuavemente(
-                                        gridLayoutManager = GridLayoutManager(requireContext(), 3),
+                                        gridLayoutManager = GridLayoutManager(contexto, 3),
                                         recyclerView = binding.localesEncontradosRecycler,
                                         adapter = EmpresaRecyclerViewAdapter(empresas, currentUsuario),
                                     )
                                 } catch (e: IllegalStateException) {
                                     Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context.")
                                     Utils.enviarRegistroDeErrorABBDD(
-                                        context = requireContext(),
+                                        context = contexto,
                                         stacktrace = e.message.toString(),
                                     )
                                 }
@@ -120,7 +127,7 @@ class ExplorerFragment : Fragment() {
                         }
                     })
 
-                    WebServiceExperiencia.buscarExperiencia(s.toString(), requireContext(), object: WebServiceGenericInterface {
+                    WebServiceExperiencia.buscarExperiencia(s.toString(), contexto, object: WebServiceGenericInterface {
                         override fun callback(any: Any) {
 
                             if (any == 0) {
@@ -130,14 +137,14 @@ class ExplorerFragment : Fragment() {
                                 //ocultarContenido()
                                 try {
                                     Animations.pintarGridRecyclerViewSuavemente(
-                                        gridLayoutManager = GridLayoutManager(requireContext(), 2),
+                                        gridLayoutManager = GridLayoutManager(contexto, 2),
                                         recyclerView = binding.experienciasEncontradasRecycler,
                                         adapter = ExperienciaRecyclerViewAdapter(experiencias, currentUsuario)
                                     )
                                 } catch (e: IllegalStateException) {
                                     Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
                                     Utils.enviarRegistroDeErrorABBDD(
-                                        context = requireContext(),
+                                        context = contexto,
                                         stacktrace = e.message.toString(),
                                     )
                                 }
@@ -191,19 +198,19 @@ class ExplorerFragment : Fragment() {
     // muestro todas las empresas en otro fragmento
     private fun mostrarTodasLasEmpresas() {
         val fragmento = AllEmpresasFragment.newInstance(currentUsuario)
-        Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager,fragmento, "", R.id.frame_layout)
+        Utils.cambiarDeFragmentoGuardandoElAnterior((actividad as AppCompatActivity).supportFragmentManager,fragmento, "", R.id.frame_layout)
     }
 
     private fun mostrarTodasLasExperiencias() {
         val fragmento = AllExperiencesFragment.newInstance(currentUsuario)
-        Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager,fragmento, "", R.id.frame_layout)
+        Utils.cambiarDeFragmentoGuardandoElAnterior((actividad as AppCompatActivity).supportFragmentManager,fragmento, "", R.id.frame_layout)
     }
 
     // pinto las 4 experiencias mas mencionadas en opiniones
     private fun pintarExperienciasDestacadas() {
 
         // busco las experiencias mas mencionadas
-        WebServiceExperiencia.findTop4ExperienciasMasComentadas(requireContext(), object: WebServiceGenericInterface {
+        WebServiceExperiencia.findTop4ExperienciasMasComentadas((actividad as AppCompatActivity), object: WebServiceGenericInterface {
             override fun callback(any: Any) {
 
                 if (any == 0) {
@@ -212,9 +219,9 @@ class ExplorerFragment : Fragment() {
                 else {
                     // Una vez encontradas las pinto suavemente
                     val experiencias = any as ExperienciaWrapper
-                    Utils.terminarCarga(requireContext(), binding.loadingAnimationExperienciasDestacadas) {
+                    Utils.terminarCarga(contexto, binding.loadingAnimationExperienciasDestacadas) {
                         Animations.pintarGridRecyclerViewSuavemente(
-                            gridLayoutManager = GridLayoutManager(requireContext(), 2),
+                            gridLayoutManager = GridLayoutManager(contexto, 2),
                             recyclerView = binding.experienciaDestacadasRecyclerView,
                             adapter = ExperienciaRecyclerViewAdapter(experiencias.sortedBy { it.titulo }, currentUsuario),
                         )
@@ -230,7 +237,7 @@ class ExplorerFragment : Fragment() {
     private fun pintarTopEmpresas() {
 
         // Busco las 10 empresas o locales (es lo mismo) con mas seguidores
-        WebServiceEmpresa.findTop10EmpresasConMasSeguidores(requireContext(), object:
+        WebServiceEmpresa.findTop10EmpresasConMasSeguidores(contexto, object:
             WebServiceGenericInterface {
             override fun callback(any: Any) {
                 if (any == 0) {
@@ -239,9 +246,9 @@ class ExplorerFragment : Fragment() {
                 else {
                     // Una vez encontradas las pinto suavemente
                     val empresas = any as EmpresaWrapper
-                    Utils.terminarCarga(requireContext(), binding.loadingAnimationTopLocales){
+                    Utils.terminarCarga(contexto, binding.loadingAnimationTopLocales){
                         Animations.pintarLinearRecyclerViewSuavemente(
-                            linearLayoutManager = LinearLayoutManager(requireContext()),
+                            linearLayoutManager = LinearLayoutManager(contexto),
                             recyclerView = binding.localesTrendingRecycler,
                             adapter = EmpresaRecyclerViewAdapter(empresas, currentUsuario),
                             orientation = LinearLayoutManager.HORIZONTAL,
@@ -266,8 +273,8 @@ class ExplorerFragment : Fragment() {
     }
 
     private fun setBottomBarColorAndPosition() {
-        val bottomBar = requireActivity().findViewById<AnimatedBottomBar>(R.id.bottom_bar)
-        Utils.mostrarBottomBar(requireActivity())
+        val bottomBar = actividad.findViewById<AnimatedBottomBar>(R.id.bottom_bar)
+        Utils.mostrarBottomBar(actividad)
         bottomBar.indicatorColorRes = R.color.rosa_meet
         bottomBar.selectTabAt(1, true)
     }

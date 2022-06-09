@@ -203,6 +203,44 @@ object WebServiceExperiencia {
 
         } catch (e: Exception) {
             e.printStackTrace()
+            Utils.enviarRegistroDeErrorABBDD(
+                context = context,
+                stacktrace = e.message.toString(),
+            )
+        }
+    }
+
+    fun findExperienciaById(idExperiencia: Int,context: Context, callback : WebServiceGenericInterface) {
+
+        val url = "interface/api/meetfever/experiencia/ObtenerExperienciaPorId"
+        val jsonObject = JSONObject().apply {
+            put("Id", idExperiencia)
+        }
+
+        try {
+
+            WebService.processRequestPost(context, url, jsonObject, object: WebServiceGenericInterface {
+                override fun callback(any: Any) {
+
+                    if (any.toString().isNotEmpty()) {
+                        // Obtengo el response
+                        val experiencia = GsonBuilder()
+                            .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeTypeAdapter())
+                            .create()
+                            .fromJson(any.toString(), Experiencia::class.java)
+                        callback.callback(experiencia)
+                    } else
+                        callback.callback(0)
+
+                }
+            })
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Utils.enviarRegistroDeErrorABBDD(
+                context = context,
+                stacktrace = e.message.toString(),
+            )
         }
     }
 

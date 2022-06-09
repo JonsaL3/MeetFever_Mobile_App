@@ -146,7 +146,6 @@
 
                 </FrameLayout>
 
-
                 <ImageView
                     android:id="@+id/profilePicture"
                     android:layout_width="171dp"
@@ -183,6 +182,7 @@
                     tools:text="nombre"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp"
+                    android:maxLength="20"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.498"
                     app:layout_constraintStart_toStartOf="parent"
@@ -196,6 +196,7 @@
                     tools:text="frase"
                     android:textColor="#FFFFFF"
                     android:textSize="15sp"
+                    android:maxLength="40"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

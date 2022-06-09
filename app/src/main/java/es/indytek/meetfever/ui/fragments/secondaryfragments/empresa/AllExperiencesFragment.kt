@@ -1,5 +1,7 @@
 package es.indytek.meetfever.ui.fragments.secondaryfragments.empresa
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -25,11 +27,16 @@ class AllExperiencesFragment : Fragment() {
     // datos que necesito en este fragmento
     private lateinit var usuario: Usuario
 
+    private lateinit var contexto: Context
+    private lateinit var actividad: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             usuario = it.getSerializable(ARG_PARAM1) as Usuario
         }
+        contexto = requireContext()
+        actividad = requireActivity()
     }
 
     override fun onCreateView(
@@ -46,7 +53,7 @@ class AllExperiencesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Utils.ocultarElementosUI(requireActivity())
+        Utils.ocultarElementosUI(actividad)
     }
 
     // pinto todas las experiencias en este fragmento y lo que necesite
@@ -57,16 +64,16 @@ class AllExperiencesFragment : Fragment() {
     // pinto las experiencias
     private fun pintarTodasLasExperiencias() {
 
-        WebServiceExperiencia.findAllExperiencias(requireContext(), object: WebServiceGenericInterface {
+        WebServiceExperiencia.findAllExperiencias(contexto, object: WebServiceGenericInterface {
             override fun callback(any: Any) {
 
                 if (any == 0) {
                     Utils.terminarCargaOnError(binding.loadingAnimation,binding.experiencesNone)
                 } else {
                     val experiencias = any as ExperienciaWrapper
-                    Utils.terminarCarga(requireContext(), binding.loadingAnimation) {
+                    Utils.terminarCarga(contexto, binding.loadingAnimation) {
                         Animations.pintarGridRecyclerViewSuavemente(
-                            gridLayoutManager = GridLayoutManager(requireContext(), 2),
+                            gridLayoutManager = GridLayoutManager(contexto, 2),
                             recyclerView = binding.recyclerAllExperiences,
                             adapter = ExperienciaRecyclerViewAdapter(experiencias, usuario),
                         )
@@ -79,7 +86,7 @@ class AllExperiencesFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        Utils.ocultarBottomBar(requireActivity())
+        Utils.ocultarBottomBar(actividad)
     }
 
     companion object {

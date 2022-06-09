@@ -1,7 +1,9 @@
 package es.indytek.meetfever.ui.fragments.secondaryfragments.experiencia
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -11,6 +13,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.paypal.checkout.paymentbutton.PayPalButton
 import es.indytek.meetfever.R
@@ -47,12 +50,18 @@ class ExperienciaFragment : Fragment() {
 
     private lateinit var dialog: Dialog
 
+    private lateinit var contexto: Context
+    private lateinit var actividad: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             usuario = it.getSerializable(ARG_PARAM1) as Usuario
             experiencia = it.getSerializable(ARG_PARAM2) as Experiencia
         }
+
+        contexto = requireContext()
+        actividad = requireActivity()
 
         entradasVendidas = experiencia.numeroEntradas
 
@@ -76,13 +85,13 @@ class ExperienciaFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Utils.ocultarElementosUI(requireActivity())
+        Utils.ocultarElementosUI(actividad)
 
         binding.nEntradas.text = "1"
 
         arrancarListeners()
 
-        dialog = DialogMaker(requireContext()).infoLoading()
+        dialog = DialogMaker(contexto).infoLoading()
 
     }
 
@@ -94,7 +103,7 @@ class ExperienciaFragment : Fragment() {
                 usuario = experiencia.empresa,
                 currentUsuario = usuario
             )
-            Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager,fragmento, "", R.id.frame_layout)
+            Utils.cambiarDeFragmentoGuardandoElAnterior((actividad as AppCompatActivity).supportFragmentManager,fragmento, "", R.id.frame_layout)
         }
 
         binding.botonPagar.setOnClickListener {
@@ -116,11 +125,11 @@ class ExperienciaFragment : Fragment() {
                         entradasPosibles <= experiencia.aforo
                     ){
                         val fragmento = PasarelaDePagoFragment.newInstance(usuario as Persona, binding.nEntradas.text.toString().toInt(), experiencia)
-                        Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager,fragmento, "", R.id.frame_layout)
+                        Utils.cambiarDeFragmentoGuardandoElAnterior((actividad as AppCompatActivity).supportFragmentManager,fragmento, "", R.id.frame_layout)
                     }else{
 
                         DialogMaker(
-                            requireContext(),
+                            contexto,
                             getString(R.string.error_tittle),
                             getString(R.string.error_no_entradas)
                         ).infoNoCustomActions()
@@ -128,14 +137,14 @@ class ExperienciaFragment : Fragment() {
                 }else{
 
                     DialogMaker(
-                        requireContext(),
+                        contexto,
                         getString(R.string.error_tittle),
                         getString(R.string.data_error_profile_message)
                     ).infoNoCustomActions()
                 }
             }else{
                 DialogMaker(
-                    requireContext(),
+                    contexto,
                     getString(R.string.error_tittle),
                     getString(R.string.account_with_no_permission)
                 ).infoNoCustomActions()
@@ -182,14 +191,13 @@ class ExperienciaFragment : Fragment() {
         // pinto la imagen de la experiencia
         val foto = experiencia.foto
         foto?.let {
-            Utils.putBase64ImageIntoImageViewCircularWithPlaceholder(binding.imagenExperiencia, it, requireContext(), R.drawable.ic_default_experiencie_true_tone)
-            binding.degradadoExperiencia.setColorFilter(Utils.getDominantColorInImageFromBase64(foto), PorterDuff.Mode.SRC_ATOP)
+            Utils.putBase64ImageIntoImageViewWithPlaceholder(binding.imagenExperiencia, it, contexto, R.drawable.ic_default_experiencie_true_tone)
         }?: kotlin.run {
-            Utils.putResourceImageIntoImageView(binding.imagenExperiencia, R.drawable.ic_default_experiencie_true_tone, requireContext())
+            Utils.putResourceImageIntoImageView(binding.imagenExperiencia, R.drawable.ic_default_experiencie_true_tone, contexto)
         }
 
         // pinto la imagen de la empresa que organiza la experiencia
-        Utils.pintarFotoDePerfil(experiencia.empresa, binding.imagenEmpresaExperiencia, requireContext())
+        Utils.pintarFotoDePerfil(experiencia.empresa, binding.imagenEmpresaExperiencia, contexto)
 
         // pinto el degradado de la imagen en consecuencia
         experiencia.empresa.fotoPerfil?.let {
@@ -217,7 +225,7 @@ class ExperienciaFragment : Fragment() {
 
         WebServiceExperiencia.conseguirNumeroEntradas(
             experiencia,
-            requireContext(),
+            contexto,
             object: WebServiceGenericInterface{
                 override fun callback(any: Any) {
 
@@ -231,7 +239,7 @@ class ExperienciaFragment : Fragment() {
                     }else{
 
                         DialogMaker(
-                            requireContext(),
+                            contexto,
                             getString(R.string.error_tittle),
                             getString(R.string.data_error_message)
                         ).infoCustomAccept(
@@ -240,7 +248,7 @@ class ExperienciaFragment : Fragment() {
                                 override fun acceptButton() {
 
                                     val fragmento = ExplorerFragment.newInstance(usuario)
-                                    Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager,fragmento, "", R.id.frame_layout)
+                                    Utils.cambiarDeFragmentoGuardandoElAnterior((actividad as AppCompatActivity).supportFragmentManager,fragmento, "", R.id.frame_layout)
 
                                     val fragmentTransaction = fragmentManager?.beginTransaction()
                                     fragmentTransaction?.setCustomAnimations(
@@ -264,7 +272,7 @@ class ExperienciaFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        Utils.ocultarBottomBar(requireActivity())
+        Utils.ocultarBottomBar(actividad)
 
         getNumeroEntradas()
     }

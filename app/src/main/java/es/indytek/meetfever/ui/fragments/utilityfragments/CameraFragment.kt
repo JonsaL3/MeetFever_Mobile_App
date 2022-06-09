@@ -1,6 +1,7 @@
 package es.indytek.meetfever.ui.fragments.utilityfragments
 
 import android.Manifest
+import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
 import android.content.pm.PackageManager
@@ -13,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -41,6 +43,7 @@ class CameraFragment : Fragment() {
     private lateinit var currentUsuario: Usuario
 
     private lateinit var contexto: Context
+    private lateinit var actividad: Activity
 
     private var imageCapture: ImageCapture? = null
 
@@ -50,6 +53,7 @@ class CameraFragment : Fragment() {
             currentUsuario = it.getSerializable(ARG_PARAM1) as Usuario
         }
         contexto = requireContext()
+        actividad = requireActivity()
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -98,7 +102,7 @@ class CameraFragment : Fragment() {
 
         // El archivo de salida con sus metadatos
         val outputOptions = ImageCapture.OutputFileOptions.Builder(
-            requireActivity().contentResolver,
+            actividad.contentResolver,
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             contentValues
         ).build()
@@ -126,7 +130,7 @@ class CameraFragment : Fragment() {
                     } catch (e: IllegalStateException) {
                         e.printStackTrace()
                         Utils.enviarRegistroDeErrorABBDD(
-                            context = requireContext(),
+                            context = contexto,
                             stacktrace = e.message.toString(),
                         )
                     }
@@ -163,7 +167,7 @@ class CameraFragment : Fragment() {
             } catch(exc: Exception) {
                 Log.e(TAG, "Fallo en el bindeo de caso de uso.", exc)
                 Utils.enviarRegistroDeErrorABBDD(
-                    context = requireContext(),
+                    context = contexto,
                     stacktrace = exc.message.toString(),
                 )
             }
@@ -178,7 +182,7 @@ class CameraFragment : Fragment() {
         if (allPermissionsGranted()) {
             startCamera()
         } else {
-            ActivityCompat.requestPermissions(requireActivity(),
+            ActivityCompat.requestPermissions(actividad,
                 REQUIRED_PERMISSIONS,
                 REQUEST_CODE_PERMISSIONS
             )
@@ -227,14 +231,14 @@ class CameraFragment : Fragment() {
         setFragmentResult("FOTO", resultBundle)
 
         // me vuelvo al fragmento que deje pausado antes
-        requireActivity().supportFragmentManager.popBackStackImmediate()
+        (actividad as AppCompatActivity).supportFragmentManager.popBackStackImmediate()
 
     }
 
     override fun onResume() {
         super.onResume()
-        Utils.ocultarBottomBar(requireActivity())
-        Utils.ocultarElementosUI(requireActivity())
+        Utils.ocultarBottomBar(actividad)
+        Utils.ocultarElementosUI(actividad)
     }
 
     companion object {

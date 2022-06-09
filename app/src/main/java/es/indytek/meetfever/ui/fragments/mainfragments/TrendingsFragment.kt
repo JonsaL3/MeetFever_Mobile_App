@@ -1,5 +1,7 @@
 package es.indytek.meetfever.ui.fragments.mainfragments
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,6 +10,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import es.indytek.meetfever.R
 import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
@@ -29,6 +32,9 @@ class TrendingsFragment : Fragment() {
     private lateinit var binding: FragmentTrendingsBinding
     private lateinit var currentUsuario: Usuario
 
+    private lateinit var contexto: Context
+    private lateinit var actividad: Activity
+
     private var contenidoOculto = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +42,8 @@ class TrendingsFragment : Fragment() {
         arguments?.let {
             currentUsuario = it.getSerializable(ARG_PARAM1) as Usuario
         }
+        contexto = requireContext()
+        actividad = requireActivity()
     }
 
     override fun onCreateView(
@@ -55,7 +63,7 @@ class TrendingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Utils.mostrarElementosUI(requireActivity())
+        Utils.mostrarElementosUI(actividad)
     }
 
     // Preparo las busquedas
@@ -69,7 +77,7 @@ class TrendingsFragment : Fragment() {
                     mostrarContenido()
                 } else {
                     ocultarContenido()
-                    WebServiceOpinion.buscarOpinion(s.toString(), currentUsuario.id, requireContext(), object: WebServiceGenericInterface {
+                    WebServiceOpinion.buscarOpinion(s.toString(), currentUsuario.id, contexto, object: WebServiceGenericInterface {
                         override fun callback(any: Any) {
 
                             if (any == 0) {
@@ -79,7 +87,7 @@ class TrendingsFragment : Fragment() {
                                 //ocultarContenido()
                                 try {
                                     Animations.pintarLinearRecyclerViewSuavemente(
-                                        linearLayoutManager = LinearLayoutManager(requireContext()),
+                                        linearLayoutManager = LinearLayoutManager(contexto),
                                         recyclerView = binding.busquedaOpinionesRecyclerView,
                                         adapter = OpinionRecyclerViewAdapter(opiniones, TrendingsFragment::class.java, currentUsuario),
                                         orientation = LinearLayoutManager.VERTICAL
@@ -87,7 +95,7 @@ class TrendingsFragment : Fragment() {
                                 } catch (e: IllegalStateException) {
                                     Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
                                     Utils.enviarRegistroDeErrorABBDD(
-                                        context = requireContext(),
+                                        context = contexto,
                                         stacktrace = e.message.toString(),
                                     )
                                 }
@@ -131,7 +139,7 @@ class TrendingsFragment : Fragment() {
     // pinto las 100 opiniones con mas megustas de las ultimas 24 horas
     private fun pintarOpiniones() {
 
-        WebServiceOpinion.find100OpinionesMasGustadas24h(currentUsuario.id, requireContext(), object:
+        WebServiceOpinion.find100OpinionesMasGustadas24h(currentUsuario.id, contexto, object:
             WebServiceGenericInterface {
             override fun callback(any: Any) {
 
@@ -142,9 +150,9 @@ class TrendingsFragment : Fragment() {
                     top100OpinionesMasGustadas24H.forEach {
                         Log.d(":::", it.numeroLikes.toString() + " " + it.like)
                     }
-                    Utils.terminarCarga(requireContext(), binding.loadingAnimationOpiniones){
+                    Utils.terminarCarga(contexto, binding.loadingAnimationOpiniones){
                         Animations.pintarLinearRecyclerViewSuavemente(
-                            linearLayoutManager = LinearLayoutManager(requireContext()),
+                            linearLayoutManager = LinearLayoutManager(contexto),
                             recyclerView = binding.topOpinionesRecycler,
                             adapter = OpinionRecyclerViewAdapter(top100OpinionesMasGustadas24H, TrendingsFragment::class.java, currentUsuario),
                             orientation = LinearLayoutManager.VERTICAL,
@@ -164,8 +172,8 @@ class TrendingsFragment : Fragment() {
     }
 
     private fun setBottomBarColorAndPosition() {
-        val bottomBar = requireActivity().findViewById<AnimatedBottomBar>(R.id.bottom_bar)
-        Utils.mostrarBottomBar(requireActivity())
+        val bottomBar = (actividad as AppCompatActivity).findViewById<AnimatedBottomBar>(R.id.bottom_bar)
+        Utils.mostrarBottomBar(actividad)
         bottomBar.indicatorColorRes = R.color.amarillo_meet
         bottomBar.selectTabAt(2, true)
     }

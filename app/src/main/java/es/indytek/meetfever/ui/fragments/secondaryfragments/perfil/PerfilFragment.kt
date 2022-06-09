@@ -1,5 +1,7 @@
 package es.indytek.meetfever.ui.fragments.secondaryfragments.perfil
 
+import android.app.Activity
+import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
@@ -11,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidmads.library.qrgenearator.QRGContents
 import androidmads.library.qrgenearator.QRGEncoder
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.zxing.WriterException
 import es.indytek.meetfever.R
@@ -41,6 +44,9 @@ class PerfilFragment : Fragment() {
     private lateinit var usuario: Usuario
     private lateinit var currentUsuario: Usuario
 
+    private lateinit var contexto: Context
+    private lateinit var actividad: Activity
+
     // mesigge
     private lateinit var meSigue: MeSigue
 
@@ -50,6 +56,8 @@ class PerfilFragment : Fragment() {
             usuario = it.getSerializable(ARG_PARAM1) as Usuario
             currentUsuario = it.getSerializable(ARG_PARAM2) as Usuario
         }
+        contexto = requireContext()
+        actividad = requireActivity()
     }
 
     override fun onCreateView(
@@ -73,7 +81,7 @@ class PerfilFragment : Fragment() {
         precargarSeguidoresYSeguidos()
 
         // oculto los elementos que solo quiero que se vean en los 3 fragmentos principales
-        Utils.ocultarElementosUI(requireActivity())
+        Utils.ocultarElementosUI(actividad)
     }
 
     private fun arrancarListeners() {
@@ -112,7 +120,7 @@ class PerfilFragment : Fragment() {
         } catch (e: WriterException) {
             e.printStackTrace()
             Utils.enviarRegistroDeErrorABBDD(
-                context = requireContext(),
+                context = contexto,
                 stacktrace = e.message.toString(),
             )
         }
@@ -121,7 +129,7 @@ class PerfilFragment : Fragment() {
 
     private fun precargarSeguidoresYSeguidos() {
 
-        WebServiceUsuario.obtenerSeguidores(usuario.id, requireContext(), object: WebServiceGenericInterface {
+        WebServiceUsuario.obtenerSeguidores(usuario.id, contexto, object: WebServiceGenericInterface {
             override fun callback(any: Any) {
 
                 if (any != 0) {
@@ -132,7 +140,7 @@ class PerfilFragment : Fragment() {
 
                     binding.seguidoresLayout.setOnClickListener {
                         val fragmento = FollowedFollowingFragment.newInstance(usuario, currentUsuario, seguidores,true)
-                        Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager,fragmento, "", R.id.frame_layout)
+                        Utils.cambiarDeFragmentoGuardandoElAnterior((actividad as AppCompatActivity).supportFragmentManager,fragmento, "", R.id.frame_layout)
                     }
 
                 }
@@ -140,7 +148,7 @@ class PerfilFragment : Fragment() {
             }
         })
 
-        WebServiceUsuario.obtenerSeguidos(usuario.id, requireContext(), object: WebServiceGenericInterface {
+        WebServiceUsuario.obtenerSeguidos(usuario.id, contexto, object: WebServiceGenericInterface {
             override fun callback(any: Any) {
 
                 if (any != 0) {
@@ -150,7 +158,7 @@ class PerfilFragment : Fragment() {
 
                     binding.seguidosLayout.setOnClickListener {
                         val fragmento = FollowedFollowingFragment.newInstance(usuario, currentUsuario, seguidos,false)
-                        Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager,fragmento, "", R.id.frame_layout)
+                        Utils.cambiarDeFragmentoGuardandoElAnterior((actividad as AppCompatActivity).supportFragmentManager,fragmento, "", R.id.frame_layout)
                     }
 
                 }
@@ -167,7 +175,7 @@ class PerfilFragment : Fragment() {
 
             binding.seguirNoSeguir.visibility = View.VISIBLE
 
-            WebServiceUsuario.isSeguidoPorUser(currentUsuario.id, usuario.id, requireContext(), object: WebServiceGenericInterface {
+            WebServiceUsuario.isSeguidoPorUser(currentUsuario.id, usuario.id, contexto, object: WebServiceGenericInterface {
                 override fun callback(any: Any) {
 
                     Log.w(":::", "isSeguidoPorUser: $any")
@@ -192,11 +200,11 @@ class PerfilFragment : Fragment() {
 
     private fun seguirODejarDeSeguir() {
 
-        WebServiceUsuario.seguirDejarDeSeguir(currentUsuario.id, usuario.id, requireContext(), object: WebServiceGenericInterface {
+        WebServiceUsuario.seguirDejarDeSeguir(currentUsuario.id, usuario.id, contexto, object: WebServiceGenericInterface {
             override fun callback(any: Any) {
 
                 if (any == 0) {
-                    Toast.makeText(requireContext(), "No se ha podido seguir al usuario.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(contexto, "No se ha podido seguir al usuario.", Toast.LENGTH_SHORT).show()
                 } else {
 
                     if (meSigue.mesigue) {
@@ -243,14 +251,14 @@ class PerfilFragment : Fragment() {
         binding.tvFrase.text = usuario.frase
 
         // foto de perfil
-        Utils.pintarFotoDePerfil(usuario, binding.profilePicture, requireContext())
+        Utils.pintarFotoDePerfil(usuario, binding.profilePicture, contexto)
 
         // foto de fondo
         val fotoFondo = usuario.fotoFondo
         fotoFondo?.let {
-            Utils.putBase64ImageIntoImageViewWithoutCornersWithPlaceholder(binding.backgroundProfile, it, requireContext(), R.drawable.ic_default_background_image)
+            Utils.putBase64ImageIntoImageViewWithoutCornersWithPlaceholder(binding.backgroundProfile, it, contexto, R.drawable.ic_default_background_image)
         }?: kotlin.run {
-            Utils.putResourceImageIntoImageViewWithoutCorners(binding.backgroundProfile, R.drawable.ic_default_background_image, requireContext())
+            Utils.putResourceImageIntoImageViewWithoutCorners(binding.backgroundProfile, R.drawable.ic_default_background_image, contexto)
         }
 
         // degradado del fondo en función de la foto del perfil
@@ -274,7 +282,7 @@ class PerfilFragment : Fragment() {
 
     private fun pintarOpiniones() {
 
-        WebServiceOpinion.obtenerOpinionPorIdAutor(usuario, currentUsuario, requireContext() ,object : WebServiceGenericInterface {
+        WebServiceOpinion.obtenerOpinionPorIdAutor(usuario, currentUsuario, contexto ,object : WebServiceGenericInterface {
             override fun callback(any: Any) {
 
                 try{
@@ -282,9 +290,9 @@ class PerfilFragment : Fragment() {
                         Utils.terminarCargaOnError(binding.loadingAnimationOpinionesPerfil, binding.feversByUserNone)
                     } else {
                         val opiniones = any as OpinionWrapper
-                        Utils.terminarCarga(requireContext(), binding.loadingAnimationOpinionesPerfil){
+                        Utils.terminarCarga(contexto, binding.loadingAnimationOpinionesPerfil){
                             Animations.pintarLinearRecyclerViewSuavemente(
-                                linearLayoutManager = LinearLayoutManager(requireContext()),
+                                linearLayoutManager = LinearLayoutManager(contexto),
                                 recyclerView = binding.opinionesUsuarioRecycler,
                                 adapter = OpinionRecyclerViewAdapter(opiniones, PerfilFragment::class.java, currentUsuario),
                                 orientation = LinearLayoutManager.VERTICAL,
@@ -303,7 +311,7 @@ class PerfilFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        Utils.ocultarBottomBar(requireActivity())
+        Utils.ocultarBottomBar(actividad)
     }
 
     companion object {

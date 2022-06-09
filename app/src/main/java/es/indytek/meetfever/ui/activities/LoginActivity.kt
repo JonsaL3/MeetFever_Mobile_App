@@ -58,7 +58,7 @@ class LoginActivity : AppCompatActivity() {
             Animations.mostrarVistaSuavemente(binding.prePantallaDeCarga, 500)
 
             // Hago una petición para obtener el usuario
-            WebServiceUsuario.inciarSesion("alberhp@gmail.com", "Clave_00", this, object: WebServiceGenericInterface {
+            WebServiceUsuario.inciarSesion("hfjsnsvd@jfjekd.com", "d7afde3e7059cd0a0fe09eec4b0008", this, object: WebServiceGenericInterface {
                 override fun callback(any: Any) {
 
                     if (any == 0) { // en caso de que vaya mal muestro un popup

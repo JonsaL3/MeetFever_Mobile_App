@@ -1,5 +1,7 @@
 package es.indytek.meetfever.ui.fragments.secondaryfragments.empresa
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -26,11 +28,16 @@ class AllEmpresasFragment : Fragment() {
     // Datos que necesito en este fragmento
     private lateinit var usuario: Usuario
 
+    private lateinit var contexto: Context
+    private lateinit var actividad: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             usuario = it.getSerializable(ARG_PARAM1) as Usuario
         }
+        contexto = requireContext()
+        actividad = requireActivity()
     }
 
     override fun onCreateView(
@@ -47,7 +54,7 @@ class AllEmpresasFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Utils.ocultarElementosUI(requireActivity())
+        Utils.ocultarElementosUI(actividad)
     }
 
     // pinto las distintas cosas que necesito
@@ -57,16 +64,16 @@ class AllEmpresasFragment : Fragment() {
 
     private fun pintarTodasLasEmpresas() {
 
-        WebServiceEmpresa.findAllEmpresas(requireContext(), object: WebServiceGenericInterface {
+        WebServiceEmpresa.findAllEmpresas(contexto, object: WebServiceGenericInterface {
             override fun callback(any: Any) {
 
                 if (any == 0) {
                     Utils.terminarCargaOnError(binding.loadingAnimation, binding.topLocalesNone)
                 } else {
                     val empresas = any as EmpresaWrapper
-                    Utils.terminarCarga(requireContext(), binding.loadingAnimation){
+                    Utils.terminarCarga(contexto, binding.loadingAnimation){
                         Animations.pintarGridRecyclerViewSuavemente(
-                            gridLayoutManager = GridLayoutManager(requireContext(), 3),
+                            gridLayoutManager = GridLayoutManager(contexto, 3),
                             recyclerView = binding.recyclerAllEmpresas,
                             adapter = EmpresaRecyclerViewAdapter(empresas, usuario),
                         )
@@ -80,7 +87,7 @@ class AllEmpresasFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        Utils.ocultarBottomBar(requireActivity())
+        Utils.ocultarBottomBar(actividad)
     }
 
     companion object {

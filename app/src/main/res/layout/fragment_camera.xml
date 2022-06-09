@@ -12,14 +12,14 @@
         android:layout_height="match_parent"
         />
 
-    <ImageButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/hacer_foto_boton"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center"
-        android:background="@drawable/ic_photo_camera_photograph_svgrepo_com_1"
+        android:background="@drawable/anim_button_pressed"
         android:fontFamily="@font/montserrat_light"
-        android:text="@string/iniciar_sesi_n"
+        android:text="@string/realizar_fotograf_a"
         android:textAllCaps="false"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"

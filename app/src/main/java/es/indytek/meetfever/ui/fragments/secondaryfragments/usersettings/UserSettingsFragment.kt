@@ -1,6 +1,8 @@
 package es.indytek.meetfever.ui.fragments.secondaryfragments.usersettings
 
+import android.app.Activity
 import android.app.Activity.RESULT_OK
+import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.BitmapFactory
@@ -13,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import es.indytek.meetfever.R
@@ -50,11 +53,19 @@ class UserSettingsFragment : Fragment() {
     // para acceder a la galeria
     private val REQUEST_GALLERY = 1
 
+    private lateinit var contexto: Context
+    private lateinit var actividad: Activity
+
+    private lateinit var listaSexos: SexoWrapper
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             currentUsuario = it.getSerializable(ARG_PARAM1) as Usuario
         }
+        contexto = requireContext()
+        actividad = requireActivity()
     }
 
     override fun onCreateView(
@@ -115,10 +126,10 @@ class UserSettingsFragment : Fragment() {
 
                 if (isFromProfilePic) {
                     fotoPerfil = base64FromFile
-                    Utils.pintarFotoDePerfilDirectamente(currentUsuario, base64FromFile, binding.fotoPerfil, requireContext())
+                    Utils.pintarFotoDePerfilDirectamente(currentUsuario, base64FromFile, binding.fotoPerfil, contexto)
                 } else {
                     fotoFondo = base64FromFile
-                    Utils.putBase64ImageIntoImageView(binding.fotoFondo, base64FromFile, requireContext())
+                    Utils.putBase64ImageIntoImageView(binding.fotoFondo, base64FromFile, contexto)
                 }
 
             }
@@ -128,7 +139,7 @@ class UserSettingsFragment : Fragment() {
 
     private fun irAlFragmentoDeLaCamara() {
         val fragemnt = CameraFragment.newInstance(currentUsuario)
-        Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager, fragemnt, "", R.id.frame_layout)
+        Utils.cambiarDeFragmentoGuardandoElAnterior((actividad as AppCompatActivity).supportFragmentManager, fragemnt, "", R.id.frame_layout)
     }
 
     private fun cargarDatosActualesDelUsuario() {
@@ -165,18 +176,66 @@ class UserSettingsFragment : Fragment() {
             fotoPerfil?.let { empresaActualizada.fotoPerfil = it }
             fotoFondo?.let { empresaActualizada.fotoFondo = it }
 
-            WebServiceEmpresa.actualizarEmpresa(empresaActualizada, requireContext(), object: WebServiceGenericInterface {
+            if (empresaActualizada.telefono == "") {
+                empresaActualizada.telefono = null
+            }
+
+            if (empresaActualizada.frase == "") {
+                empresaActualizada.frase = null
+            }
+
+            if (empresaActualizada.nombreEmpresa == "") {
+                empresaActualizada.nombreEmpresa = null
+            }
+
+            if (empresaActualizada.cif == "") {
+                empresaActualizada.cif = null
+            }
+
+            if (empresaActualizada.direccionFacturacion == "") {
+                empresaActualizada.direccionFacturacion = null
+            }
+
+            if (empresaActualizada.direccionFiscal == "") {
+                empresaActualizada.direccionFiscal = null
+            }
+
+            if (empresaActualizada.nombrePersona == "") {
+                empresaActualizada.nombrePersona = null
+            }
+
+            if (empresaActualizada.apellido1Persona == "") {
+                empresaActualizada.apellido1Persona = null
+            }
+
+            if (empresaActualizada.apellido2Persona == "") {
+                empresaActualizada.apellido2Persona = null
+            }
+
+            if (empresaActualizada.dniPersona == "") {
+                empresaActualizada.dniPersona = null
+            }
+
+            if (empresaActualizada.fotoPerfil == "") {
+                empresaActualizada.fotoPerfil = null
+            }
+
+            if (empresaActualizada.fotoFondo == "") {
+                empresaActualizada.fotoFondo = null
+            }
+
+            WebServiceEmpresa.actualizarEmpresa(empresaActualizada, contexto, object: WebServiceGenericInterface {
                 override fun callback(any: Any) {
 
                     if (any == 0) {
-                        DialogMaker(requireContext(), requireContext().getString(R.string.error), getString(R.string.no_se_pudo_actualizar_empresa)).warningNoCustomActions()
+                        DialogMaker(contexto, requireContext().getString(R.string.error), getString(R.string.no_se_pudo_actualizar_empresa)).warningNoCustomActions()
                     } else {
                         currentUsuario = empresaActualizada
                         Log.d(":::, ", "EMPRESA ACTUALIZADA CORRECTAMENTE")
-                        DialogMaker(requireContext(), getString(R.string.exito), getString(R.string.empresa_actualizada_correctamente)).infoCustomAccept("Aceptar", object: DialogAcceptCustomActionInterface {
+                        DialogMaker(contexto, getString(R.string.exito), getString(R.string.empresa_actualizada_correctamente)).infoCustomAccept("Aceptar", object: DialogAcceptCustomActionInterface {
                             override fun acceptButton() {
                                 val fragmento = PerfilFragment.newInstance(currentUsuario, currentUsuario)
-                                Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager, fragmento, "", R.id.frame_layout)
+                                Utils.cambiarDeFragmentoGuardandoElAnterior((actividad as AppCompatActivity).supportFragmentManager, fragmento, "", R.id.frame_layout)
                             }
                         })
                     }
@@ -197,9 +256,42 @@ class UserSettingsFragment : Fragment() {
             binding.apellido2PersonaPersona.text.toString().let { personaAActualizar.apellido2 = it }
             binding.dniPersonaPersona.text.toString().let { personaAActualizar.dni = it }
 
-            val idSexo = binding.spinnerSexoPersona.selectedItemPosition // TODO LA ID PUEDE NO COINCIDIR CON LA POSICION
+            if (personaAActualizar.telefono == "") {
+                personaAActualizar.telefono = null
+            }
+
+            if (personaAActualizar.frase == "") {
+                personaAActualizar.frase = null
+            }
+
+            if (personaAActualizar.nombre == "") {
+                personaAActualizar.nombre = null
+            }
+
+            if (personaAActualizar.apellido1 == "") {
+                personaAActualizar.apellido1 = null
+            }
+
+            if (personaAActualizar.apellido2 == "") {
+                personaAActualizar.apellido2 = null
+            }
+
+            if (personaAActualizar.dni == "") {
+                personaAActualizar.dni = null
+            }
+
+            if (personaAActualizar.fotoPerfil == "") {
+                personaAActualizar.fotoPerfil = null
+            }
+
+            if (personaAActualizar.fotoFondo == "") {
+                personaAActualizar.fotoFondo = null
+            }
+
+            val idSexo = listaSexos.find { it.nombre == binding.spinnerSexoPersona.selectedItem.toString() }?.id
             val nombreSexo = binding.spinnerSexoPersona.selectedItem.toString()
-            val sexo = Sexo(idSexo + 1, nombreSexo)
+
+            val sexo = Sexo(idSexo!!, nombreSexo)
             personaAActualizar.sexo = sexo
 
             fotoPerfil?.let { personaAActualizar.fotoPerfil = it }
@@ -207,18 +299,18 @@ class UserSettingsFragment : Fragment() {
 
             Log.d(":::", personaAActualizar.toJsonObject().toString())
 
-            WebServicePersona.actualizarPersona(personaAActualizar, requireContext(), object: WebServiceGenericInterface {
+            WebServicePersona.actualizarPersona(personaAActualizar, contexto, object: WebServiceGenericInterface {
                 override fun callback(any: Any) {
 
                     if (any == 0) {
-                        DialogMaker(requireContext(), requireContext().getString(R.string.error), getString(R.string.no_se_pudo_actualizar_persona)).warningNoCustomActions()
+                        DialogMaker(contexto, requireContext().getString(R.string.error), getString(R.string.no_se_pudo_actualizar_persona)).warningNoCustomActions()
                     } else {
                         currentUsuario = personaAActualizar
                         Log.d(":::, ", "USUARIO ACTUALIZADA CORRECTAMENTE")
-                        DialogMaker(requireContext(), getString(R.string.exito), getString(R.string.empresa_actualizada_correctamente)).infoCustomAccept("Aceptar", object: DialogAcceptCustomActionInterface {
+                        DialogMaker(contexto, getString(R.string.exito), getString(R.string.empresa_actualizada_correctamente)).infoCustomAccept("Aceptar", object: DialogAcceptCustomActionInterface {
                             override fun acceptButton() {
                                 val fragmento = PerfilFragment.newInstance(currentUsuario, currentUsuario)
-                                Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager, fragmento, "", R.id.frame_layout)
+                                Utils.cambiarDeFragmentoGuardandoElAnterior((actividad as AppCompatActivity).supportFragmentManager, fragmento, "", R.id.frame_layout)
                             }
                         })
                     }
@@ -233,7 +325,7 @@ class UserSettingsFragment : Fragment() {
     private fun pintarDatosGenerales() {
 
         // foto de perfil
-        Utils.pintarFotoDePerfil(currentUsuario, binding.fotoPerfil, requireContext())
+        Utils.pintarFotoDePerfil(currentUsuario, binding.fotoPerfil, contexto)
 
         currentUsuario.fotoPerfil?.let {
 
@@ -254,7 +346,7 @@ class UserSettingsFragment : Fragment() {
 
         // foto de fondo
         currentUsuario.fotoFondo?.let {
-            Utils.putBase64ImageIntoImageView(binding.fotoFondo, it, requireContext())
+            Utils.putBase64ImageIntoImageView(binding.fotoFondo, it, contexto)
         }
 
         binding.correo.setText(currentUsuario.correo)
@@ -298,15 +390,16 @@ class UserSettingsFragment : Fragment() {
 
         binding.apellido2PersonaPersona.setText(persona.apellido2)
 
-        WebServiceSexo.getAllSexos(requireContext(), object: WebServiceGenericInterface {
+        WebServiceSexo.getAllSexos(contexto, object: WebServiceGenericInterface {
             override fun callback(any: Any) {
 
                 if (any == 0) {
-                    Toast.makeText(requireContext(), "Error al obtener los sexos del servidor.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(contexto, "Error al obtener los sexos del servidor.", Toast.LENGTH_SHORT).show()
                 } else {
                     val sexos = any as SexoWrapper
+                    listaSexos = sexos
                     sexos.sortedBy { it.id }
-                    val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, sexos)
+                    val adapter = ArrayAdapter(contexto, android.R.layout.simple_spinner_item, sexos.map{ s -> s.nombre })
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                     binding.spinnerSexoPersona.adapter = adapter
                     binding.spinnerSexoPersona.setSelection(sexos.indexOf(persona.sexo))
@@ -344,18 +437,18 @@ class UserSettingsFragment : Fragment() {
                     if (isFromProfilePic) {
                         binding.fotoPerfil.setImageURI(imageUri)
                         fotoPerfil = binding.fotoPerfil.toBase64()
-                        Utils.pintarFotoDePerfilDirectamente(currentUsuario, fotoPerfil!!, binding.fotoPerfil, requireContext())
+                        Utils.pintarFotoDePerfilDirectamente(currentUsuario, fotoPerfil!!, binding.fotoPerfil, contexto)
                     } else {
                         binding.fotoFondo.setImageURI(imageUri)
                         fotoFondo = binding.fotoFondo.toBase64()
-                        Utils.putBase64ImageIntoImageView(binding.fotoFondo, fotoFondo!!, requireContext())
+                        Utils.putBase64ImageIntoImageView(binding.fotoFondo, fotoFondo!!, contexto)
                     }
 
                 } catch (e: RuntimeException) {
-                    Toast.makeText(requireContext(), getString(R.string.error_al_cargar_imagen), Toast.LENGTH_SHORT).show()
-                    Utils.pintarFotoDePerfil(currentUsuario, binding.fotoPerfil, requireContext())
+                    Toast.makeText(contexto, getString(R.string.error_al_cargar_imagen), Toast.LENGTH_SHORT).show()
+                    Utils.pintarFotoDePerfil(currentUsuario, binding.fotoPerfil, contexto)
                     Utils.enviarRegistroDeErrorABBDD(
-                        context = requireContext(),
+                        context = contexto,
                         stacktrace = e.message.toString(),
                     )
                 }
@@ -368,8 +461,8 @@ class UserSettingsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        Utils.ocultarBottomBar(requireActivity())
-        Utils.ocultarElementosUI(requireActivity())
+        Utils.ocultarBottomBar(actividad)
+        Utils.ocultarElementosUI(actividad)
     }
 
     companion object {
