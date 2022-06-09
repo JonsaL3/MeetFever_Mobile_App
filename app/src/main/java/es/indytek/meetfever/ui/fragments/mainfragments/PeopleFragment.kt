@@ -1,5 +1,7 @@
 package es.indytek.meetfever.ui.fragments.mainfragments
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,6 +10,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import es.indytek.meetfever.R
@@ -29,6 +32,8 @@ class PeopleFragment : Fragment() {
 
     // bindeo de las vistas
     private lateinit var binding: FragmentPeopleBinding
+    private lateinit var contexto: Context
+    private lateinit var actividad: Activity
 
     // datos que necesito
     private lateinit var currentUsuario: Usuario
@@ -40,6 +45,8 @@ class PeopleFragment : Fragment() {
         arguments?.let {
             currentUsuario = it.getSerializable(ARG_PARAM1) as Usuario
         }
+        contexto = requireContext()
+        actividad = requireActivity()
     }
 
     override fun onCreateView(
@@ -62,7 +69,7 @@ class PeopleFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Utils.mostrarElementosUI(requireActivity())
+        Utils.mostrarElementosUI(actividad)
     }
 
     // Preparo las busquedas
@@ -76,7 +83,7 @@ class PeopleFragment : Fragment() {
                     mostrarContenido()
                 } else {
                     ocultarContenido()
-                    WebServicePersona.buscarPersonas(s.toString(), requireContext(), object: WebServiceGenericInterface {
+                    WebServicePersona.buscarPersonas(s.toString(), contexto, object: WebServiceGenericInterface {
                         override fun callback(any: Any) {
 
                             if (any == 0) {
@@ -86,9 +93,9 @@ class PeopleFragment : Fragment() {
                                 //ocultarContenido()
                                 try {
 
-                                    Utils.terminarCarga(requireContext(), binding.loadingAnimationPersonasQueQuizasConoczcas){
+                                    Utils.terminarCarga(contexto, binding.loadingAnimationPersonasQueQuizasConoczcas){
                                         Animations.pintarGridRecyclerViewSuavemente(
-                                            gridLayoutManager = GridLayoutManager(requireContext(), 3),
+                                            gridLayoutManager = GridLayoutManager(contexto, 3),
                                             recyclerView = binding.busquedaPersonasRecyclerView,
                                             adapter = PersonaRecyclerViewAdapter(personas, currentUsuario)
                                         )
@@ -97,7 +104,7 @@ class PeopleFragment : Fragment() {
                                 } catch (e: IllegalStateException) {
                                     Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
                                     Utils.enviarRegistroDeErrorABBDD(
-                                        context = requireContext(),
+                                        context = contexto,
                                         stacktrace = e.message.toString(),
                                     )
                                 }
@@ -151,19 +158,19 @@ class PeopleFragment : Fragment() {
     // pregunto al webservice por todas las personas
     private fun mostrarTodasLasPersonas() {
         val fragmento = AllPeopleFragment.newInstance(currentUsuario)
-        Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager,fragmento, "", R.id.frame_layout)
+        Utils.cambiarDeFragmentoGuardandoElAnterior((actividad as AppCompatActivity).supportFragmentManager,fragmento, "", R.id.frame_layout)
     }
 
     // private fun pregunto al web service por todas las personas relacionadas
     private fun obtenerTodasLasPersonasRelacionadas() {
         val fragmento = AllRelatedPeopleFragment.newInstance(currentUsuario)
-        Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager,fragmento, "", R.id.frame_layout)
+        Utils.cambiarDeFragmentoGuardandoElAnterior((actividad as AppCompatActivity).supportFragmentManager,fragmento, "", R.id.frame_layout)
     }
 
     // pinta el recycler de las personas con mas seguidores
     private fun pintarTopPersonas() {
 
-        WebServicePersona.findTop10PersonasConMasSeguidores(requireContext(), object:
+        WebServicePersona.findTop10PersonasConMasSeguidores(contexto, object:
             WebServiceGenericInterface {
             override fun callback(any: Any) {
 
@@ -171,9 +178,9 @@ class PeopleFragment : Fragment() {
                     Utils.terminarCargaOnError(binding.loadingAnimationTopInfluencers,binding.topInfluencersNone)
                 } else {
                     val personas = any as PersonaWrapper
-                    Utils.terminarCarga(requireContext(), binding.loadingAnimationTopInfluencers){
+                    Utils.terminarCarga(contexto, binding.loadingAnimationTopInfluencers){
                         Animations.pintarLinearRecyclerViewSuavemente(
-                            linearLayoutManager = LinearLayoutManager(requireContext()),
+                            linearLayoutManager = LinearLayoutManager(contexto),
                             recyclerView = binding.topPersonasRecyclerView,
                             adapter = PersonaRecyclerViewAdapter(personas, currentUsuario),
                             orientation = LinearLayoutManager.HORIZONTAL,
@@ -188,7 +195,7 @@ class PeopleFragment : Fragment() {
 
     private fun pintarPersonasQueQuizasConozca() {
 
-        WebServicePersona.find10PersonasQueQuizasConozca(currentUsuario, requireContext(), object:
+        WebServicePersona.find10PersonasQueQuizasConozca(currentUsuario, contexto, object:
             WebServiceGenericInterface {
             override fun callback(any: Any) {
 
@@ -197,9 +204,9 @@ class PeopleFragment : Fragment() {
                 }
                 else {
                     val personas = any as PersonaWrapper
-                    Utils.terminarCarga(requireContext(), binding.loadingAnimationPersonasQueQuizasConoczcas) {
+                    Utils.terminarCarga(contexto, binding.loadingAnimationPersonasQueQuizasConoczcas) {
                         Animations.pintarLinearRecyclerViewSuavemente(
-                            linearLayoutManager = LinearLayoutManager(requireContext()),
+                            linearLayoutManager = LinearLayoutManager(contexto),
                             recyclerView = binding.personasQueQuizasConozcasRecyclerView,
                             adapter = PersonaRecyclerViewAdapter(personas, currentUsuario),
                             orientation = LinearLayoutManager.HORIZONTAL,
@@ -225,8 +232,8 @@ class PeopleFragment : Fragment() {
     }
 
     private fun setBottomBarColorAndPosition() {
-        val bottomBar = requireActivity().findViewById<AnimatedBottomBar>(R.id.bottom_bar)
-        Utils.mostrarBottomBar(requireActivity())
+        val bottomBar = (actividad as AppCompatActivity).findViewById<AnimatedBottomBar>(R.id.bottom_bar)
+        Utils.mostrarBottomBar(actividad)
         bottomBar.indicatorColorRes = R.color.azul_meet
         bottomBar.selectTabAt(0, true)
     }

@@ -1,6 +1,8 @@
 package es.indytek.meetfever.ui.fragments.secondaryfragments.fever
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.PorterDuff
@@ -15,6 +17,7 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -55,16 +58,23 @@ class RedactarFeverFragment : Fragment() {
     private lateinit var emoticonos: ArrayList<Emoticono>
     private lateinit var imageViews: LinkedHashMap<ImageView, Boolean>
 
-    private var selectedEmpresaId: Int = -1
-    private var selectedExperiencia: Int = -1
+    private var selectedEmpresaId: Int? = null
+    private var selectedExperiencia: Int? = null
+
+    private lateinit var contexto: Context
+    private lateinit var actividad: Activity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             currentUsuario = it.getSerializable(ARG_PARAM1) as Usuario
         }
+
         emoticonos = ArrayList()
         imageViews = linkedMapOf()
+
+        contexto = requireContext()
+        actividad = requireActivity()
     }
 
     override fun onCreateView(
@@ -87,7 +97,7 @@ class RedactarFeverFragment : Fragment() {
         // arranco los listeners
         arrancarListeners()
 
-        Utils.ocultarElementosUI(requireActivity())
+        Utils.ocultarElementosUI(actividad)
     }
 
     private fun publicarFever() {
@@ -107,17 +117,12 @@ class RedactarFeverFragment : Fragment() {
         }
 
         if (descripcion.isEmpty()) {
-            Toast.makeText(requireContext(), "Debes escribir una opinión...", Toast.LENGTH_SHORT).show()
+            Toast.makeText(contexto, "Debes escribir una opinión...", Toast.LENGTH_SHORT).show()
             return
         }
 
         if (idEmoji == -1) {
-            Toast.makeText(requireContext(), "Debes seleccionar un emoticono...", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        if (selectedEmpresaId == -1) {
-            Toast.makeText(requireContext(), "Debes seleccionar una empresa...", Toast.LENGTH_SHORT).show()
+            Toast.makeText(contexto, "Debes seleccionar un emoticono...", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -130,21 +135,21 @@ class RedactarFeverFragment : Fragment() {
             idAutor,
             idEmpresa,
             idExperiencia,
-            requireContext(),
+            contexto,
             object: WebServiceGenericInterface {
                 override fun callback(any: Any) {
 
                     if (any == 0) {
 
                     } else {
-                        DialogMaker(requireContext(),
+                        DialogMaker(contexto,
                             "Exito",
                             "Fever publicado con éxito"
                         ).infoCustomAccept(
                             "Aceptar",
                             object: DialogAcceptCustomActionInterface {
                             override fun acceptButton() {
-                                requireActivity().supportFragmentManager.popBackStackImmediate()
+                                (actividad as AppCompatActivity).supportFragmentManager.popBackStackImmediate()
                             }
                         })
                     }
@@ -195,7 +200,7 @@ class RedactarFeverFragment : Fragment() {
                     Animations.mostrarVistaSuavemente(binding.textoErrorBusquedaExperiencia)
                     Animations.ocultarVistaSuavemente(binding.recyclerSelectorExperiencias)
                 } else {
-                    WebServiceExperiencia.buscarExperiencia(s.toString(), requireContext(), object: WebServiceGenericInterface {
+                    WebServiceExperiencia.buscarExperiencia(s.toString(), contexto, object: WebServiceGenericInterface {
                         override fun callback(any: Any) {
 
                             if (any == 0) {
@@ -207,7 +212,7 @@ class RedactarFeverFragment : Fragment() {
                                 //ocultarContenido()
                                 try {
                                     Animations.pintarLinearRecyclerViewSuavemente(
-                                        linearLayoutManager = LinearLayoutManager(requireContext()),
+                                        linearLayoutManager = LinearLayoutManager(contexto),
                                         recyclerView = binding.recyclerSelectorExperiencias,
                                         adapter = ExperienciaBusquedaRecyclerViewAdapter(experiencias, currentUsuario, object: FromViewHolderToParent {
                                             override fun passthroughData(any: Any) {
@@ -220,7 +225,7 @@ class RedactarFeverFragment : Fragment() {
                                 } catch (e: IllegalStateException) {
                                     Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
                                     Utils.enviarRegistroDeErrorABBDD(
-                                        context = requireContext(),
+                                        context = contexto,
                                         stacktrace = e.message.toString(),
                                     )
                                 }
@@ -254,7 +259,7 @@ class RedactarFeverFragment : Fragment() {
                     Animations.mostrarVistaSuavemente(binding.textoErrorBusquedaEmpresa)
                     Animations.ocultarVistaSuavemente(binding.recyclerSelectorEmpresas)
                 } else {
-                    WebServiceEmpresa.buscarEmpresa(s.toString(), requireContext(), object: WebServiceGenericInterface {
+                    WebServiceEmpresa.buscarEmpresa(s.toString(), contexto, object: WebServiceGenericInterface {
                         override fun callback(any: Any) {
 
                             if (any == 0) {
@@ -266,7 +271,7 @@ class RedactarFeverFragment : Fragment() {
                                 //ocultarContenido()
                                 try {
                                     Animations.pintarLinearRecyclerViewSuavemente(
-                                        linearLayoutManager = LinearLayoutManager(requireContext()),
+                                        linearLayoutManager = LinearLayoutManager(contexto),
                                         recyclerView = binding.recyclerSelectorEmpresas,
                                         adapter = EmpresaBusquedaRecyclerViewAdapter(empresas, currentUsuario, object: FromViewHolderToParent {
                                             override fun passthroughData(any: Any) {
@@ -280,7 +285,7 @@ class RedactarFeverFragment : Fragment() {
                                 } catch (e: IllegalStateException) {
                                     Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
                                     Utils.enviarRegistroDeErrorABBDD(
-                                        context = requireContext(),
+                                        context = contexto,
                                         stacktrace = e.message.toString(),
                                     )
                                 }
@@ -307,7 +312,7 @@ class RedactarFeverFragment : Fragment() {
         binding.opinionContainer.addTextChangedListener { text ->
 
             // Primero actualizo el contador de caracteres
-            Utils.setTextColorAsResource(binding.numeroCaracteresOpinion, R.color.gris_textos, requireContext())
+            Utils.setTextColorAsResource(binding.numeroCaracteresOpinion, R.color.gris_textos, contexto)
             if (text.toString().length > 250) {
                 binding.numeroCaracteresOpinion.setTextColor(Color.RED)
             }
@@ -328,12 +333,12 @@ class RedactarFeverFragment : Fragment() {
 
     // pinto los datos del usuario (em este caso la foto)
     private fun pintarDatosUsuario() {
-        Utils.pintarFotoDePerfil(currentUsuario, binding.fotoPerfil, requireContext())
+        Utils.pintarFotoDePerfil(currentUsuario, binding.fotoPerfil, contexto)
     }
 
     // pinto todos los emoticonos que puede seleccionar y estén en la base de datos remota
     private fun pintarIconosSeleccionables() {
-        WebServiceEmoticono.obtenerTodosLosEmoticonos(requireContext(), object: WebServiceGenericInterface {
+        WebServiceEmoticono.obtenerTodosLosEmoticonos(contexto, object: WebServiceGenericInterface {
             override fun callback(any: Any) {
 
                // binding.animationView.visibility = View.GONE
@@ -355,7 +360,7 @@ class RedactarFeverFragment : Fragment() {
                     } catch (e: Exception) {
                         e.printStackTrace()
                         Utils.enviarRegistroDeErrorABBDD(
-                            context = requireContext(),
+                            context = contexto,
                             stacktrace = e.message.toString(),
                         )
                     }
@@ -378,7 +383,7 @@ class RedactarFeverFragment : Fragment() {
             val decodedString: ByteArray = Base64.decode(emoticono.emoji, Base64.DEFAULT)
             val decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
 
-            val imageView = ImageView(requireContext())
+            val imageView = ImageView(contexto)
             imageView.setImageBitmap(decodedByte)
 
             imageViews[imageView] = false
@@ -387,7 +392,7 @@ class RedactarFeverFragment : Fragment() {
 
                 binding.noSeleccionado.text = getString(R.string.meetmoji_seleccionado)
 
-                imageView.startAnimation(AnimationUtils.loadAnimation(requireContext(), androidx.appcompat.R.anim.abc_popup_enter))
+                imageView.startAnimation(AnimationUtils.loadAnimation(contexto, androidx.appcompat.R.anim.abc_popup_enter))
 
                 imageView.clearColorFilter()
 
@@ -430,7 +435,7 @@ class RedactarFeverFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        Utils.ocultarBottomBar(requireActivity())
+        Utils.ocultarBottomBar(actividad)
     }
 
     companion object {

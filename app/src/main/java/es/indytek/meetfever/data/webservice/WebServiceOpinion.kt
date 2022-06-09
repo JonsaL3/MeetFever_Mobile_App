@@ -137,8 +137,8 @@ object WebServiceOpinion {
         fecha: LocalDateTime,
         idEmoticono: Int,
         idAutor: Int,
-        idEmpresa: Int,
-        idExperiencia: Int,
+        idEmpresa: Int?,
+        idExperiencia: Int?,
         context: Context,
         callback : WebServiceGenericInterface) {
 

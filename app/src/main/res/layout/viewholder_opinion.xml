@@ -8,7 +8,7 @@
     android:backgroundTintMode="multiply"
     android:layout_marginTop="5dp"
     android:id="@+id/opinion_container"
-    android:layout_height="175dp">
+    android:layout_height="200dp">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -58,7 +58,9 @@
             android:fontFamily="@font/montserrat_light"
             android:textColor="@color/white"
             android:textSize="20sp"
-            tools:text="Juan carlos palomo sanchex" />
+            tools:text="JUAN JUANITO JUAN HIJO DE LOS GALLOS Y LAS GALLINAS"
+            android:maxLength="20"
+            />
 
     </LinearLayout>
 
@@ -88,7 +90,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.57"
         tools:text="Aún no me puedo creer que me cobraran 6€ Solo por subir a la terraza del ayuntamiento, Indignante y además el vino daba asco" />
 
     <ImageView
@@ -134,4 +135,83 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.050000012" />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.08"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.79">
+
+        <LinearLayout
+            android:id="@+id/empresa_viewer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:fontFamily="@font/montserrat_light"
+                android:gravity="start"
+                android:text="@string/empresa"
+                android:textColor="@color/white"
+                android:textSize="7sp"
+                tools:ignore="SmallSp" />
+
+            <TextView
+                android:id="@+id/empresa_opinion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/montserrat_light"
+                android:gravity="start"
+                android:maxLength="20"
+                android:textColor="@color/white"
+                android:textSize="7sp"
+                tools:ignore="SmallSp"
+                tools:text="Pepote S.L. AAAAAAAAAAAAAAAAAAAAAAAAAAA" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/experiencia_viewer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:fontFamily="@font/montserrat_light"
+                android:gravity="start"
+                android:text="@string/experiencia"
+                android:textColor="@color/white"
+                android:textSize="7sp"
+                tools:ignore="SmallSp" />
+
+            <TextView
+                android:id="@+id/experiencia_opinion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/montserrat_light"
+                android:gravity="start"
+                android:maxLength="20"
+                android:textColor="@color/white"
+                android:textSize="7sp"
+                tools:ignore="SmallSp"
+                tools:text="Colorful Overnight" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

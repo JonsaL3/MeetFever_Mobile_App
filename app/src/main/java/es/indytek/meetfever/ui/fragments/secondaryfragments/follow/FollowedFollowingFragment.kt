@@ -1,5 +1,7 @@
 package es.indytek.meetfever.ui.fragments.secondaryfragments.follow
 
+import android.app.Activity
+import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
@@ -30,6 +32,9 @@ class FollowedFollowingFragment : Fragment() {
 
     private var following: Boolean = false
 
+    private lateinit var contexto: Context
+    private lateinit var actividad: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -38,6 +43,8 @@ class FollowedFollowingFragment : Fragment() {
             following = it.getBoolean(ARG_PARAM3)
             listaUsuarios = it.getSerializable(ARG_PARAM4) as UsuarioWrapper
         }
+        contexto = requireContext()
+        actividad = requireActivity()
     }
 
     override fun onCreateView(
@@ -54,7 +61,7 @@ class FollowedFollowingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Utils.ocultarElementosUI(requireActivity())
+        Utils.ocultarElementosUI(actividad)
     }
 
     private fun pintar() {
@@ -82,7 +89,7 @@ class FollowedFollowingFragment : Fragment() {
 
         try {
             Animations.pintarLinearRecyclerViewSuavemente(
-                linearLayoutManager = LinearLayoutManager(requireContext()),
+                linearLayoutManager = LinearLayoutManager(contexto),
                 recyclerView = binding.recyclerViewSeguidores,
                 adapter = SeguidorSeguidoRecyclerViewAdapter(listaUsuarios.toList(), currentUser),
                 orientation = LinearLayoutManager.VERTICAL
@@ -90,7 +97,7 @@ class FollowedFollowingFragment : Fragment() {
         } catch (e: IllegalStateException) {
             Log.d(":::","¿Tienes un móvil o una tostadora? no le dió tiempo a cargar al context")
             Utils.enviarRegistroDeErrorABBDD(
-                context = requireContext(),
+                context = contexto,
                 stacktrace = e.message.toString(),
             )
         }
@@ -99,7 +106,7 @@ class FollowedFollowingFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        Utils.ocultarBottomBar(requireActivity())
+        Utils.ocultarBottomBar(actividad)
     }
 
     companion object {

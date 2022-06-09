@@ -196,4 +196,39 @@ object WebServiceEmpresa {
         }
     }
 
+    // Obtener todas las empresas
+    fun findEmpresaById(idEmpresa: Int, context: Context, callback : WebServiceGenericInterface) {
+
+        val url = "interface/api/meetfever/empresa/ObtenerEmpresaPorId"
+        val jsonObject = JSONObject().apply {
+            put("Id", idEmpresa)
+        }
+
+        try {
+
+            WebService.processRequestPost(context, url, jsonObject, object: WebServiceGenericInterface {
+                override fun callback(any: Any) {
+
+                    if (any.toString().isNotEmpty()) {
+                        // Obtengo el response
+                        val empresas = GsonBuilder()
+                            .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeTypeAdapter())
+                            .create()
+                            .fromJson(any.toString(), Empresa::class.java)
+                        callback.callback(empresas)
+                    } else
+                        callback.callback(0)
+
+                }
+            })
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Utils.enviarRegistroDeErrorABBDD(
+                context = context,
+                stacktrace = e.message.toString(),
+            )
+        }
+    }
+
 }

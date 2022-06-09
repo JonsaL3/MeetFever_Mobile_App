@@ -8,12 +8,14 @@ import android.os.Looper
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import es.indytek.meetfever.R
 import es.indytek.meetfever.databinding.ActivityMainBinding
+import es.indytek.meetfever.models.persona.Persona
 import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.ui.fragments.mainfragments.ExplorerFragment
 import es.indytek.meetfever.ui.fragments.mainfragments.PeopleFragment
@@ -229,14 +231,12 @@ class MainActivity : AppCompatActivity() {
 
         val header : View = binding.navView.getHeaderView(0)
 
-        currentUsuario.fotoPerfil?.let {
-            Utils.putBase64ImageIntoImageViewWithoutCornersWithPlaceholder(
-                header.findViewById(R.id.imagen),
-                it,
-                this,
-                R.drawable.ic_default_background_image
-            )
-        }
+        // esta funcion ya tiene en cuenta todos los casos de las fotos de perfil
+        Utils.pintarFotoDePerfil(
+            currentUsuario,
+            header.findViewById(R.id.imagen),
+            this
+        )
 
         currentUsuario.fotoFondo?.let {
             Utils.putBase64ImageIntoImageViewWithoutCornersWithPlaceholder(
@@ -245,6 +245,8 @@ class MainActivity : AppCompatActivity() {
                 this,
                 R.drawable.ic_default_background_image
             )
+        } ?: run {
+            header.findViewById<ImageView>(R.id.backgroundProfile).setImageResource(R.drawable.ic_default_background_image)
         }
 
         header.findViewById<TextView>(R.id.nick).apply {
@@ -265,9 +267,13 @@ class MainActivity : AppCompatActivity() {
             })
         }
 
-        binding.botonMisFacturas.setOnClickListener {
-            binding.drawerLayout.close()
-            cargarFacturasFragment()
+        if (currentUsuario is Persona) {
+            binding.botonMisFacturas.setOnClickListener {
+                binding.drawerLayout.close()
+                cargarFacturasFragment()
+            }
+        } else {
+            //binding.botonMisFacturas.visibility = View.GONE
         }
 
     }

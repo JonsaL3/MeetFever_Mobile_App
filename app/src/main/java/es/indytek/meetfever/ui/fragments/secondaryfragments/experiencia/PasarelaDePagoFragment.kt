@@ -1,5 +1,6 @@
 package es.indytek.meetfever.ui.fragments.secondaryfragments.experiencia
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
@@ -12,6 +13,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.paypal.checkout.approve.OnApprove
@@ -62,6 +64,9 @@ class PasarelaDePagoFragment : Fragment() {
     val listEntradas = mutableListOf<Entrada>()
 
     private lateinit var payPalButton: PayPalButton
+
+    private lateinit var contexto: Context
+    private lateinit var actividad: Activity
 
     private var cntOkRequests: Int = 0
     private var cntErrorRequests: Int = 0
@@ -120,7 +125,7 @@ class PasarelaDePagoFragment : Fragment() {
                 approval.orderActions.capture { captureOrderResult ->
                     Log.i(":::", "CaptureOrderResult: $captureOrderResult")
 
-                    Utils.hideKeyboard(requireContext(), binding.root)
+                    Utils.hideKeyboard(contexto, binding.root)
 
                     val id = captureOrderResult.toString().split("(")[2].split(",")[0].split("=")[1]
 
@@ -131,7 +136,7 @@ class PasarelaDePagoFragment : Fragment() {
                     binding.loadingFakeDialog.visibility = VISIBLE
 
                     listEntradas.forEach {
-                        WebServiceEntrada.insertarCompra(it, requireContext(), object : WebServiceGenericInterface{
+                        WebServiceEntrada.insertarCompra(it, contexto, object : WebServiceGenericInterface{
                             override fun callback(any: Any) {
 
                                 if(any.toString() == "") {
@@ -153,7 +158,7 @@ class PasarelaDePagoFragment : Fragment() {
             onCancel = OnCancel {
                 Log.v(":::", "OnCancel")
                 DialogMaker(
-                    requireContext(),
+                    contexto,
                     getString(R.string.error_tittle),
                     getString(R.string.error_cancel_purchasee)
                 ).infoNoCustomActions()
@@ -162,7 +167,7 @@ class PasarelaDePagoFragment : Fragment() {
                 Log.v(":::", "OnError")
                 Log.d(":::", "Error details: $errorInfo")
                 DialogMaker(
-                    requireContext(),
+                    contexto,
                     getString(R.string.error_tittle),
                     getString(R.string.purchase_error_message)
                 ).infoNoCustomActions()
@@ -188,7 +193,7 @@ class PasarelaDePagoFragment : Fragment() {
         listEntradas[0].dni = currentUsuario.dni.toString()
 
         Animations.pintarLinearRecyclerViewSuavemente(
-            linearLayoutManager = LinearLayoutManager(requireContext()),
+            linearLayoutManager = LinearLayoutManager(contexto),
             recyclerView = binding.recyclerviewpago,
             adapter = EntradaAdapter(listEntradas, experiencia),
             orientation = LinearLayoutManager.VERTICAL
@@ -199,7 +204,7 @@ class PasarelaDePagoFragment : Fragment() {
 
     private fun checkStatusWebService(id: String){
 
-        Utils.hideKeyboard(requireContext(), binding.root)
+        Utils.hideKeyboard(contexto, binding.root)
 
         if((cntOkRequests + cntErrorRequests) == listEntradas.size) {
 
@@ -225,7 +230,7 @@ class PasarelaDePagoFragment : Fragment() {
                 binding.loadingFakeDialog.visibility = GONE
 
                 DialogMaker(
-                    requireContext(),
+                    contexto,
                     getString(R.string.error_tittle),
                     getString(R.string.error_purchase, id)
                 ).infoNoCustomActions()
@@ -249,7 +254,7 @@ class PasarelaDePagoFragment : Fragment() {
         if(list.size != listEntradas.size){
             Log.d(":::","ERROR DE DATOS")
             DialogMaker(
-                requireContext(),
+                contexto,
                 getString(R.string.error_tittle),
                 getString(R.string.error_message)
             ).infoNoCustomActions()
@@ -260,7 +265,7 @@ class PasarelaDePagoFragment : Fragment() {
 
                 Log.d(":::","TODO OK")
 
-                Utils.hideKeyboard(requireContext(), binding.root)
+                Utils.hideKeyboard(contexto, binding.root)
 
                 Animations.mostrarVistaSuavemente(binding.layoutConfirmPayment)
 
@@ -284,7 +289,7 @@ class PasarelaDePagoFragment : Fragment() {
         binding.botonBackToHome.setOnClickListener {
 
             val fragmento = ExplorerFragment.newInstance(currentUsuario)
-            Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager,fragmento, "", R.id.frame_layout)
+            Utils.cambiarDeFragmentoGuardandoElAnterior((actividad as AppCompatActivity).supportFragmentManager,fragmento, "", R.id.frame_layout)
 
             val fragmentTransaction = fragmentManager?.beginTransaction()
             fragmentTransaction?.setCustomAnimations(

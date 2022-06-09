@@ -10,9 +10,13 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import es.indytek.meetfever.R
+import es.indytek.meetfever.data.webservice.WebServiceEmpresa
+import es.indytek.meetfever.data.webservice.WebServiceExperiencia
 import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
 import es.indytek.meetfever.data.webservice.WebServiceMeGusta
 import es.indytek.meetfever.databinding.ViewholderOpinionBinding
+import es.indytek.meetfever.models.empresa.Empresa
+import es.indytek.meetfever.models.experiencia.Experiencia
 import es.indytek.meetfever.models.opinion.Opinion
 import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.ui.fragments.mainfragments.TrendingsFragment
@@ -36,6 +40,44 @@ class OpinionViewHolder(
 
         binding.textoNombre.text = objeto.autor.nick
         binding.opinionText.text = objeto.descripcion
+
+        if (objeto.idEmpresa != 0) {
+
+            WebServiceEmpresa.findEmpresaById(objeto.idEmpresa, view.context, object: WebServiceGenericInterface {
+                override fun callback(any: Any) {
+
+                    if (any == 0) {
+                        binding.empresaOpinion.text = "Error"
+                    } else {
+                        val empresa = any as Empresa
+                        binding.empresaOpinion.text = empresa.nick
+                        Animations.mostrarVistaSuavemente(binding.empresaViewer)
+                    }
+
+                }
+            })
+
+        }
+
+        if (objeto.idExperiencia != 0) {
+
+            WebServiceExperiencia.findExperienciaById(objeto.idExperiencia, view.context, object: WebServiceGenericInterface {
+                override fun callback(any: Any) {
+
+                    if (any == 0) {
+                        binding.experienciaOpinion.text = "Error"
+                    } else {
+                        val experiencia = any as Experiencia
+                        binding.experienciaOpinion.text = experiencia.titulo
+                        Animations.mostrarVistaSuavemente(binding.experienciaViewer)
+                    }
+
+                }
+            })
+
+        }
+
+        binding.experienciaOpinion.text = objeto.idExperiencia.toString()
 
         if (Utils.isFamous(objeto.autor))
             Animations.mostrarVistaSuavemente(binding.famousRectangle)

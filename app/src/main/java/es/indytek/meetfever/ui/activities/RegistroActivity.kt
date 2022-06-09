@@ -18,10 +18,13 @@ import es.indytek.meetfever.models.sexo.Sexo
 import es.indytek.meetfever.models.sexo.SexoWrapper
 import es.indytek.meetfever.models.usuario.Usuario
 import es.indytek.meetfever.utils.CreateMD5
+import es.indytek.meetfever.utils.DialogMaker
 
 class RegistroActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegistroBinding
+
+    private lateinit var globalSexos: SexoWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -74,8 +77,9 @@ class RegistroActivity : AppCompatActivity() {
                     Log.d("::::", "sexos: $any")
 
                     val sexos = any as SexoWrapper
+                    globalSexos = sexos
                     // creo un array adapter para el spinner
-                    val adapter = ArrayAdapter(this@RegistroActivity, android.R.layout.simple_spinner_item, sexos)
+                    val adapter = ArrayAdapter(this@RegistroActivity, android.R.layout.simple_spinner_item, sexos.map { it.nombre })
                     // seteo el layout para el spinner
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                     // seteo el adapter al spinner
@@ -97,7 +101,7 @@ class RegistroActivity : AppCompatActivity() {
         val contrasena2 = binding.inputContrasena2Registro.text.toString()
         val isEmpresa = binding.checkEmpresa.isChecked
 
-        val idSexo = binding.spinnerSexo.selectedItemPosition // TODO LA ID PUEDE NO COINCIDIR CON LA POSICION
+        val idSexo = globalSexos.find { it.nombre == binding.spinnerSexo.selectedItem.toString() }?.id
         val nombreSexo = binding.spinnerSexo.selectedItem.toString()
 
         if (correo.isEmpty() || nickname.isEmpty() || contrasena.isEmpty() || contrasena2.isEmpty()) {
@@ -118,7 +122,7 @@ class RegistroActivity : AppCompatActivity() {
         cuenta = if (isEmpresa) {
             Empresa(correo, CreateMD5().create(contrasena), nickname)
         } else {
-            val sexo = Sexo(idSexo + 1, nombreSexo)
+            val sexo = Sexo(idSexo!!, nombreSexo)
             Persona(correo, CreateMD5().create(contrasena), nickname, sexo)
         }
 
@@ -128,7 +132,7 @@ class RegistroActivity : AppCompatActivity() {
 
         WebServiceUsuario.registrarse(cuenta, this, object: WebServiceGenericInterface {
             override fun callback(any: Any) = if (any == 0) {
-                // TODO ERROR
+                DialogMaker(this@RegistroActivity, getString(R.string.atencion), getString(R.string.error_creedenciales_duplicadas)).infoNoCustomActions()
             } else {
                 irAInicioDeSesion()
                 Toast.makeText(this@RegistroActivity, getString(R.string.registro_exitoso_inicie_sesion), Toast.LENGTH_SHORT).show()
