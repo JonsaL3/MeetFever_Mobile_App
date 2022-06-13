@@ -27,14 +27,16 @@ class EntradaViewHolder(
         binding.textViewNEntrada.text  = itemView.context.getString(R.string.n_entrada_t, (position+1).toString())
 
         experiencia.foto?.let {
-            Utils.putBase64ImageIntoImageView(binding.experienciaFoto, it, itemView.context)
+            Utils.putBase64ImageIntoImageViewWithPlaceholder(binding.experienciaFoto, it, itemView.context, R.drawable.ic_default_experiencie_true_tone)
+        }?: kotlin.run {
+            Utils.putResourceImageIntoImageView(binding.experienciaFoto, R.drawable.ic_default_experiencie_true_tone, itemView.context)
         }
 
         if (position == 0){
-            binding.nombreTitular.setText(entrada.nombre)
-            binding.apellido1Titular.setText(entrada.apellido1)
-            binding.apellido2Titular.setText(entrada.apellido2)
-            binding.dniTitular.setText(entrada.dni)
+            if (entrada.nombre != "null") binding.nombreTitular.setText(entrada.nombre)
+            if (entrada.apellido1 != "null") binding.apellido1Titular.setText(entrada.apellido1)
+            if (entrada.apellido2 != "null") binding.apellido2Titular.setText(entrada.apellido2)
+            if (entrada.dni != "null") binding.dniTitular.setText(entrada.dni)
         }
 
         val textWatcherNombre = object: TextWatcher{

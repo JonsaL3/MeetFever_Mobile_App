@@ -183,6 +183,7 @@
     <string name="error_creedenciales_duplicadas">Error, es posible que alguna de tus credenciales ya coincida con las de una cuenta existente.</string>
     <string name="realizar_fotograf_a">Realizar fotografía</string>
     <string name="empresa">Empresa:</string>
+    <string name="darse_de_baja_en_meetfever">Darse de baja en MeetFever!</string>
 
 
 </resources>

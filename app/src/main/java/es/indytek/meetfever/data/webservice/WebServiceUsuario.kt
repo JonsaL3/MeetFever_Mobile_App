@@ -97,6 +97,8 @@ object WebServiceUsuario {
             jsonObject.put("correo", correo)
             jsonObject.put("contrasena", contrasena)
 
+            Log.d(":::","jsonObject: $jsonObject")
+
             WebService.processRequestPost(context, url, jsonObject, object: WebServiceGenericInterface {
                 override fun callback(any: Any) {
 
@@ -249,6 +251,40 @@ object WebServiceUsuario {
                 stacktrace = e.message.toString(),
             )
         }
+    }
+
+    fun borrarLogicamenteUsuario(usuario: Usuario, context: Context, callback : WebServiceGenericInterface) {
+
+        val url: String
+        val jsonObject = usuario.toJsonObject()
+
+        when (usuario) {
+
+            is Empresa -> {
+                "interface/api/meetfever/empresa/BorradoLogicoEmpresa".let {
+                    url = it
+                }
+            }
+            is Persona -> {
+                "interface/api/meetfever/persona/BorradoLogicoPersona".let {
+                    url = it
+                }
+            }
+            else -> throw IllegalArgumentException("El usuario no es de tipo Empresa o Persona")
+        }
+
+        WebService.processRequestPut(context, url, jsonObject, object: WebServiceGenericInterface {
+            override fun callback(any: Any) {
+
+                if (any.toString().isNotEmpty()) {
+                    callback.callback(any)
+                } else  {
+                    callback.callback(0)
+                }
+
+            }
+        })
+
     }
 
 }

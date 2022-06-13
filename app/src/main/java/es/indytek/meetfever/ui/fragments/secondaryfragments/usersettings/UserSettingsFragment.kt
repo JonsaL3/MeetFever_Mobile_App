@@ -79,10 +79,8 @@ class UserSettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        cargarListeners()
-
         cargarDatosActualesDelUsuario()
-
+        cargarListeners()
     }
 
     private fun cargarListeners() {
@@ -100,6 +98,7 @@ class UserSettingsFragment : Fragment() {
 
         binding.confirmarCambios.setOnClickListener {
             confirmarCambios()
+            Toast.makeText(contexto, "Espere mientras el servidor recibe la petición.", Toast.LENGTH_LONG).show()
         }
 
         binding.buscarFotoFondo.setOnClickListener {
@@ -139,7 +138,11 @@ class UserSettingsFragment : Fragment() {
 
     private fun irAlFragmentoDeLaCamara() {
         val fragemnt = CameraFragment.newInstance(currentUsuario)
-        Utils.cambiarDeFragmentoGuardandoElAnterior((actividad as AppCompatActivity).supportFragmentManager, fragemnt, "", R.id.frame_layout)
+        try {
+            Utils.cambiarDeFragmentoGuardandoElAnterior(requireActivity().supportFragmentManager, fragemnt, "", R.id.frame_layout)
+        } catch (e: Exception) {
+            Utils.enviarRegistroDeErrorABBDD(e.stackTraceToString(), 0, contexto)
+        }
     }
 
     private fun cargarDatosActualesDelUsuario() {
@@ -324,11 +327,10 @@ class UserSettingsFragment : Fragment() {
 
     private fun pintarDatosGenerales() {
 
-        // foto de perfil
-        Utils.pintarFotoDePerfil(currentUsuario, binding.fotoPerfil, contexto)
+        fotoPerfil?.let {
 
-        currentUsuario.fotoPerfil?.let {
-
+            currentUsuario.fotoPerfil = it
+            Utils.pintarFotoDePerfil(currentUsuario, binding.fotoPerfil, contexto)
             val color = Utils.getDominantColorInImageFromBase64(it)
 
             if (color == Color.BLACK) { // puede ocurrir que el base 64 este mal formado, por lo que devolverá negro y arruinará la targeta
@@ -339,15 +341,40 @@ class UserSettingsFragment : Fragment() {
                 binding.colorFondo2.backgroundTintList = ColorStateList.valueOf(color)
             }
 
-        }?: kotlin.run { // si no tiene foto lo pongo de blanco
-            binding.colorFondo.backgroundTintList = ColorStateList.valueOf(Color.WHITE)
-            binding.colorFondo2.backgroundTintList = ColorStateList.valueOf(Color.WHITE)
+        }?: run {
+
+            Utils.pintarFotoDePerfil(currentUsuario, binding.fotoPerfil, contexto)
+
+            currentUsuario.fotoPerfil?.let {
+
+                val color = Utils.getDominantColorInImageFromBase64(it)
+
+                if (color == Color.BLACK) { // puede ocurrir que el base 64 este mal formado, por lo que devolverá negro y arruinará la targeta
+                    binding.colorFondo.backgroundTintList = ColorStateList.valueOf(Color.WHITE)
+                    binding.colorFondo2.backgroundTintList = ColorStateList.valueOf(Color.WHITE)
+                } else {
+                    binding.colorFondo.backgroundTintList = ColorStateList.valueOf(color)
+                    binding.colorFondo2.backgroundTintList = ColorStateList.valueOf(color)
+                }
+
+            }?: kotlin.run { // si no tiene foto lo pongo de blanco
+                binding.colorFondo.backgroundTintList = ColorStateList.valueOf(Color.WHITE)
+                binding.colorFondo2.backgroundTintList = ColorStateList.valueOf(Color.WHITE)
+            }
+
         }
 
         // foto de fondo
-        currentUsuario.fotoFondo?.let {
+
+        fotoFondo?.let {
             Utils.putBase64ImageIntoImageView(binding.fotoFondo, it, contexto)
+        }?: run {
+            currentUsuario.fotoFondo?.let {
+                Utils.putBase64ImageIntoImageView(binding.fotoFondo, it, contexto)
+            }
         }
+
+
 
         binding.correo.setText(currentUsuario.correo)
 
@@ -408,7 +435,7 @@ class UserSettingsFragment : Fragment() {
             }
         })
 
-        binding.fechaNacimientoPersona.setText(persona.fechaNacimiento.toString())
+        if (persona.fechaNacimiento.toString() != "null") binding.fechaNacimientoPersona.setText(persona.fechaNacimiento.toString())
 
         binding.dniPersonaPersona.setText(persona.dni)
 

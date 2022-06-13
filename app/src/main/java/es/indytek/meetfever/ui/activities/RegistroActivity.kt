@@ -126,8 +126,6 @@ class RegistroActivity : AppCompatActivity() {
             Persona(correo, CreateMD5().create(contrasena), nickname, sexo)
         }
 
-        cuenta.contrasena = CreateMD5().create(cuenta.contrasena)
-
         Log.d(":::","cuenta: $cuenta")
 
         WebServiceUsuario.registrarse(cuenta, this, object: WebServiceGenericInterface {

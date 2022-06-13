@@ -1,5 +1,7 @@
 package es.indytek.meetfever.ui.recyclerviews.viewholders
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.graphics.PorterDuff
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -29,6 +31,13 @@ class ExperienciaViewHolder(
             Utils.putBase64ImageIntoImageViewWithPlaceholder(binding.imagenTopExperiencia, it, itemView.context, R.drawable.ic_default_experiencie_true_tone)
         }?: kotlin.run {
             Utils.putResourceImageIntoImageView(binding.imagenTopExperiencia, R.drawable.ic_default_experiencie_true_tone, itemView.context)
+        }
+
+        objeto.foto?.let {
+            val color = Utils.getDominantColorInImageFromBase64(it)
+            binding.degradadoExperiencia.backgroundTintList = ColorStateList.valueOf(color)
+        }?: kotlin.run {
+            binding.degradadoExperiencia.backgroundTintList = ColorStateList.valueOf(Color.BLACK)
         }
 
         binding.viewholderExperiencia.setOnClickListener {

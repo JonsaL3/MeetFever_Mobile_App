@@ -14,6 +14,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import es.indytek.meetfever.R
+import es.indytek.meetfever.data.webservice.WebServiceGenericInterface
+import es.indytek.meetfever.data.webservice.WebServiceUsuario
 import es.indytek.meetfever.databinding.ActivityMainBinding
 import es.indytek.meetfever.models.persona.Persona
 import es.indytek.meetfever.models.usuario.Usuario
@@ -243,10 +245,10 @@ class MainActivity : AppCompatActivity() {
                 header.findViewById(R.id.backgroundProfile),
                 it,
                 this,
-                R.drawable.ic_default_background_image
+                R.drawable.ic_single_border_default_background
             )
         } ?: run {
-            header.findViewById<ImageView>(R.id.backgroundProfile).setImageResource(R.drawable.ic_default_background_image)
+            header.findViewById<ImageView>(R.id.backgroundProfile).setImageResource(R.drawable.ic_single_border_default_background)
         }
 
         header.findViewById<TextView>(R.id.nick).apply {
@@ -267,13 +269,40 @@ class MainActivity : AppCompatActivity() {
             })
         }
 
+        binding.deleteAccount.setOnClickListener {
+            DialogMaker(this, "Darse de baja", "¿Realmente desea darse de baja de MeetFever!?").warningAcceptCustomAction("Darse de baja.", "Cancelar.", object: DialogAcceptCustomActionInterface {
+                override fun acceptButton() {
+
+                    WebServiceUsuario.borrarLogicamenteUsuario(currentUsuario, this@MainActivity, object: WebServiceGenericInterface {
+                        override fun callback(any: Any) {
+
+                            if (any == 0) {
+                                DialogMaker(this@MainActivity, "Darse de baja", "Error al dar de baja al usuario.").warningNoCustomActions()
+                            } else {
+                                DialogMaker(this@MainActivity, "Darse de baja", "Usuario dado de baja correctamente.").infoCustomAccept("Aceptar", object: DialogAcceptCustomActionInterface {
+                                    override fun acceptButton() {
+                                        val intent = Intent(this@MainActivity, LoginActivity::class.java)
+                                        this@MainActivity.startActivity(intent)
+                                        (this@MainActivity as AppCompatActivity).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                                    }
+                                })
+
+                            }
+
+                        }
+                    })
+
+                }
+            })
+        }
+
         if (currentUsuario is Persona) {
             binding.botonMisFacturas.setOnClickListener {
                 binding.drawerLayout.close()
                 cargarFacturasFragment()
             }
         } else {
-            //binding.botonMisFacturas.visibility = View.GONE
+            binding.botonMisFacturas.visibility = View.GONE
         }
 
     }

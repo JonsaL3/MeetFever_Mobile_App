@@ -78,6 +78,10 @@ class PasarelaDePagoFragment : Fragment() {
             numeroDeEntradas = it.getSerializable(ARG_PARAM2) as Int
             experiencia = it.getSerializable(ARG_PARAM3) as Experiencia
         }
+
+        contexto = requireContext()
+        actividad = requireActivity()
+
     }
 
     override fun onCreateView(
