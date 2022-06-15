@@ -3,6 +3,7 @@ package es.indytek.meetfever.ui.activities
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -152,36 +153,51 @@ class QrActivity : AppCompatActivity() {
 
                     val qrObtenido = qr.split(";")
                     if (qrObtenido[0] != "MEETFEVERMOBILEAPP")
-                        throw Exception("Qr no válido")
+                        throw Exception("QR no válido")
 
                     val idUsuarioASeguir = qrObtenido[1].toInt()
 
-                    WebServiceUsuario.seguirDejarDeSeguir(currentUsuario.id, idUsuarioASeguir, this, object:
-                        WebServiceGenericInterface {
+                    WebServiceUsuario.seguirDejarDeSeguir(currentUsuario.id, idUsuarioASeguir, this, object: WebServiceGenericInterface {
                         override fun callback(any: Any) {
 
                             Log.d(":::", any.toString())
 
                             if (any == 0) {
-                                // TODO ERROR
-                                //TODO mostrar dialogo de que no se encuentra
+                                DialogMaker(
+                                    this@QrActivity,
+                                    "Follower Scanner",
+                                    "Se ha producido un error al seguir a ese usuario."
+                                ).infoCustomAccept(
+                                    customAcceptText = getString(R.string.back_to_home),
+                                    customAccept = object : DialogAcceptCustomActionInterface{
+                                        override fun acceptButton() {
+
+                                            finish()
+
+                                        }
+                                    }
+                                )
                             } else {
-                                //TODO MOSTRAR ok Y MANDAR A LA PANTALLA DE ATRÁS
-                                // todo esta comprobaxcion es erronea no hacer mucho caso
+
                                 if (any.toString().lowercase().contains("true")) {
                                     Log.d(":::", "USUARIO SEGUIDO")
-
                                     startAnim()
-
-
-
-
-
-
-
-
                                 } else {
                                     Log.d(":::", "USUARIO DEJADO DE SEGUIR")
+                                    DialogMaker(
+                                        this@QrActivity,
+                                        "Follower Scanner",
+                                        "Has dejado de seguir a este usuario."
+                                    ).infoCustomAccept(
+                                        customAcceptText = getString(R.string.back_to_home),
+                                        customAccept = object : DialogAcceptCustomActionInterface{
+                                            override fun acceptButton() {
+
+                                                finish()
+
+                                            }
+                                        }
+                                    )
                                 }
 
                             }
@@ -191,7 +207,20 @@ class QrActivity : AppCompatActivity() {
 
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    // TODO QR ERRONEO
+                    DialogMaker(
+                        this@QrActivity,
+                        "Follower Scanner",
+                        "El qr escaneado no está asociado a el ecosistema de MeetFever!"
+                    ).infoCustomAccept(
+                        customAcceptText = getString(R.string.back_to_home),
+                        customAccept = object : DialogAcceptCustomActionInterface{
+                            override fun acceptButton() {
+
+                                finish()
+
+                            }
+                        }
+                    )
                 }
 
             }, 0)

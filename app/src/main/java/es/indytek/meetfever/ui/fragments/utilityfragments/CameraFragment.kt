@@ -56,23 +56,23 @@ class CameraFragment : Fragment() {
         actividad = requireActivity()
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCameraBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        // Request camera permissions
-        solicitarPermisos()
-
-        // Cargo los listeners de los botones
-        cargarListeners()
-
+    @RequiresApi(Build.VERSION_CODES.Q)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         // Creo un hilo para la cámara (creo)
         cameraExecutor = Executors.newSingleThreadExecutor()
-
-        return binding.root
+        // Request camera permissions
+        solicitarPermisos()
+        startCamera()
+        cargarListeners()
     }
 
     // CONTROLAR LA CÁMARA #########################################################################
@@ -122,19 +122,8 @@ class CameraFragment : Fragment() {
 
                 val uri = output.savedUri
                 uri?.let {
-
                     // devuelvo los datos al fragmento anterior
                     returnImagenAlFragmentoAnterior("/storage/emulated/0/Pictures/MeetFever/$name.jpg")
-                    try {
-                        requireActivity().supportFragmentManager.popBackStackImmediate()
-                    } catch (e: IllegalStateException) {
-                        e.printStackTrace()
-                        Utils.enviarRegistroDeErrorABBDD(
-                            context = contexto,
-                            stacktrace = e.message.toString(),
-                        )
-                    }
-
                 }
             }
 
@@ -186,6 +175,9 @@ class CameraFragment : Fragment() {
                 REQUIRED_PERMISSIONS,
                 REQUEST_CODE_PERMISSIONS
             )
+            if (allPermissionsGranted()) {
+                startCamera()
+            }
         }
 
     }
@@ -231,7 +223,7 @@ class CameraFragment : Fragment() {
         setFragmentResult("FOTO", resultBundle)
 
         // me vuelvo al fragmento que deje pausado antes
-        (actividad as AppCompatActivity).supportFragmentManager.popBackStackImmediate()
+        requireActivity().supportFragmentManager.popBackStackImmediate()
 
     }
 
@@ -250,8 +242,7 @@ class CameraFragment : Fragment() {
         // Permisos de la cámara
         private const val REQUEST_CODE_PERMISSIONS = 10
         private val REQUIRED_PERMISSIONS = mutableListOf(
-            Manifest.permission.CAMERA,
-            Manifest.permission.RECORD_AUDIO
+            Manifest.permission.CAMERA
         ).apply {
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
                 add(Manifest.permission.WRITE_EXTERNAL_STORAGE)

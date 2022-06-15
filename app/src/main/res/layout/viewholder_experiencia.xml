@@ -26,6 +26,7 @@
             android:id="@+id/degradado_experiencia"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:tintMode="multiply"
             android:background="@drawable/ic_generic_experience"
             app:shapeAppearanceOverlay="@style/roundCorners"
             />

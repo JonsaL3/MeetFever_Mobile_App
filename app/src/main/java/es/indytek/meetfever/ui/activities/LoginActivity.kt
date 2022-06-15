@@ -53,12 +53,12 @@ class LoginActivity : AppCompatActivity() {
         val correo = binding.inputEmail.text.toString()
         val contrasena = CreateMD5().create(binding.inputContrasenaLogin.text.toString())
 
-        if (!correo.isNotEmpty() || !contrasena.isNotEmpty()) { // TODO QUITAR EXCLAMACIONES
+        if (correo.isNotEmpty() || contrasena.isNotEmpty()) { // TODO QUITAR EXCLAMACIONES
 
             Animations.mostrarVistaSuavemente(binding.prePantallaDeCarga, 500)
 
             // Hago una petición para obtener el usuario
-            WebServiceUsuario.inciarSesion("hfjsnsvd@jfjekd.com", "d7afde3e7059cd0a0fe09eec4b0008", this, object: WebServiceGenericInterface {
+            WebServiceUsuario.inciarSesion(correo, contrasena, this, object: WebServiceGenericInterface {
                 override fun callback(any: Any) {
 
                     if (any == 0) { // en caso de que vaya mal muestro un popup

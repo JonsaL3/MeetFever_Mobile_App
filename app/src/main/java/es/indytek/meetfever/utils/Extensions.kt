@@ -10,6 +10,22 @@ import java.io.File
 
 object Extensions {
 
+    fun getResizedBitmap(image: Bitmap, maxSize: Int): Bitmap? {
+        var width = image.width
+        var height = image.height
+        val bitmapRatio = width.toFloat() / height.toFloat()
+
+        if (bitmapRatio > 1) {
+            width = maxSize
+            height = (width / bitmapRatio).toInt()
+        } else {
+            height = maxSize
+            width = (height * bitmapRatio).toInt()
+        }
+
+        return Bitmap.createScaledBitmap(image, width, height, true)
+    }
+
     // convierte un file a base 664
     fun convertImageFileToBase64(imageFile: File): String {
         return ByteArrayOutputStream().use { outputStream ->
@@ -24,10 +40,12 @@ object Extensions {
 
     // convierte un bitmap a base 64 KOMPRESSOR
     fun Bitmap.toBase64String(): String {
-        ByteArrayOutputStream().apply {
-            compress(Bitmap.CompressFormat.JPEG,5,this)
-            return java.util.Base64.getEncoder().encodeToString(toByteArray())
+        getResizedBitmap(this, 500)?.let {
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            it.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream)
+            return Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT)
         }
+        return ""
     }
 
     fun ImageView.toBase64(): String {
